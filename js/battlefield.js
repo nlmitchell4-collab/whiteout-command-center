@@ -109,7 +109,7 @@ function initializePhaseSelector() {
             activePhase = button.dataset.phase;
 
             buildBattlefield();
-
+renderSummary();
         };
 
     });
