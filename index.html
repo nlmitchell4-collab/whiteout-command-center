@@ -7,8 +7,7 @@
     <title>Whiteout Foundry Command Center</title>
 
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="css/main.css">
-<link rel="stylesheet" href="css/battlefield.css">
+
 </head>
 
 <body>
@@ -97,7 +96,24 @@
         <section id="battlefield" class="page">
 
     <h1>Battlefield</h1>
+<div id="phase-selector">
 
+    <button class="phase-button active"
+            data-phase="opening">
+        Opening
+    </button>
+
+    <button class="phase-button"
+            data-phase="mid">
+        Mid Game
+    </button>
+
+    <button class="phase-button"
+            data-phase="final">
+        Final 10
+    </button>
+
+</div>
     <div id="battlefield-container">
 
         <div id="battlefield-map">
