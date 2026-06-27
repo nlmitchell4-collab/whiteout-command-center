@@ -1,4 +1,42 @@
+// =========================================
+// Battlefield
+// =========================================
+
 let activePhase = "opening";
+let selectedObjective = null;
+
+// -----------------------------
+// Helpers
+// -----------------------------
+
+function getPriorityIcon(priority) {
+
+    const icons = {
+        critical: "🔴",
+        high: "🟠",
+        medium: "🟡",
+        low: "⚪"
+    };
+
+    return icons[priority.toLowerCase()] || "⚪";
+
+}
+
+function isObjectiveUnlocked(objective) {
+
+    const phaseOrder = {
+        opening: 0,
+        mid: 1,
+        final: 2
+    };
+
+    return phaseOrder[activePhase] >= phaseOrder[objective.unlockPhase];
+
+}
+
+// -----------------------------
+// Battlefield
+// -----------------------------
 
 function buildBattlefield() {
 
@@ -21,104 +59,179 @@ function buildBattlefield() {
 
         const phase = objective.phases[activePhase];
 
-        tile.classList.add(phase.priority.toLowerCase());
+        const unlocked = isObjectiveUnlocked(objective);
+
+        // -------------------------
+        // Priority
+        // -------------------------
+
+        tile.classList.add(
+            phase.priority.toLowerCase()
+        );
+
+        // -------------------------
+        // Assignment Highlighting
+        // -------------------------
 
         if (chief) {
 
-            const assigned = myAssignments.some(a => a.objectiveId === objective.id);
+            const assigned = myAssignments.some(a =>
+                a.objectiveId === objective.id
+            );
 
             tile.classList.add(
-                assigned ? "assigned" : "unassigned"
+                assigned
+                    ? "assigned"
+                    : "unassigned"
             );
 
         }
 
-const icon = {
+        // -------------------------
+        // Locked Objectives
+        // -------------------------
 
-    critical: "🔴",
-    high: "🟠",
-    medium: "🟡",
-    low: "⚪"
+        if (!unlocked) {
 
-};
+            tile.classList.add("locked");
 
-const icon = {
+        }
 
-    critical: "🔴",
-    high: "🟠",
-    medium: "🟡",
-    low: "⚪"
+        // -------------------------
+        // Selected Objective
+        // -------------------------
 
-};
+        if (
+            selectedObjective &&
+            selectedObjective.id === objective.id
+        ) {
 
-tile.innerHTML = `
+            tile.classList.add("selected");
 
-    <div class="objective-priority">
+        }
 
-        ${icon[phase.priority.toLowerCase()]}
+        // -------------------------
+        // Tile HTML
+        // -------------------------
 
-    </div>
+        tile.innerHTML = `
 
-    <div class="objective-name">
+            <div class="objective-priority">
 
-        ${objective.name}
+                ${
+                    unlocked
+                        ? getPriorityIcon(phase.priority)
+                        : "🔒"
+                }
 
-    </div>
+            </div>
 
-`;
+            <div class="objective-name">
 
-        tile.onclick = () => showObjective(objective);
+                ${objective.name}
+
+            </div>
+
+        `;
+
+        tile.onclick = () => {
+
+            selectedObjective = objective;
+
+            buildBattlefield();
+
+        };
 
         map.appendChild(tile);
 
     });
 
-    showObjective(foundryObjectives[0]);
+    if (!selectedObjective) {
+
+        selectedObjective = foundryObjectives[0];
+
+    }
+
+    showObjective(selectedObjective);
+
+    renderSummary();
+
+    renderMyObjectives();
 
 }
 
+// -----------------------------
+// Objective Details
+// -----------------------------
+
 function showObjective(objective) {
 
-    const phase = objective.phases[activePhase];
+    const phase =
+        objective.phases[activePhase];
 
-    const assignment = getAssignmentForObjective(
-        getSelectedChief(),
-        activePhase,
-        objective.id
-    );
+    const assignment =
+        getAssignmentForObjective(
+            getSelectedChief(),
+            activePhase,
+            objective.id
+        );
 
-    document.getElementById("objective-panel").innerHTML = `
+    document.getElementById(
+        "objective-panel"
+    ).innerHTML = `
 
         <div class="detail-card">
 
-            <h2>${objective.name}</h2>
+            <h2>
+
+                ${objective.name}
+
+            </h2>
 
             <div class="badge ${phase.priority.toLowerCase()}">
+
                 ${phase.priority}
+
             </div>
 
             <h3>Your Assignment</h3>
 
-            <p>${
-                assignment
-                    ? assignment.assignment
-                    : "Not Assigned"
-            }</p>
+            <p>
+
+                ${
+                    assignment
+                        ? assignment.assignment
+                        : "Not Assigned"
+                }
+
+            </p>
 
             <h3>Strategy</h3>
 
-            <p>${phase.strategy}</p>
+            <p>
+
+                ${phase.strategy}
+
+            </p>
 
             <h3>Why</h3>
 
-            <p>${phase.why}</p>
+            <p>
+
+                ${phase.why}
+
+            </p>
 
         </div>
 
     `;
 
 }
-renderMyObjectives();
+
+// -----------------------------
+// Phase Buttons
+// -----------------------------
+
 function initializePhaseSelector() {
 
     const buttons =
@@ -128,19 +241,17 @@ function initializePhaseSelector() {
 
         button.onclick = () => {
 
-            buttons.forEach(btn =>
-                btn.classList.remove("active")
+            buttons.forEach(b =>
+                b.classList.remove("active")
             );
 
             button.classList.add("active");
 
-            activePhase = button.dataset.phase;
+            activePhase =
+                button.dataset.phase;
 
             buildBattlefield();
 
-renderSummary();
-
-renderMyObjectives();
         };
 
     });
