@@ -723,3 +723,66 @@ footer{
     border-color:var(--gold);
 
 }
+/* ==========================================
+   Chief Selector
+========================================== */
+
+#chief-bar{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-bottom:20px;
+
+}
+
+#chief-bar label{
+
+    font-weight:bold;
+
+    color:var(--gold);
+
+}
+
+#chief-select{
+
+    min-width:260px;
+
+    padding:10px 14px;
+
+    background:#1b2538;
+
+    color:white;
+
+    border:2px solid var(--border);
+
+    border-radius:10px;
+
+    font-size:15px;
+
+}
+
+#chief-select:focus{
+
+    outline:none;
+
+    border-color:var(--gold);
+
+}
+.assigned {
+
+    box-shadow:
+        0 0 20px rgba(255,215,0,.6);
+
+    transform: scale(1.03);
+
+}
+
+.unassigned {
+
+    opacity: .35;
+
+}

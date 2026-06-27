@@ -96,21 +96,36 @@
         <section id="battlefield" class="page">
 
     <h1>Battlefield</h1>
+    <div id="chief-bar">
+
+    <label for="chief-select">
+        Chief
+    </label>
+
+    <select id="chief-select">
+
+        <option value="">
+            Select Yourself...
+        </option>
+
+    </select>
+
+</div>
 <div id="phase-selector">
 
     <button class="phase-button active"
             data-phase="opening">
-        Opening
+        0-15 Minutes
     </button>
 
     <button class="phase-button"
             data-phase="mid">
-        Mid Game
+        15-45 Minutes
     </button>
 
     <button class="phase-button"
             data-phase="final">
-        Final 10
+        45 Minutes-End
     </button>
 
 </div>
@@ -168,9 +183,12 @@
     </main>
 
 </div>
-
+<script src="data/foundry/config.js"></script>
+<script src="data/foundry/objectives.js"></script>
 <script src="data/foundry.js"></script>
-
+<script src="data/chiefs.js"></script>
+<script src="data/foundry/objectives.js"></script>
+<script src="js/chiefs.js"></script>
 <script src="js/navigation.js"></script>
 <script src="js/battlefield.js"></script>
 <script src="js/app.js"></script>
