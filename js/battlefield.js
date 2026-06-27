@@ -33,11 +33,39 @@ function buildBattlefield() {
 
         }
 
-        tile.innerHTML = `
-            <div class="objective-name">
-                ${objective.name}
-            </div>
-        `;
+const icon = {
+
+    critical: "🔴",
+    high: "🟠",
+    medium: "🟡",
+    low: "⚪"
+
+};
+
+const icon = {
+
+    critical: "🔴",
+    high: "🟠",
+    medium: "🟡",
+    low: "⚪"
+
+};
+
+tile.innerHTML = `
+
+    <div class="objective-priority">
+
+        ${icon[phase.priority.toLowerCase()]}
+
+    </div>
+
+    <div class="objective-name">
+
+        ${objective.name}
+
+    </div>
+
+`;
 
         tile.onclick = () => showObjective(objective);
 

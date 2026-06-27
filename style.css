@@ -870,3 +870,24 @@ footer{
     transform:translateY(-2px);
 
 }
+.objective-priority{
+
+    font-size:18px;
+
+    margin-bottom:6px;
+
+    text-align:center;
+
+}
+
+.objective{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
