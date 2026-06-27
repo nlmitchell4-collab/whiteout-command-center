@@ -786,3 +786,15 @@ footer{
     opacity: .35;
 
 }
+.selected {
+
+    border: 3px solid #ffd54a !important;
+
+    box-shadow:
+        0 0 28px rgba(255,213,74,.8);
+
+    transform: scale(1.06);
+
+    z-index: 5;
+
+}
