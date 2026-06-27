@@ -1,0 +1,19 @@
+#sidebar {
+    width: 260px;
+    min-width: 260px;
+    height: 100vh;
+
+    background: #182233;
+
+    border-right: 2px solid var(--border);
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 24px;
+
+    position: sticky;
+    top: 0;
+
+    overflow-y: auto;
+}

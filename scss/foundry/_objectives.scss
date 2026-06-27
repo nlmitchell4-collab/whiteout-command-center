@@ -1,0 +1,77 @@
+.objective {
+    position: absolute;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: clamp(70px, 8vw, 120px);
+min-height: clamp(38px, 5vw, 60px);
+
+padding: clamp(4px, 0.6vw, 8px);
+
+    background: rgba(24, 34, 51, .92);
+
+    border: 2px solid #394b67;
+    border-radius: 10px;
+
+    cursor: pointer;
+    user-select: none;
+
+    transition: all .2s ease;
+
+    z-index: 5;
+}
+
+.objective:hover {
+    transform: translate(-50%, -50%) scale(1.05);
+    border-color: var(--gold);
+}
+
+.objective-name {
+    font-size: .8rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.objective-priority {
+    margin-bottom: 4px;
+    font-size: 18px;
+}
+
+.objective.selected {
+    border: 3px solid #ffd54a;
+    box-shadow: 0 0 24px rgba(255, 213, 74, .8);
+    z-index: 20;
+}
+
+.objective.assigned {
+    box-shadow: 0 0 18px rgba(255, 215, 0, .55);
+}
+
+.objective.unassigned {
+    opacity: .35;
+}
+
+.objective.locked {
+    filter: grayscale(100%);
+    opacity: .55;
+}
+
+.objective.critical {
+    border-color: #d9534f;
+}
+
+.objective.high {
+    border-color: #d6b15d;
+}
+
+.objective.medium {
+    border-color: #4d6c93;
+}
+
+.objective.low {
+    border-color: #555;
+}

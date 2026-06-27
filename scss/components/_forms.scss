@@ -1,0 +1,64 @@
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+}
+
+label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    background: var(--panel);
+
+    color: var(--text);
+
+    border: 2px solid var(--border);
+    border-radius: 10px;
+
+    font: inherit;
+
+    transition: border-color .2s ease,
+                box-shadow .2s ease,
+                background .2s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--text-muted);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+
+    border-color: var(--gold);
+
+    box-shadow: 0 0 0 3px rgba(215,179,106,.20);
+}
+
+button {
+    font: inherit;
+}
+
+button,
+input[type="button"],
+input[type="submit"] {
+    cursor: pointer;
+}
+
+.button-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}

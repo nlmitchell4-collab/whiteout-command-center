@@ -1,0 +1,29 @@
+{
+  "name": "whiteout-command-center",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/nlmitchell4-collab/whiteout-command-center#readme",
+  "bugs": {
+    "url": "https://github.com/nlmitchell4-collab/whiteout-command-center/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nlmitchell4-collab/whiteout-command-center.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "sass": "^1.101.0",
+    "vite": "^8.1.0"
+  },
+  "dependencies": {
+    "save-dev": "^0.0.1-security"
+  }
+}

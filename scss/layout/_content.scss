@@ -1,0 +1,21 @@
+#content {
+    flex: 1;
+    min-width: 0;
+
+    padding: 32px;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+main {
+    width: 100%;
+}
+
+.page {
+    width: 100%;
+}
+
+.page.active {
+    display: block;
+}
