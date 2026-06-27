@@ -6,6 +6,10 @@ function buildBattlefield() {
 
     map.innerHTML = "";
 
+    const chief = getSelectedChief();
+
+    const myAssignments = getAssignments(chief, activePhase);
+
     foundryObjectives.forEach(objective => {
 
         const tile = document.createElement("div");
@@ -19,40 +23,23 @@ function buildBattlefield() {
 
         tile.classList.add(phase.priority.toLowerCase());
 
-        const assignment = getAssignment(
-            getSelectedChief(),
-            objective.id
-        );
+        if (chief) {
 
-        if (getSelectedChief()) {
+            const assigned = myAssignments.some(a => a.objectiveId === objective.id);
 
-            if (assignment) {
-
-                tile.classList.add("assigned");
-
-            } else {
-
-                tile.classList.add("unassigned");
-
-            }
+            tile.classList.add(
+                assigned ? "assigned" : "unassigned"
+            );
 
         }
 
         tile.innerHTML = `
-
             <div class="objective-name">
-
                 ${objective.name}
-
             </div>
-
         `;
 
-        tile.onclick = () => {
-
-            showObjective(objective);
-
-        };
+        tile.onclick = () => showObjective(objective);
 
         map.appendChild(tile);
 
@@ -62,28 +49,13 @@ function buildBattlefield() {
 
 }
 
-function getAssignment(chiefId, objectiveId) {
-
-    if (!chiefId) return null;
-
-    const phaseAssignments =
-        foundryAssignments[activePhase];
-
-    const assignments =
-        phaseAssignments[objectiveId];
-
-    if (!assignments) return null;
-
-    return assignments.find(a => a.chief === chiefId) || null;
-
-}
-
 function showObjective(objective) {
 
     const phase = objective.phases[activePhase];
 
-    const assignment = getAssignment(
+    const assignment = getAssignmentForObjective(
         getSelectedChief(),
+        activePhase,
         objective.id
     );
 
@@ -94,9 +66,7 @@ function showObjective(objective) {
             <h2>${objective.name}</h2>
 
             <div class="badge ${phase.priority.toLowerCase()}">
-
                 ${phase.priority}
-
             </div>
 
             <h3>Your Assignment</h3>
@@ -130,8 +100,8 @@ function initializePhaseSelector() {
 
         button.onclick = () => {
 
-            buttons.forEach(b =>
-                b.classList.remove("active")
+            buttons.forEach(btn =>
+                btn.classList.remove("active")
             );
 
             button.classList.add("active");
