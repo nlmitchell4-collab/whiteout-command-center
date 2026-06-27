@@ -839,3 +839,34 @@ footer{
     border-top:1px solid rgba(255,255,255,.08);
 
 }
+#my-objectives{
+
+    margin-bottom:20px;
+
+}
+
+.assignment-card{
+
+    background:#1b2538;
+
+    border:2px solid var(--border);
+
+    border-radius:10px;
+
+    padding:12px;
+
+    margin-bottom:10px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.assignment-card:hover{
+
+    border-color:var(--gold);
+
+    transform:translateY(-2px);
+
+}

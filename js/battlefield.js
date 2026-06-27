@@ -90,7 +90,7 @@ function showObjective(objective) {
     `;
 
 }
-
+renderMyObjectives();
 function initializePhaseSelector() {
 
     const buttons =
@@ -109,7 +109,10 @@ function initializePhaseSelector() {
             activePhase = button.dataset.phase;
 
             buildBattlefield();
+
 renderSummary();
+
+renderMyObjectives();
         };
 
     });

@@ -70,7 +70,10 @@ function initializeChiefSelector() {
         );
 
         buildBattlefield();
+
 renderSummary();
+
+renderMyObjectives();
     });
 
 }
