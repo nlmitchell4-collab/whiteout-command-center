@@ -5,9 +5,9 @@
 let activePhase = "opening";
 let selectedObjective = null;
 
-// -----------------------------
+// =========================================
 // Helpers
-// -----------------------------
+// =========================================
 
 function getPriorityIcon(priority) {
 
@@ -25,71 +25,70 @@ function getPriorityIcon(priority) {
 function isObjectiveUnlocked(objective) {
 
     const phaseOrder = {
+
         opening: 0,
         mid: 1,
         final: 2
+
     };
 
-    return phaseOrder[activePhase] >= phaseOrder[objective.unlockPhase];
+    return phaseOrder[activePhase] >=
+           phaseOrder[objective.unlockPhase];
 
 }
 
-// -----------------------------
-// Battlefield
-// -----------------------------
+// =========================================
+// Battlefield Rendering
+// =========================================
 
 function buildBattlefield() {
 
-    const map = document.getElementById("battlefield-map");
+    const map =
+        document.getElementById("battlefield-map");
 
     map.innerHTML = "";
 
-    const chief = getSelectedChief();
+    const chief =
+        getSelectedChief();
 
-    const myAssignments = getAssignments(chief, activePhase);
+    const assignments =
+        getAssignments(chief, activePhase);
 
     foundryObjectives.forEach(objective => {
 
-        const tile = document.createElement("div");
+        const tile =
+            document.createElement("div");
 
         tile.className = "objective";
 
-        tile.style.gridColumn = objective.col;
-        tile.style.gridRow = objective.row;
+        // -----------------------------
+        // Absolute Position
+        // -----------------------------
 
-        const phase = objective.phases[activePhase];
+        tile.style.left = objective.x + "%";
+        tile.style.top = objective.y + "%";
 
-        const unlocked = isObjectiveUnlocked(objective);
+        // -----------------------------
+        // Current Phase
+        // -----------------------------
 
-        // -------------------------
-        // Priority
-        // -------------------------
+        const phase =
+            objective.phases[activePhase];
+
+        // -----------------------------
+        // Priority Color
+        // -----------------------------
 
         tile.classList.add(
             phase.priority.toLowerCase()
         );
 
-        // -------------------------
-        // Assignment Highlighting
-        // -------------------------
+        // -----------------------------
+        // Locked?
+        // -----------------------------
 
-        if (chief) {
-
-            const assigned = myAssignments.some(a =>
-                a.objectiveId === objective.id
-            );
-
-            tile.classList.add(
-                assigned
-                    ? "assigned"
-                    : "unassigned"
-            );
-
-        }
-
-        // -------------------------
-        // Locked Objectives
-        // -------------------------
+        const unlocked =
+            isObjectiveUnlocked(objective);
 
         if (!unlocked) {
 
@@ -97,22 +96,45 @@ function buildBattlefield() {
 
         }
 
-        // -------------------------
-        // Selected Objective
-        // -------------------------
+        // -----------------------------
+        // Assigned?
+        // -----------------------------
+
+        if (chief) {
+
+            const assigned =
+                assignments.some(a =>
+                    a.objectiveId === objective.id
+                );
+
+            tile.classList.add(
+
+                assigned
+                    ? "assigned"
+                    : "unassigned"
+
+            );
+
+        }
+
+        // -----------------------------
+        // Selected?
+        // -----------------------------
 
         if (
+
             selectedObjective &&
             selectedObjective.id === objective.id
+
         ) {
 
             tile.classList.add("selected");
 
         }
 
-        // -------------------------
-        // Tile HTML
-        // -------------------------
+        // -----------------------------
+        // HTML
+        // -----------------------------
 
         tile.innerHTML = `
 
@@ -146,9 +168,14 @@ function buildBattlefield() {
 
     });
 
+    // -----------------------------
+    // Default Selection
+    // -----------------------------
+
     if (!selectedObjective) {
 
-        selectedObjective = foundryObjectives[0];
+        selectedObjective =
+            foundryObjectives[0];
 
     }
 
@@ -160,9 +187,9 @@ function buildBattlefield() {
 
 }
 
-// -----------------------------
+// =========================================
 // Objective Details
-// -----------------------------
+// =========================================
 
 function showObjective(objective) {
 
@@ -171,13 +198,19 @@ function showObjective(objective) {
 
     const assignment =
         getAssignmentForObjective(
+
             getSelectedChief(),
+
             activePhase,
+
             objective.id
+
         );
 
     document.getElementById(
+
         "objective-panel"
+
     ).innerHTML = `
 
         <div class="detail-card">
@@ -198,11 +231,9 @@ function showObjective(objective) {
 
             <p>
 
-                ${
-                    assignment
-                        ? assignment.assignment
-                        : "Not Assigned"
-                }
+                ${assignment
+                    ? assignment.assignment
+                    : "Not Assigned"}
 
             </p>
 
@@ -228,9 +259,9 @@ function showObjective(objective) {
 
 }
 
-// -----------------------------
-// Phase Buttons
-// -----------------------------
+// =========================================
+// Phase Selector
+// =========================================
 
 function initializePhaseSelector() {
 
@@ -241,8 +272,10 @@ function initializePhaseSelector() {
 
         button.onclick = () => {
 
-            buttons.forEach(b =>
-                b.classList.remove("active")
+            buttons.forEach(btn =>
+
+                btn.classList.remove("active")
+
             );
 
             button.classList.add("active");

@@ -1,42 +1,72 @@
 // =========================================
 // Foundry Objectives
-// Version 0.1.10
+// Version 0.1.11
 // =========================================
 
 const foundryObjectives = [
 
 {
-    id:"boiler",
-    name:"Boiler",
-    row:1,
-    col:4,
+    id: "boiler",
+    name: "Boiler",
 
-    unlockPhase:"opening",
+    x: 32,
+    y: 14,
 
-    phases:{
-        opening:{
-            priority:"Critical",
-            strategy:"Capture immediately.",
-            why:"50% faster building capture."
+    unlockPhase: "opening",
+
+    phases: {
+        opening: {
+            priority: "Critical",
+            strategy: "Capture immediately.",
+            why: "Building capture speed buff."
         },
-        mid:{
-            priority:"High",
-            strategy:"Maintain control.",
-            why:"Important mobility advantage."
+        mid: {
+            priority: "High",
+            strategy: "Maintain control.",
+            why: "Still valuable throughout the match."
         },
-        final:{
-            priority:"Medium",
-            strategy:"Only defend if nearby.",
-            why:"Imperial has higher value."
+        final: {
+            priority: "Medium",
+            strategy: "Defend only if nearby.",
+            why: "Imperial takes priority."
         }
     }
 },
 
 {
-    id:"workshop-west",
-    name:"Workshop",
-    row:2,
-    col:2,
+    id: "repair-north",
+    name: "North Repair",
+
+    x: 58,
+    y: 15,
+
+    unlockPhase: "opening",
+
+    phases: {
+        opening:{
+            priority:"Medium",
+            strategy:"Capture if available.",
+            why:"Extra points."
+        },
+        mid:{
+            priority:"Medium",
+            strategy:"Maintain if uncontested.",
+            why:"Secondary objective."
+        },
+        final:{
+            priority:"Low",
+            strategy:"Abandon if needed.",
+            why:"Imperial comes first."
+        }
+    }
+},
+
+{
+    id:"workshop-northwest",
+    name:"NW Workshop",
+
+    x:28,
+    y:28,
 
     unlockPhase:"opening",
 
@@ -44,7 +74,7 @@ const foundryObjectives = [
         opening:{
             priority:"High",
             strategy:"Capture early.",
-            why:"Provides combat buffs."
+            why:"Combat buffs."
         },
         mid:{
             priority:"High",
@@ -53,62 +83,8 @@ const foundryObjectives = [
         },
         final:{
             priority:"Medium",
-            strategy:"Hold if convenient.",
+            strategy:"Hold if practical.",
             why:"Secondary objective."
-        }
-    }
-},
-
-{
-    id:"workshop-east",
-    name:"Workshop",
-    row:2,
-    col:6,
-
-    unlockPhase:"opening",
-
-    phases:{
-        opening:{
-            priority:"High",
-            strategy:"Capture early.",
-            why:"Provides combat buffs."
-        },
-        mid:{
-            priority:"High",
-            strategy:"Maintain control.",
-            why:"Supports Prototype."
-        },
-        final:{
-            priority:"Medium",
-            strategy:"Hold if convenient.",
-            why:"Secondary objective."
-        }
-    }
-},
-
-{
-    id:"prototype-west",
-    name:"Prototype",
-    row:3,
-    col:2,
-
-    unlockPhase:"opening",
-
-    phases:{
-        opening:{
-            priority:"Critical",
-            strategy:"Capture immediately.",
-            why:"High scoring objective."
-        },
-        mid:{
-            priority:"Critical",
-            strategy:"Hold at all costs.",
-            why:"Major source of points."
-        },
-        final:{
-            priority:"Critical",
-            strategy:"Never abandon unless ordered.",
-            why:"Still one of the highest priorities."
         }
     }
 },
@@ -116,8 +92,9 @@ const foundryObjectives = [
 {
     id:"mercenary",
     name:"Mercenary Camp",
-    row:3,
-    col:4,
+
+    x:46,
+    y:31,
 
     unlockPhase:"mid",
 
@@ -129,22 +106,51 @@ const foundryObjectives = [
         },
         mid:{
             priority:"High",
-            strategy:"Capture when available.",
-            why:"Strong point income."
+            strategy:"Capture immediately.",
+            why:"High point value."
         },
         final:{
             priority:"Medium",
-            strategy:"Maintain if uncontested.",
+            strategy:"Hold if uncontested.",
             why:"Support objective."
         }
     }
 },
 
 {
-    id:"prototype-east",
-    name:"Prototype",
-    row:3,
-    col:6,
+    id:"workshop-northeast",
+    name:"NE Workshop",
+
+    x:64,
+    y:29,
+
+    unlockPhase:"opening",
+
+    phases:{
+        opening:{
+            priority:"High",
+            strategy:"Capture early.",
+            why:"Combat buffs."
+        },
+        mid:{
+            priority:"High",
+            strategy:"Maintain control.",
+            why:"Supports Prototype."
+        },
+        final:{
+            priority:"Medium",
+            strategy:"Hold if practical.",
+            why:"Secondary objective."
+        }
+    }
+},
+
+{
+    id:"prototype-west",
+    name:"West Prototype",
+
+    x:15,
+    y:47,
 
     unlockPhase:"opening",
 
@@ -152,12 +158,12 @@ const foundryObjectives = [
         opening:{
             priority:"Critical",
             strategy:"Capture immediately.",
-            why:"High scoring objective."
+            why:"Major scoring objective."
         },
         mid:{
             priority:"Critical",
             strategy:"Hold at all costs.",
-            why:"Major source of points."
+            why:"Excellent point generation."
         },
         final:{
             priority:"Critical",
@@ -169,9 +175,10 @@ const foundryObjectives = [
 
 {
     id:"repair-west",
-    name:"Repair Station",
-    row:4,
-    col:2,
+    name:"West Repair",
+
+    x:6,
+    y:63,
 
     unlockPhase:"opening",
 
@@ -188,8 +195,8 @@ const foundryObjectives = [
         },
         final:{
             priority:"Low",
-            strategy:"Ignore if necessary.",
-            why:"Imperial comes first."
+            strategy:"Ignore if needed.",
+            why:"Imperial first."
         }
     }
 },
@@ -197,8 +204,9 @@ const foundryObjectives = [
 {
     id:"imperial",
     name:"Imperial Institute",
-    row:4,
-    col:4,
+
+    x:47,
+    y:52,
 
     unlockPhase:"final",
 
@@ -210,22 +218,23 @@ const foundryObjectives = [
         },
         mid:{
             priority:"Low",
-            strategy:"Prepare to rotate.",
-            why:"Still locked."
+            strategy:"Prepare rotation.",
+            why:"Unlocks in Final."
         },
         final:{
             priority:"Critical",
             strategy:"Primary objective.",
-            why:"Highest scoring objective."
+            why:"Highest value objective."
         }
     }
 },
 
 {
     id:"repair-east",
-    name:"Repair Station",
-    row:4,
-    col:6,
+    name:"East Repair",
+
+    x:90,
+    y:46,
 
     unlockPhase:"opening",
 
@@ -242,17 +251,46 @@ const foundryObjectives = [
         },
         final:{
             priority:"Low",
-            strategy:"Ignore if necessary.",
-            why:"Imperial comes first."
+            strategy:"Ignore if needed.",
+            why:"Imperial first."
         }
     }
 },
 
 {
-    id:"workshop-south",
-    name:"Workshop",
-    row:5,
-    col:3,
+    id:"prototype-east",
+    name:"East Prototype",
+
+    x:80,
+    y:60,
+
+    unlockPhase:"opening",
+
+    phases:{
+        opening:{
+            priority:"Critical",
+            strategy:"Capture immediately.",
+            why:"Major scoring objective."
+        },
+        mid:{
+            priority:"Critical",
+            strategy:"Hold at all costs.",
+            why:"Excellent point generation."
+        },
+        final:{
+            priority:"Critical",
+            strategy:"Never abandon unless ordered.",
+            why:"Still one of the highest priorities."
+        }
+    }
+},
+
+{
+    id:"workshop-southwest",
+    name:"SW Workshop",
+
+    x:26,
+    y:73,
 
     unlockPhase:"opening",
 
@@ -260,44 +298,45 @@ const foundryObjectives = [
         opening:{
             priority:"High",
             strategy:"Capture early.",
-            why:"Provides combat buffs."
+            why:"Combat buffs."
         },
         mid:{
             priority:"High",
             strategy:"Maintain control.",
-            why:"Supports center objectives."
+            why:"Supports Transit."
         },
         final:{
             priority:"Medium",
-            strategy:"Support Imperial.",
+            strategy:"Hold if practical.",
             why:"Secondary objective."
         }
     }
 },
 
 {
-    id:"repair-south",
-    name:"Repair Station",
-    row:5,
-    col:5,
+    id:"workshop-southeast",
+    name:"SE Workshop",
+
+    x:61,
+    y:71,
 
     unlockPhase:"opening",
 
     phases:{
         opening:{
-            priority:"Medium",
-            strategy:"Capture if nearby.",
-            why:"Additional points."
+            priority:"High",
+            strategy:"Capture early.",
+            why:"Combat buffs."
         },
         mid:{
-            priority:"Medium",
-            strategy:"Maintain if uncontested.",
-            why:"Useful support."
+            priority:"High",
+            strategy:"Maintain control.",
+            why:"Supports Transit."
         },
         final:{
-            priority:"Low",
-            strategy:"Ignore if necessary.",
-            why:"Imperial comes first."
+            priority:"Medium",
+            strategy:"Hold if practical.",
+            why:"Secondary objective."
         }
     }
 },
@@ -305,8 +344,9 @@ const foundryObjectives = [
 {
     id:"munitions",
     name:"Munitions Factory",
-    row:6,
-    col:4,
+
+    x:45,
+    y:84,
 
     unlockPhase:"mid",
 
@@ -319,12 +359,40 @@ const foundryObjectives = [
         mid:{
             priority:"Critical",
             strategy:"Capture immediately.",
-            why:"Major combat buff."
+            why:"Powerful combat buff."
         },
         final:{
             priority:"High",
             strategy:"Maintain control.",
-            why:"Important combat buff."
+            why:"Strong late-game buff."
+        }
+    }
+},
+
+{
+    id:"repair-south",
+    name:"South Repair",
+
+    x:31,
+    y:95,
+
+    unlockPhase:"opening",
+
+    phases:{
+        opening:{
+            priority:"Medium",
+            strategy:"Capture if nearby.",
+            why:"Additional points."
+        },
+        mid:{
+            priority:"Medium",
+            strategy:"Maintain if uncontested.",
+            why:"Useful support."
+        },
+        final:{
+            priority:"Low",
+            strategy:"Ignore if needed.",
+            why:"Imperial first."
         }
     }
 },
@@ -332,8 +400,9 @@ const foundryObjectives = [
 {
     id:"transit",
     name:"Transit Station",
-    row:7,
-    col:4,
+
+    x:60,
+    y:96,
 
     unlockPhase:"opening",
 
@@ -341,7 +410,7 @@ const foundryObjectives = [
         opening:{
             priority:"Critical",
             strategy:"Capture immediately.",
-            why:"Rapid reinforcement."
+            why:"Major mobility advantage."
         },
         mid:{
             priority:"Critical",
@@ -351,7 +420,7 @@ const foundryObjectives = [
         final:{
             priority:"High",
             strategy:"Support Imperial.",
-            why:"Excellent mobility."
+            why:"Quick reinforcement."
         }
     }
 }
