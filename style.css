@@ -417,3 +417,260 @@ footer{
     }
 
 }
+/* ==========================================
+   Battlefield Layout
+========================================== */
+
+#battlefield-container{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr;
+
+    gap:24px;
+
+    margin-top:20px;
+
+    align-items:start;
+
+}
+
+#battlefield-map{
+
+    display:grid;
+
+    grid-template-columns:repeat(7,1fr);
+
+    grid-template-rows:repeat(7,90px);
+
+    gap:14px;
+
+    padding:24px;
+
+    background:#101826;
+
+    border:2px solid var(--border);
+
+    border-radius:14px;
+
+    min-height:720px;
+
+}
+
+/* ==========================================
+   Objective Tiles
+========================================== */
+
+.objective{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    padding:10px;
+
+    cursor:pointer;
+
+    user-select:none;
+
+    border-radius:12px;
+
+    border:2px solid #394b67;
+
+    background:linear-gradient(
+        180deg,
+        #29384f,
+        #1a2436
+    );
+
+    color:white;
+
+    transition:.2s;
+
+    box-shadow:
+        inset 0 1px rgba(255,255,255,.06),
+        0 4px 10px rgba(0,0,0,.35);
+
+}
+
+.objective:hover{
+
+    transform:translateY(-3px);
+
+    border-color:#d6b15d;
+
+    box-shadow:
+
+        0 0 18px rgba(214,177,93,.35),
+
+        inset 0 1px rgba(255,255,255,.08);
+
+}
+
+.objective-name{
+
+    font-size:.9rem;
+
+    font-weight:700;
+
+    letter-spacing:.4px;
+
+}
+
+/* ==========================================
+   Priority Colors
+========================================== */
+
+.objective.critical{
+
+    border-color:#d9534f;
+
+    box-shadow:
+
+        0 0 18px rgba(217,83,79,.40);
+
+}
+
+.objective.high{
+
+    border-color:#d6b15d;
+
+}
+
+.objective.medium{
+
+    opacity:.92;
+
+}
+
+.objective.low{
+
+    opacity:.45;
+
+}
+
+/* ==========================================
+   Detail Panel
+========================================== */
+
+#objective-panel{
+
+    background:#182233;
+
+    border:2px solid var(--border);
+
+    border-radius:14px;
+
+    padding:24px;
+
+    min-height:720px;
+
+}
+
+.detail-card h2{
+
+    color:var(--gold);
+
+    margin-bottom:14px;
+
+}
+
+.detail-card h3{
+
+    margin-top:20px;
+
+    margin-bottom:8px;
+
+    font-size:.8rem;
+
+    color:#9fb4cf;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+}
+
+.detail-card p{
+
+    line-height:1.6;
+
+}
+
+/* ==========================================
+   Priority Badge
+========================================== */
+
+.badge{
+
+    display:inline-block;
+
+    padding:7px 14px;
+
+    border-radius:20px;
+
+    font-size:.8rem;
+
+    font-weight:bold;
+
+    margin-bottom:10px;
+
+}
+
+.badge.critical{
+
+    background:#d9534f;
+
+    color:white;
+
+}
+
+.badge.high{
+
+    background:#d6b15d;
+
+    color:#111;
+
+}
+
+.badge.medium{
+
+    background:#4d6c93;
+
+}
+
+.badge.low{
+
+    background:#444;
+
+}
+
+/* ==========================================
+   Mobile
+========================================== */
+
+@media(max-width:900px){
+
+    #battlefield-container{
+
+        grid-template-columns:1fr;
+
+    }
+
+    #battlefield-map{
+
+        min-height:600px;
+
+    }
+
+    #objective-panel{
+
+        min-height:auto;
+
+    }
+
+}
