@@ -23,51 +23,30 @@ buttons.forEach(button => {
 // Battlefield Engine
 // ======================================
 
-const objectives = [
+div.textContent = obj.name;
 
-    {
-        name:"Boiler",
-        row:1,
-        col:3
-    },
+div.style.gridColumn = obj.location.col;
+div.style.gridRow = obj.location.row;
 
-    {
-        name:"Prototype",
-        row:3,
-        col:1
-    },
+div.onclick = () => {
 
-    {
-        name:"Mercenary",
-        row:3,
-        col:3
-    },
+    document.getElementById("objective-panel").innerHTML = `
 
-    {
-        name:"Prototype",
-        row:3,
-        col:5
-    },
+        <h2>${obj.name}</h2>
 
-    {
-        name:"Imperial",
-        row:4,
-        col:3
-    },
+        <p><strong>Team:</strong> ${obj.team}</p>
 
-    {
-        name:"Munitions",
-        row:6,
-        col:3
-    },
+        <p><strong>Priority:</strong> ${obj.phase.opening}</p>
 
-    {
-        name:"Transit",
-        row:7,
-        col:3
-    }
+        <p>${obj.strategy.opening}</p>
 
-];
+        <hr>
+
+        <p>${obj.why}</p>
+
+    `;
+
+};
 
 const map=document.getElementById("battlefield-map");
 
