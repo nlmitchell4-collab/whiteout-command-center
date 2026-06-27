@@ -1,0 +1,322 @@
+/* ==========================================
+   WHITEOUT FOUNDRY COMMAND CENTER
+   Version 0.1
+========================================== */
+
+:root{
+
+    --bg:#0b1220;
+    --panel:#182233;
+    --panel-light:#223047;
+
+    --gold:#d7b36a;
+    --gold-dark:#8d6a2f;
+
+    --text:#f5f7fa;
+    --text-muted:#b9c3d0;
+
+    --border:#31445f;
+
+    --green:#44c767;
+    --red:#d9534f;
+    --blue:#4aa3ff;
+    --orange:#f0ad4e;
+
+    --shadow:0 8px 20px rgba(0,0,0,.35);
+
+    --radius:14px;
+
+    --sidebar-width:250px;
+
+    font-family:
+        "Segoe UI",
+        Tahoma,
+        Geneva,
+        Verdana,
+        sans-serif;
+
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    background:var(--bg);
+
+    color:var(--text);
+
+    min-height:100vh;
+
+}
+
+#app{
+
+    display:flex;
+
+    min-height:100vh;
+
+}
+
+/**************************************************
+ SIDEBAR
+**************************************************/
+
+#sidebar{
+
+    width:var(--sidebar-width);
+
+    background:linear-gradient(
+        180deg,
+        #182233,
+        #111827
+    );
+
+    border-right:2px solid var(--border);
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.logo{
+
+    padding:28px;
+
+    text-align:center;
+
+    border-bottom:1px solid var(--border);
+
+}
+
+.logo h1{
+
+    color:var(--gold);
+
+    font-size:28px;
+
+    letter-spacing:2px;
+
+}
+
+.logo h2{
+
+    margin-top:8px;
+
+    font-size:18px;
+
+    color:white;
+
+}
+
+.operation{
+
+    margin-top:18px;
+
+    color:var(--text-muted);
+
+    font-size:13px;
+
+}
+
+nav{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+    padding:18px;
+
+}
+
+.nav-button{
+
+    background:transparent;
+
+    border:none;
+
+    color:white;
+
+    text-align:left;
+
+    padding:14px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    font-size:16px;
+
+}
+
+.nav-button:hover{
+
+    background:var(--panel-light);
+
+}
+
+.nav-button.active{
+
+    background:var(--gold-dark);
+
+    color:white;
+
+}
+
+footer{
+
+    margin-top:auto;
+
+    padding:20px;
+
+    text-align:center;
+
+    color:var(--text-muted);
+
+    font-size:12px;
+
+}
+
+/**************************************************
+ CONTENT
+**************************************************/
+
+#content{
+
+    flex:1;
+
+    padding:40px;
+
+    overflow:auto;
+
+}
+
+.page{
+
+    display:none;
+
+}
+
+.page.active{
+
+    display:block;
+
+}
+
+.page h1{
+
+    font-size:36px;
+
+    color:var(--gold);
+
+    margin-bottom:24px;
+
+}
+
+.page p{
+
+    line-height:1.8;
+
+    max-width:900px;
+
+    color:var(--text-muted);
+
+    font-size:18px;
+
+}
+
+.page ul{
+
+    margin-left:24px;
+
+    margin-top:20px;
+
+}
+
+.page li{
+
+    margin-bottom:16px;
+
+    font-size:18px;
+
+}
+
+/**************************************************
+ BATTLEFIELD PLACEHOLDER
+**************************************************/
+
+#battlefield-map{
+
+    margin-top:25px;
+
+    height:650px;
+
+    border:2px dashed var(--border);
+
+    border-radius:var(--radius);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#101826;
+
+    color:var(--text-muted);
+
+}
+
+/**************************************************
+ MOBILE
+**************************************************/
+
+@media(max-width:900px){
+
+    #app{
+
+        flex-direction:column;
+
+    }
+
+    #sidebar{
+
+        width:100%;
+
+    }
+
+    nav{
+
+        flex-direction:row;
+
+        overflow-x:auto;
+
+    }
+
+    .nav-button{
+
+        white-space:nowrap;
+
+    }
+
+    #content{
+
+        padding:20px;
+
+    }
+
+    #battlefield-map{
+
+        height:450px;
+
+    }
+
+}

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Whiteout Foundry Command Center</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="app">
+
+    <aside id="sidebar">
+
+        <div class="logo">
+
+            <h1>WHITEOUT</h1>
+            <h2>Foundry Command Center</h2>
+
+            <div class="operation">
+                Operation Iron Foundry
+            </div>
+
+        </div>
+
+        <nav>
+
+            <button class="nav-button active"
+                    data-page="mission">
+                📜 Mission
+            </button>
+
+            <button class="nav-button"
+                    data-page="timeline">
+                ⏱ Timeline
+            </button>
+
+            <button class="nav-button"
+                    data-page="battlefield">
+                🗺 Battlefield
+            </button>
+
+            <button class="nav-button"
+                    data-page="teams">
+                👥 Teams
+            </button>
+
+            <button class="nav-button"
+                    data-page="rules">
+                📖 Rules
+            </button>
+
+        </nav>
+
+        <footer>
+
+            Version 0.1.0
+
+        </footer>
+
+    </aside>
+
+
+    <main id="content">
+
+        <section id="mission" class="page active">
+
+            <h1>Mission</h1>
+
+            <p>
+                Establish an early point advantage through superior
+                objective control. Prioritize combat buffs and map
+                control before committing to Imperial. Protect
+                Prototype whenever possible and avoid unnecessary
+                battles that sacrifice objectives.
+            </p>
+
+        </section>
+
+
+        <section id="timeline" class="page">
+
+            <h1>Timeline</h1>
+
+            <p>
+                Timeline coming in Commit #2.
+            </p>
+
+        </section>
+
+
+        <section id="battlefield" class="page">
+
+            <h1>Battlefield</h1>
+
+            <div id="battlefield-map">
+
+                Battlefield engine coming in Commit #2.
+
+            </div>
+
+        </section>
+
+
+        <section id="teams" class="page">
+
+            <h1>Teams</h1>
+
+            <p>
+                Team assignments coming soon.
+            </p>
+
+        </section>
+
+
+        <section id="rules" class="page">
+
+            <h1>Rules</h1>
+
+            <ul>
+
+                <li>Buildings win Foundry.</li>
+
+                <li>Capture before fighting.</li>
+
+                <li>Protect Prototype.</li>
+
+                <li>Imperial is a late-game objective.</li>
+
+                <li>Follow R4 instructions.</li>
+
+            </ul>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
