@@ -747,9 +747,9 @@ footer{
 
 }
 
-#chief-select{
+#chief-search{
 
-    min-width:260px;
+    min-width:280px;
 
     padding:10px 14px;
 
@@ -765,7 +765,7 @@ footer{
 
 }
 
-#chief-select:focus{
+#chief-search:focus{
 
     outline:none;
 

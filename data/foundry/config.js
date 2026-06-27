@@ -6,7 +6,7 @@ const foundryConfig = {
 
     strategyName: "Legion 2 Standard",
 
-    version: "0.1.3",
+    version: "0.1.4",
 
     commander: "Kazuma",
 
