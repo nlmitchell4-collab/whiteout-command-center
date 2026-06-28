@@ -1,3 +1,5 @@
+import { initializeNavigation } from "./navigation.js";
+
 document.addEventListener("DOMContentLoaded", () => {
 
     initializeNavigation();

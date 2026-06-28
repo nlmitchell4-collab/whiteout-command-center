@@ -1,8 +1,9 @@
 // =========================================
 // Navigation
 // =========================================
-
-function initializeNavigation(){
+import { isAdmin } from "./auth.js";
+import { showLoginModal } from "./pages/loginModal.js";
+export function initializeNavigation() {
 
     const pages =
         document.querySelectorAll(".page");
@@ -12,23 +13,36 @@ function initializeNavigation(){
 
     buttons.forEach(button=>{
 
-        button.addEventListener("click",()=>{
+button.addEventListener("click", () => {
 
-            pages.forEach(page=>
-                page.classList.remove("active")
-            );
+    const openPage = () => {
 
-            buttons.forEach(btn=>
-                btn.classList.remove("active")
-            );
+        pages.forEach(page =>
+            page.classList.remove("active")
+        );
 
-            button.classList.add("active");
+        buttons.forEach(btn =>
+            btn.classList.remove("active")
+        );
 
-            document
-                .getElementById(button.dataset.page)
-                .classList.add("active");
+        button.classList.add("active");
 
-        });
+        document
+            .getElementById(button.dataset.page)
+            .classList.add("active");
+
+    };
+
+    if (button.dataset.page === "import" && !isAdmin()) {
+
+        showLoginModal(openPage);
+        return;
+
+    }
+
+    openPage();
+
+});
 
     });
 
