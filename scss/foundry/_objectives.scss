@@ -1,33 +1,53 @@
 .objective {
     position: absolute;
-    transform: translate(-50%, -50%);
+    transform: translate(0%, 0%);
 
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
 
-    width: clamp(70px, 8vw, 120px);
-min-height: clamp(38px, 5vw, 60px);
+    width: clamp(72px, 7vw, 105px);
+    min-height: clamp(36px, 4vw, 52px);
 
-padding: clamp(4px, 0.6vw, 8px);
+    padding: clamp(4px, .5vw, 8px);
 
-    background: rgba(24, 34, 51, .92);
+    background: rgba(24, 34, 51, .94);
 
-    border: 2px solid #394b67;
-    border-radius: 10px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
 
     cursor: pointer;
     user-select: none;
 
-    transition: all .2s ease;
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease,
+        border-color .15s ease;
 
     z-index: 5;
 }
 
+.objective::after {
+    content: "";
+
+    position: absolute;
+
+    bottom: -8px;
+
+    left: 50%;
+
+    transform: translateX(-0%);
+
+    width: 0;
+    height: 0;
+
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 8px solid rgba(24,34,51,.94);
+}
+
 .objective:hover {
-    transform: translate(-50%, -50%) scale(1.05);
-    border-color: var(--gold);
+    transform: translate(-5%, -5%) scale(1.05);
 }
 
 .objective-name {
@@ -74,4 +94,17 @@ padding: clamp(4px, 0.6vw, 8px);
 
 .objective.low {
     border-color: #555;
+}
+/* Fine tuning map marker positions */
+
+.objective[data-id="boiler"] {
+    margin-left: -8px;
+}
+
+.objective[data-id="prototype"] {
+    margin-top: -8px;
+}
+
+.objective[data-id="transit"] {
+    margin-top: 6px;
 }

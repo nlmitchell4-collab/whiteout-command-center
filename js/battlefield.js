@@ -58,7 +58,7 @@ function buildBattlefield() {
 
         const tile =
             document.createElement("div");
-
+tile.dataset.id = objective.id;
         tile.className = "objective";
 
         // -----------------------------

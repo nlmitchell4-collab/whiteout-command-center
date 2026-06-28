@@ -9,8 +9,8 @@ const foundryObjectives = [
     id: "boiler",
     name: "Boiler",
 
-    x: 32,
-    y: 14,
+    x: 30,
+    y: 5,
 
     unlockPhase: "opening",
 
@@ -38,7 +38,7 @@ const foundryObjectives = [
     name: "North Repair",
 
     x: 58,
-    y: 15,
+    y: 5,
 
     unlockPhase: "opening",
 
@@ -65,8 +65,8 @@ const foundryObjectives = [
     id:"workshop-northwest",
     name:"NW Workshop",
 
-    x:28,
-    y:28,
+    x:20,
+    y:15,
 
     unlockPhase:"opening",
 
@@ -93,8 +93,8 @@ const foundryObjectives = [
     id:"mercenary",
     name:"Mercenary Camp",
 
-    x:46,
-    y:31,
+    x:45,
+    y:15,
 
     unlockPhase:"mid",
 
@@ -121,8 +121,8 @@ const foundryObjectives = [
     id:"workshop-northeast",
     name:"NE Workshop",
 
-    x:64,
-    y:29,
+    x:70,
+    y:20,
 
     unlockPhase:"opening",
 
@@ -149,8 +149,8 @@ const foundryObjectives = [
     id:"prototype-west",
     name:"West Prototype",
 
-    x:15,
-    y:47,
+    x:20,
+    y:30,
 
     unlockPhase:"opening",
 
@@ -177,8 +177,8 @@ const foundryObjectives = [
     id:"repair-west",
     name:"West Repair",
 
-    x:6,
-    y:63,
+    x:10,
+    y:40,
 
     unlockPhase:"opening",
 
@@ -205,8 +205,8 @@ const foundryObjectives = [
     id:"imperial",
     name:"Imperial Institute",
 
-    x:47,
-    y:52,
+    x:45,
+    y:35,
 
     unlockPhase:"final",
 
@@ -233,8 +233,8 @@ const foundryObjectives = [
     id:"repair-east",
     name:"East Repair",
 
-    x:90,
-    y:46,
+    x:80,
+    y:35,
 
     unlockPhase:"opening",
 
@@ -261,8 +261,8 @@ const foundryObjectives = [
     id:"prototype-east",
     name:"East Prototype",
 
-    x:80,
-    y:60,
+    x:70,
+    y:45,
 
     unlockPhase:"opening",
 
@@ -290,7 +290,7 @@ const foundryObjectives = [
     name:"SW Workshop",
 
     x:26,
-    y:73,
+    y:55,
 
     unlockPhase:"opening",
 
@@ -318,7 +318,7 @@ const foundryObjectives = [
     name:"SE Workshop",
 
     x:61,
-    y:71,
+    y:60,
 
     unlockPhase:"opening",
 
@@ -346,7 +346,7 @@ const foundryObjectives = [
     name:"Munitions Factory",
 
     x:45,
-    y:84,
+    y:60,
 
     unlockPhase:"mid",
 
@@ -374,7 +374,7 @@ const foundryObjectives = [
     name:"South Repair",
 
     x:31,
-    y:95,
+    y:75,
 
     unlockPhase:"opening",
 
@@ -402,7 +402,7 @@ const foundryObjectives = [
     name:"Transit Station",
 
     x:60,
-    y:96,
+    y:75,
 
     unlockPhase:"opening",
 
