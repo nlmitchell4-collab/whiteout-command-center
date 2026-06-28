@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Whiteout Foundry Command Center</title>
+
+  <script type="module" crossorigin src="/assets/index-CU-MST5-.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BTcvdSzL.css">
+</head>
+
+<body>
+
+<div id="app">
+
+    <aside id="sidebar">
+
+        <div class="logo">
+
+            <h1>WHITEOUT</h1>
+            <h2>Foundry Command Center</h2>
+
+            <div class="operation">
+                Operation Iron Foundry
+            </div>
+
+        </div>
+
+        <nav>
+
+            <button class="nav-button active"
+                    data-page="mission">
+                📜 Mission
+            </button>
+
+            <button class="nav-button"
+                    data-page="timeline">
+                ⏱ Timeline
+            </button>
+
+            <button class="nav-button"
+                    data-page="battlefield">
+                🗺 Battlefield
+            </button>
+
+            <button class="nav-button"
+                    data-page="teams">
+                👥 Teams
+            </button>
+
+            <button class="nav-button"
+                    data-page="rules">
+                📖 Rules
+            </button>
+
+        </nav>
+
+        <footer>
+
+            Version 0.1.0
+
+        </footer>
+
+    </aside>
+
+
+    <main id="content">
+
+        <section id="mission" class="page active">
+
+            <h1>Mission</h1>
+
+            <p>
+                Establish an early point advantage through superior
+                objective control. Prioritize combat buffs and map
+                control before committing to Imperial. Protect
+                Prototype whenever possible and avoid unnecessary
+                battles that sacrifice objectives.
+            </p>
+
+        </section>
+
+
+        <section id="timeline" class="page">
+
+            <h1>Timeline</h1>
+
+            <p>
+                Timeline coming in Commit #2.
+            </p>
+
+        </section>
+
+
+        <section id="battlefield" class="page">
+
+    <h1>Battlefield</h1>
+    <div id="assignment-summary"></div>
+    <div id="chief-bar">
+
+    <label for="chief-select">
+        Chief
+    </label>
+
+    <input
+    id="chief-search"
+    list="chief-list"
+    placeholder="Type your name..."
+    autocomplete="off">
+
+<datalist id="chief-list"></datalist>
+
+    </select>
+
+</div>
+<div id="my-objectives"></div>
+<div id="phase-selector">
+
+    <button class="phase-button active"
+            data-phase="opening">
+        0-15 Minutes
+    </button>
+
+    <button class="phase-button"
+            data-phase="mid">
+        15-45 Minutes
+    </button>
+
+    <button class="phase-button"
+            data-phase="final">
+        45 Minutes-End
+    </button>
+
+</div>
+    <div id="battlefield-container">
+
+        <div id="battlefield-map">
+        </div>
+
+        <div id="objective-panel">
+
+            <h2>Select an Objective</h2>
+
+            <p>
+                Tap any objective on the battlefield to view its
+                strategy, assigned team and priority.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+        <section id="teams" class="page">
+
+            <h1>Teams</h1>
+
+            <p>
+                Team assignments coming soon.
+            </p>
+
+        </section>
+
+
+        <section id="rules" class="page">
+
+            <h1>Rules</h1>
+
+            <ul>
+
+                <li>Buildings win Foundry.</li>
+
+                <li>Capture before fighting.</li>
+
+                <li>Protect Prototype.</li>
+
+                <li>Imperial is a late-game objective.</li>
+
+                <li>Follow R4 instructions.</li>
+
+            </ul>
+
+        </section>
+
+    </main>
+
+</div>
+<script src="data/foundry/config.js"></script>
+<script src="data/foundry/objectives.js"></script>
+<script src="data/foundry/assignments.js"></script>
+<script src="data/chiefs.js"></script>
+<script src="js/navigation.js"></script>
+<script src="js/chiefs.js"></script>
+<script src="js/assignments.js"></script>
+<script src="js/battlefield.js"></script>
+<script src="js/summary.js"></script>
+<script src="js/myObjectives.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
