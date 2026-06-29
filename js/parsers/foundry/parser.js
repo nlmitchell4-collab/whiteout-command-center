@@ -268,6 +268,21 @@ function parseScreenshotLegion(value) {
 }
 
 function determineLegion(status, engagement, screenshotLegion) {
+    const normalizedAction =
+        normalizeOcrText(engagement);
+
+    if (
+        screenshotLegion !== null &&
+        isJoinOrSubstitute(normalizedAction)
+    ) {
+
+        return {
+            legion: screenshotLegion,
+            source: "row-action"
+        };
+
+    }
+
     const normalizedStatus =
         normalizeOcrText(status);
 
@@ -286,28 +301,19 @@ function determineLegion(status, engagement, screenshotLegion) {
 
     }
 
-    const normalizedAction =
-        normalizeOcrText(engagement);
-
-    if (
-        screenshotLegion !== null &&
-        (
-            normalizedAction.includes("join") ||
-            normalizedAction.includes("substitute")
-        )
-    ) {
-
-        return {
-            legion: screenshotLegion,
-            source: "row-action"
-        };
-
-    }
-
     return {
         legion: null,
         source: "unknown"
     };
+}
+
+function isJoinOrSubstitute(value) {
+    return (
+        value.includes("join") ||
+        value.includes("substitute") ||
+        value.includes("substitue") ||
+        value.includes("j0in")
+    );
 }
 
 function isHeaderName(value) {

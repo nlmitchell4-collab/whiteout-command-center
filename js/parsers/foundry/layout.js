@@ -58,10 +58,10 @@ export const FOUNDRY_LAYOUT = {
         },
 
         engagement: {
-            x: 268,
-            y: 27,
-            width: 75,
-            height: 34
+            x: 246,
+            y: 8,
+            width: 110,
+            height: 54
         }
 
     }

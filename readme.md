@@ -39,4 +39,4 @@ If Firebase values are blank, the app uses bundled local data files under `data/
 
 ## Version
 
-Current version: `1.1.0`
+Current version: `1.1.1`

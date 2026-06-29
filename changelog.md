@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.1
+
+- Fixed Legion assignment precedence so row Join/Substitute actions override noisy dispatched-status OCR.
+- Widened the row action OCR crop to better capture right-side Join/Substitute labels.
+
 ## v1.1.0
 
 - Added Firestore-first command data loading with local fallback.
