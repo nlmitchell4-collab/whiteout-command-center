@@ -1,8 +1,8 @@
-import { combatants } from "./combatants.js";
+import { getCombatants } from "../../data/commandData.js";
 
 export function generateAssignments() {
 
-    const sorted = [...combatants].sort((a, b) => b.power - a.power);
+    const sorted = [...getCombatants()].sort((a, b) => b.power - a.power);
 
     return sorted;
 

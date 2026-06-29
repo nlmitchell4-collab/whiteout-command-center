@@ -1,43 +1,61 @@
 import { chiefs as defaultChiefs } from "../../data/chiefs.js";
+import { combatants as defaultCombatants } from "../../data/combatants.js";
 import { foundryAssignments as defaultFoundryAssignments } from "../../data/foundry/assignments.js";
 import { foundryConfig as defaultFoundryConfig } from "../../data/foundry/config.js";
 import { foundryObjectives as defaultFoundryObjectives } from "../../data/foundry/objectives.js";
+import { getFirebaseDb, isFirebaseConfigured } from "../common/firebase.js";
 
 let commandData = {
     chiefs: defaultChiefs,
+    combatants: defaultCombatants,
     foundryAssignments: defaultFoundryAssignments,
     foundryConfig: defaultFoundryConfig,
     foundryObjectives: defaultFoundryObjectives
 };
 
-const DATA_FILES = {
-    chiefs: "chiefs.json",
-    foundryAssignments: "foundry-assignments.json",
-    foundryConfig: "foundry-config.json",
-    foundryObjectives: "foundry-objectives.json"
+const FIRESTORE_COLLECTION = "commandData";
+
+const FIRESTORE_DOCUMENTS = {
+    chiefs: "chiefs",
+    combatants: "combatants",
+    foundryAssignments: "foundryAssignments",
+    foundryConfig: "foundryConfig",
+    foundryObjectives: "foundryObjectives"
 };
 
-async function fetchJson(baseUrl, filename) {
-    const url = new URL(filename, baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`);
-    const response = await fetch(url);
+function readDocumentPayload(snapshot, key) {
+    if (!snapshot.exists()) return commandData[key];
 
-    if (!response.ok) {
-        throw new Error(`Failed to load ${filename}: ${response.status}`);
+    const data = snapshot.data();
+
+    if (Array.isArray(commandData[key])) {
+        return Array.isArray(data.items) ? data.items : commandData[key];
     }
 
-    return response.json();
+    return data.value ?? data;
 }
 
 export async function loadCommandData() {
-    const baseUrl = import.meta.env.VITE_FIREBASE_DATA_BASE_URL;
-
-    if (!baseUrl) return commandData;
+    if (!isFirebaseConfigured()) return commandData;
 
     try {
+        const [
+            db,
+            { doc, getDoc }
+        ] = await Promise.all([
+            getFirebaseDb(),
+            import("firebase/firestore")
+        ]);
+
+        if (!db) return commandData;
+
         const entries = await Promise.all(
-            Object.entries(DATA_FILES).map(async ([key, filename]) => [
+            Object.entries(FIRESTORE_DOCUMENTS).map(async ([key, documentId]) => [
                 key,
-                await fetchJson(baseUrl, filename)
+                readDocumentPayload(
+                    await getDoc(doc(db, FIRESTORE_COLLECTION, documentId)),
+                    key
+                )
             ])
         );
 
@@ -53,8 +71,67 @@ export async function loadCommandData() {
     return commandData;
 }
 
+export async function saveCommandDataEntry(key, value) {
+    const documentId = FIRESTORE_DOCUMENTS[key];
+
+    if (!documentId) {
+        throw new Error(`Unknown command data key: ${key}`);
+    }
+
+    if (!isFirebaseConfigured()) {
+        commandData = {
+            ...commandData,
+            [key]: value
+        };
+
+        return commandData[key];
+    }
+
+    const [
+        db,
+        { doc, serverTimestamp, setDoc }
+    ] = await Promise.all([
+        getFirebaseDb(),
+        import("firebase/firestore")
+    ]);
+
+    if (!db) {
+        commandData = {
+            ...commandData,
+            [key]: value
+        };
+
+        return commandData[key];
+    }
+
+    const payload =
+        Array.isArray(value)
+            ? { items: value }
+            : { value };
+
+    await setDoc(
+        doc(db, FIRESTORE_COLLECTION, documentId),
+        {
+            ...payload,
+            updatedAt: serverTimestamp()
+        },
+        { merge: true }
+    );
+
+    commandData = {
+        ...commandData,
+        [key]: value
+    };
+
+    return commandData[key];
+}
+
 export function getChiefs() {
     return commandData.chiefs;
+}
+
+export function getCombatants() {
+    return commandData.combatants;
 }
 
 export function getFoundryAssignments() {

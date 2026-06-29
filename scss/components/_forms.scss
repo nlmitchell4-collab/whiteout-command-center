@@ -62,3 +62,56 @@ input[type="submit"] {
     gap: 12px;
     flex-wrap: wrap;
 }
+
+.review-panel {
+    margin-top: 24px;
+}
+
+.review-grid {
+    display: grid;
+    grid-template-columns:
+        minmax(140px, 1.4fr)
+        minmax(90px, .7fr)
+        minmax(80px, .6fr)
+        minmax(130px, 1fr)
+        minmax(160px, 1.2fr)
+        minmax(130px, 1fr)
+        auto;
+    gap: 8px;
+    align-items: center;
+    margin: 16px 0;
+    overflow-x: auto;
+}
+
+.review-heading {
+    color: var(--text-muted);
+    font-size: .8rem;
+    font-weight: 700;
+}
+
+.review-grid input {
+    min-width: 0;
+    padding: 8px 10px;
+}
+
+.remove-review-row {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--panel-light);
+    padding: 8px 10px;
+}
+
+#review-save-status {
+    align-self: center;
+    color: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+    .review-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .review-heading {
+        display: none;
+    }
+}
