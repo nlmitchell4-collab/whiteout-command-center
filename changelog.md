@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.3
+
+- Added Import page support for loading current combatants into the review editor.
+- Added manual combatant row creation from the Import review panel.
+
 ## v1.1.2
 
 - Replaced duplicate Battlefield Legion controls with a single conditional Legion context control.

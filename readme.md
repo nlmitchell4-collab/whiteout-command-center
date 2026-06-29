@@ -7,7 +7,7 @@ Command center for planning and reviewing Whiteout Survival Foundry assignments.
 - Foundry battlefield map with phase-based objective priorities.
 - Chief/combatant selector with conditional Legion context.
 - Screenshot import flow powered by OCR.
-- Review panel for correcting parsed combatants before saving.
+- Review panel for correcting parsed or existing combatants before saving.
 - Assignment choices for Legion 1, Legion 2, or No engagement.
 - Firestore-first command data with local file fallback for testing.
 - Local build output in `dist/` for Firebase Hosting.
@@ -39,4 +39,4 @@ If Firebase values are blank, the app uses bundled local data files under `data/
 
 ## Version
 
-Current version: `1.1.2`
+Current version: `1.1.3`

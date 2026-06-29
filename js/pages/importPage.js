@@ -1,5 +1,8 @@
 import { processScreenshots } from "../ocr/ocrProcessor.js";
-import { saveCommandDataEntry } from "../data/commandData.js";
+import {
+    getCombatants,
+    saveCommandDataEntry
+} from "../data/commandData.js";
 
 let reviewCombatants = [];
 
@@ -64,6 +67,12 @@ export function renderImportPage() {
                 Process Screenshots
             </button>
 
+            <button
+                id="load-current-combatants"
+                type="button">
+                Load Current Combatants
+            </button>
+
             <hr>
 
             <div id="import-results">
@@ -125,6 +134,34 @@ export function renderImportPage() {
 
         });
 
+    document
+        .getElementById("load-current-combatants")
+        .addEventListener("click", () => {
+
+            const resultsContainer =
+                document.getElementById("import-results");
+
+            reviewCombatants =
+                getCombatants()
+                    .map(withSuggestedAssignment);
+
+            renderCurrentCombatants(resultsContainer);
+
+        });
+
+}
+
+function renderCurrentCombatants(container) {
+    container.innerHTML = `
+        <div class="ocr-result">
+            <h3>Current Combatants</h3>
+            <p>${reviewCombatants.length} combatants loaded for editing.</p>
+        </div>
+
+        ${renderCombatantReview(reviewCombatants)}
+    `;
+
+    bindReviewEvents(container);
 }
 
 function renderImportResults(container, results) {
@@ -207,6 +244,12 @@ function renderCombatantReview(combatants = []) {
 
             <div class="button-row">
                 <button
+                    id="add-reviewed-combatant"
+                    type="button">
+                    Add Combatant
+                </button>
+
+                <button
                     id="save-reviewed-combatants"
                     type="button"
                     class="primary">
@@ -268,6 +311,24 @@ function bindReviewEvents(container) {
 
     const saveButton =
         container.querySelector("#save-reviewed-combatants");
+
+    const addButton =
+        container.querySelector("#add-reviewed-combatant");
+
+    if (addButton) {
+
+        addButton.addEventListener("click", () => {
+
+            reviewCombatants.push(createBlankCombatant());
+
+            const resultsPanel =
+                document.getElementById("import-results");
+
+            renderCurrentCombatants(resultsPanel);
+
+        });
+
+    }
 
     if (!saveButton) return;
 
@@ -345,6 +406,21 @@ function withSuggestedAssignment(combatant) {
         assignment:
             combatant.assignment ??
             suggestAssignment(combatant)
+    };
+}
+
+function createBlankCombatant() {
+    return {
+        id: "",
+        name: "",
+        power: 0,
+        legion: null,
+        assignment: "No engagement",
+        status: "",
+        engagement: "",
+        sourceFile: "manual",
+        sourceRow: null,
+        sourceY: null
     };
 }
 
