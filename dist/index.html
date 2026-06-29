@@ -6,8 +6,8 @@
 
     <title>Whiteout Foundry Command Center</title>
 
-  <script type="module" crossorigin src="/assets/index-vNTz1m25.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BTcvdSzL.css">
+  <script type="module" crossorigin src="/assets/index-BUBYRw25.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-JXLckf-w.css">
 </head>
 
 <body>
@@ -31,29 +31,32 @@
 
             <button class="nav-button active"
                     data-page="mission">
-                📜 Mission
+                Mission
             </button>
 
             <button class="nav-button"
                     data-page="timeline">
-                ⏱ Timeline
+                Timeline
             </button>
 
             <button class="nav-button"
                     data-page="battlefield">
-                🗺 Battlefield
+                Battlefield
             </button>
-<button class="nav-button" data-page="import">
-    📥 Import
-</button>
+
+            <button class="nav-button"
+                    data-page="import">
+                Import
+            </button>
+
             <button class="nav-button"
                     data-page="teams">
-                👥 Teams
+                Teams
             </button>
 
             <button class="nav-button"
                     data-page="rules">
-                📖 Rules
+                Rules
             </button>
 
         </nav>
@@ -65,7 +68,6 @@
         </footer>
 
     </aside>
-
 
     <main id="content">
 
@@ -83,7 +85,6 @@
 
         </section>
 
-
         <section id="timeline" class="page">
 
             <h1>Timeline</h1>
@@ -94,73 +95,76 @@
 
         </section>
 
-
         <section id="battlefield" class="page">
 
-    <h1>Battlefield</h1>
-    <div id="assignment-summary"></div>
-    <div id="chief-bar">
+            <h1>Battlefield</h1>
+            <div id="assignment-summary"></div>
 
-    <label for="chief-select">
-        Chief
-    </label>
+            <div id="chief-bar">
 
-    <input
-    id="chief-search"
-    list="chief-list"
-    placeholder="Type your name..."
-    autocomplete="off">
+                <label for="chief-search">
+                    Chief
+                </label>
 
-<datalist id="chief-list"></datalist>
+                <input
+                    id="chief-search"
+                    list="chief-list"
+                    placeholder="Type your name..."
+                    autocomplete="off">
 
-    </select>
+                <datalist id="chief-list"></datalist>
 
-</div>
-<div id="my-objectives"></div>
-<div id="phase-selector">
+            </div>
 
-    <button class="phase-button active"
-            data-phase="opening">
-        0-15 Minutes
-    </button>
+            <div id="my-objectives"></div>
 
-    <button class="phase-button"
-            data-phase="mid">
-        15-45 Minutes
-    </button>
+            <div id="phase-selector">
 
-    <button class="phase-button"
-            data-phase="final">
-        45 Minutes-End
-    </button>
+                <button class="phase-button active"
+                        data-phase="opening">
+                    0-15 Minutes
+                </button>
 
-</div>
-    <div id="battlefield-container">
+                <button class="phase-button"
+                        data-phase="mid">
+                    15-45 Minutes
+                </button>
 
-        <div id="battlefield-map">
-        </div>
+                <button class="phase-button"
+                        data-phase="final">
+                    45 Minutes-End
+                </button>
 
-        <div id="objective-panel">
+            </div>
 
-            <h2>Select an Objective</h2>
+            <div id="battlefield-container">
 
-            <p>
-                Tap any objective on the battlefield to view its
-                strategy, assigned team and priority.
-            </p>
+                <div id="battlefield-map">
+                </div>
 
-        </div>
+                <div id="objective-panel">
 
-    </div>
+                    <h2>Select an Objective</h2>
 
-</section>
-<section id="import" class="page">
+                    <p>
+                        Tap any objective on the battlefield to view its
+                        strategy, assigned team and priority.
+                    </p>
 
-    <h1>Import Combatants</h1>
+                </div>
 
-    <div id="import-page"></div>
+            </div>
 
-</section>
+        </section>
+
+        <section id="import" class="page">
+
+            <h1>Import Combatants</h1>
+
+            <div id="import-page"></div>
+
+        </section>
+
         <section id="teams" class="page">
 
             <h1>Teams</h1>
@@ -170,7 +174,6 @@
             </p>
 
         </section>
-
 
         <section id="rules" class="page">
 

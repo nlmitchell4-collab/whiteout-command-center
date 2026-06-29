@@ -3,7 +3,7 @@
 // Version 0.1.11
 // =========================================
 
-const foundryObjectives = [
+export const foundryObjectives = [
 
 {
     id: "boiler",

@@ -3,7 +3,7 @@
 // Permanent roster
 // =========================================
 
-const chiefs = [
+export const chiefs = [
 
     {
         id: "nick",

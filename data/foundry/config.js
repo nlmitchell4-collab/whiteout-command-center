@@ -2,7 +2,7 @@
 // Foundry Event Configuration
 // =========================================
 
-const foundryConfig = {
+export const foundryConfig = {
 
     strategyName: "Legion 2 Standard",
 

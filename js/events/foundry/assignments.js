@@ -2,13 +2,15 @@
 // Assignment Engine
 // =========================================
 
-function getAssignments(chiefId, phase) {
+import { getFoundryAssignments } from "../../data/commandData.js";
+
+export function getAssignments(chiefId, phase) {
 
     if (!chiefId) return [];
 
     const results = [];
 
-    const phaseAssignments = foundryAssignments[phase];
+    const phaseAssignments = getFoundryAssignments()[phase];
 
     if (!phaseAssignments) return results;
 
@@ -36,7 +38,7 @@ function getAssignments(chiefId, phase) {
 
 }
 
-function getAssignmentForObjective(chiefId, phase, objectiveId) {
+export function getAssignmentForObjective(chiefId, phase, objectiveId) {
 
     return getAssignments(chiefId, phase)
         .find(a => a.objectiveId === objectiveId);

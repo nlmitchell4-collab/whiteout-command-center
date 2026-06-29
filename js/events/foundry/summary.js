@@ -2,10 +2,21 @@
 // Assignment Summary
 // =========================================
 
-function renderSummary() {
+import {
+    getChiefs,
+    getFoundryConfig,
+    getFoundryObjectives
+} from "../../data/commandData.js";
+import { getSelectedChief } from "../../chiefs.js";
+import { getAssignments } from "./assignments.js";
+import { getActivePhase } from "./battlefield.js";
+
+export function renderSummary() {
 
     const container =
         document.getElementById("assignment-summary");
+
+    if (!container) return;
 
     const chief =
         getSelectedChief();
@@ -19,13 +30,22 @@ function renderSummary() {
     }
 
     const chiefInfo =
-        chiefs.find(c => c.id === chief);
+        getChiefs().find(c => c.id === chief);
+
+    if (!chiefInfo) {
+
+        container.innerHTML = "";
+        return;
+
+    }
+
+    const activePhase = getActivePhase();
 
     const assignments =
         getAssignments(chief, activePhase);
 
     const phaseName =
-        foundryConfig.phases[activePhase].label;
+        getFoundryConfig().phases[activePhase].label;
 
     container.innerHTML = `
 
@@ -47,7 +67,9 @@ function renderSummary() {
     assignments.forEach(item => {
 
         const objective =
-            foundryObjectives.find(o => o.id === item.objectiveId);
+            getFoundryObjectives().find(o => o.id === item.objectiveId);
+
+        if (!objective) return;
 
         list.innerHTML += `
 

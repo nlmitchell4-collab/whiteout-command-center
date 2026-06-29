@@ -5,6 +5,23 @@
 let activePhase = "opening";
 let selectedObjective = null;
 
+import { getFoundryObjectives } from "../../data/commandData.js";
+import { getSelectedChief } from "../../chiefs.js";
+import {
+    getAssignmentForObjective,
+    getAssignments
+} from "./assignments.js";
+import { renderMyObjectives } from "./myObjectives.js";
+import { renderSummary } from "./summary.js";
+
+export function getActivePhase() {
+    return activePhase;
+}
+
+export function setSelectedObjective(objective) {
+    selectedObjective = objective;
+}
+
 // =========================================
 // Helpers
 // =========================================
@@ -41,10 +58,12 @@ function isObjectiveUnlocked(objective) {
 // Battlefield Rendering
 // =========================================
 
-function buildBattlefield() {
+export function buildBattlefield() {
 
     const map =
         document.getElementById("battlefield-map");
+
+    if (!map) return;
 
     map.innerHTML = "";
 
@@ -54,7 +73,7 @@ function buildBattlefield() {
     const assignments =
         getAssignments(chief, activePhase);
 
-    foundryObjectives.forEach(objective => {
+    getFoundryObjectives().forEach(objective => {
 
         const tile =
             document.createElement("div");
@@ -175,7 +194,7 @@ tile.dataset.id = objective.id;
     if (!selectedObjective) {
 
         selectedObjective =
-            foundryObjectives[0];
+            getFoundryObjectives()[0];
 
     }
 
@@ -193,6 +212,11 @@ tile.dataset.id = objective.id;
 
 function showObjective(objective) {
 
+    const panel =
+        document.getElementById("objective-panel");
+
+    if (!panel || !objective) return;
+
     const phase =
         objective.phases[activePhase];
 
@@ -207,11 +231,7 @@ function showObjective(objective) {
 
         );
 
-    document.getElementById(
-
-        "objective-panel"
-
-    ).innerHTML = `
+    panel.innerHTML = `
 
         <div class="detail-card">
 
@@ -263,7 +283,7 @@ function showObjective(objective) {
 // Phase Selector
 // =========================================
 
-function initializePhaseSelector() {
+export function initializePhaseSelector() {
 
     const buttons =
         document.querySelectorAll(".phase-button");

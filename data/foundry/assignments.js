@@ -2,7 +2,7 @@
 // Foundry Assignments
 // =========================================
 
-const foundryAssignments = {
+export const foundryAssignments = {
 
     opening: {
 

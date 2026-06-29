@@ -1,6 +1,9 @@
 let selectedChief = null;
 
-function initializeChiefSelector() {
+import { getChiefs } from "./data/commandData.js";
+import { buildBattlefield } from "./events/foundry/battlefield.js";
+
+export function initializeChiefSelector() {
 
     const input =
         document.getElementById("chief-search");
@@ -8,7 +11,12 @@ function initializeChiefSelector() {
     const datalist =
         document.getElementById("chief-list");
 
-    chiefs
+    if (!input || !datalist) return;
+
+    datalist.innerHTML = "";
+
+    getChiefs()
+        .slice()
         .sort((a,b)=>
             a.displayName.localeCompare(b.displayName)
         )
@@ -30,7 +38,7 @@ function initializeChiefSelector() {
     if(saved){
 
         const chief =
-            chiefs.find(c=>c.id===saved);
+            getChiefs().find(c=>c.id===saved);
 
         if(chief){
 
@@ -45,7 +53,7 @@ function initializeChiefSelector() {
     input.addEventListener("change",()=>{
 
         const chief =
-            chiefs.find(c=>
+            getChiefs().find(c=>
                 c.displayName.toLowerCase() ===
                 input.value.toLowerCase()
             );
@@ -70,15 +78,11 @@ function initializeChiefSelector() {
         );
 
         buildBattlefield();
-
-renderSummary();
-
-renderMyObjectives();
     });
 
 }
 
-function getSelectedChief(){
+export function getSelectedChief(){
 
     return selectedChief;
 
