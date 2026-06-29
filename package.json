@@ -24,6 +24,7 @@
     "vite": "^8.1.0"
   },
   "dependencies": {
-    "save-dev": "^0.0.1-security"
+    "save-dev": "^0.0.1-security",
+    "tesseract.js": "^7.0.0"
   }
 }

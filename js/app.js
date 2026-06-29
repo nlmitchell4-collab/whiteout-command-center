@@ -1,17 +1,13 @@
 import { initializeNavigation } from "./navigation.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+export function initializeApp() {
 
     initializeNavigation();
 
-    initializeChiefSelector();
+}
 
-    initializePhaseSelector();
+document.addEventListener("DOMContentLoaded", () => {
 
-    buildBattlefield();
-
-    renderSummary();
-
-    renderMyObjectives();
+    initializeApp();
 
 });
