@@ -6,8 +6,8 @@
 
     <title>Whiteout Foundry Command Center</title>
 
-  <script type="module" crossorigin src="/assets/index-CyCygw6Y.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-Duh04Ki3.css">
+  <script type="module" crossorigin src="/assets/index-DcL8lkfz.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-Ck4SUCTM.css">
 </head>
 
 <body>
@@ -102,17 +102,38 @@
 
             <div id="chief-bar">
 
-                <label for="chief-search">
-                    Chief
-                </label>
+                <div class="battlefield-control">
+                    <label for="chief-search">
+                        Chief
+                    </label>
 
-                <input
-                    id="chief-search"
-                    list="chief-list"
-                    placeholder="Type your name..."
-                    autocomplete="off">
+                    <input
+                        id="chief-search"
+                        list="chief-list"
+                        placeholder="Type your name..."
+                        autocomplete="off">
 
-                <datalist id="chief-list"></datalist>
+                    <datalist id="chief-list"></datalist>
+                </div>
+
+                <div
+                    id="legion-selector"
+                    class="battlefield-control">
+                    <label for="legion-select">
+                        Legion
+                    </label>
+
+                    <select id="legion-select">
+                        <option value="1">Legion 1</option>
+                        <option value="2">Legion 2</option>
+                    </select>
+                </div>
+
+                <div
+                    id="legion-identifier"
+                    class="battlefield-control"
+                    hidden>
+                </div>
 
             </div>
 

@@ -151,11 +151,15 @@ async function parseCombatantRow(worker, row, filename, index, screenshotLegion)
     const legionAssignment =
         determineLegion(status, engagement, screenshotLegion);
 
+    const cleanedEngagement =
+        cleanStatus(engagement);
+
     if (
         !displayName ||
         troopPower === null ||
         troopPower <= 0 ||
-        isHeaderName(displayName)
+        isHeaderName(displayName) ||
+        isNoEngagement(cleanedEngagement)
     ) {
 
         return null;
@@ -169,7 +173,7 @@ async function parseCombatantRow(worker, row, filename, index, screenshotLegion)
         legion: legionAssignment.legion,
         legionSource: legionAssignment.source,
         status: cleanStatus(status),
-        engagement: cleanStatus(engagement),
+        engagement: cleanedEngagement,
         sourceFile: filename,
         sourceRow: index,
         sourceY: row.y
@@ -178,9 +182,27 @@ async function parseCombatantRow(worker, row, filename, index, screenshotLegion)
 }
 
 async function recognizeRegion(worker, source, region) {
+    if (region.numericOnly) {
+
+        await worker.setParameters({
+            tessedit_char_whitelist: "0123456789,.",
+            tessedit_pageseg_mode: "7"
+        });
+
+    }
+
     const {
         data: { text }
     } = await worker.recognize(cropCanvas(source, region));
+
+    if (region.numericOnly) {
+
+        await worker.setParameters({
+            tessedit_char_whitelist: "",
+            tessedit_pageseg_mode: "3"
+        });
+
+    }
 
     return text;
 
@@ -209,15 +231,28 @@ function cleanStatus(value) {
 }
 
 function parsePower(value) {
-    const match =
-        String(value).match(/[\d,]+/);
+    const candidates =
+        String(value)
+            .replace(/[oO]/g, "0")
+            .replace(/[lI|]/g, "1")
+            .match(/\d[\d,.\s]*/g) ?? [];
 
-    if (!match) return null;
+    const parsedCandidates =
+        candidates
+            .map(candidate => Number.parseInt(
+                candidate.replace(/[^\d]/g, ""),
+                10
+            ))
+            .filter(candidate =>
+                Number.isFinite(candidate) &&
+                candidate >= 100 &&
+                candidate <= 100000000
+            );
 
-    const parsed =
-        Number.parseInt(match[0].replace(/,/g, ""), 10);
+    if (parsedCandidates.length === 0) return null;
 
-    return Number.isFinite(parsed) ? parsed : null;
+    return parsedCandidates
+        .sort((a, b) => b - a)[0];
 }
 
 function parseScreenshotLegion(value) {
@@ -283,6 +318,17 @@ function isHeaderName(value) {
         "join",
         "substitute"
     ].includes(normalizeOcrText(value));
+}
+
+function isNoEngagement(value) {
+    const normalized =
+        normalizeOcrText(value);
+
+    return (
+        normalized.includes("no engagement") ||
+        normalized.includes("no engagements") ||
+        normalized.includes("noengagement")
+    );
 }
 
 function createCombatantId(name) {

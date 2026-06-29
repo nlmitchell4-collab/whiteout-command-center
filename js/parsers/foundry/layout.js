@@ -42,10 +42,12 @@ export const FOUNDRY_LAYOUT = {
         },
 
         power: {
-            x: 78,
-            y: 31,
-            width: 100,
-            height: 22
+            x: 96,
+            y: 29,
+            width: 88,
+            height: 24,
+            scale: 4,
+            numericOnly: true
         },
 
         status: {

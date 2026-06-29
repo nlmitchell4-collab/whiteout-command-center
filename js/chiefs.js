@@ -1,6 +1,13 @@
 let selectedChief = null;
+let selectedLegion = Number.parseInt(
+    localStorage.getItem("legion") ?? "1",
+    10
+);
 
-import { getChiefs } from "./data/commandData.js";
+import {
+    getRosterPeople,
+    getRosterPerson
+} from "./data/commandData.js";
 import { buildBattlefield } from "./events/foundry/battlefield.js";
 
 export function initializeChiefSelector() {
@@ -11,11 +18,14 @@ export function initializeChiefSelector() {
     const datalist =
         document.getElementById("chief-list");
 
+    const legionSelect =
+        document.getElementById("legion-select");
+
     if (!input || !datalist) return;
 
     datalist.innerHTML = "";
 
-    getChiefs()
+    getRosterPeople()
         .slice()
         .sort((a,b)=>
             a.displayName.localeCompare(b.displayName)
@@ -38,7 +48,7 @@ export function initializeChiefSelector() {
     if(saved){
 
         const chief =
-            getChiefs().find(c=>c.id===saved);
+            getRosterPeople().find(c=>c.id===saved);
 
         if(chief){
 
@@ -50,10 +60,30 @@ export function initializeChiefSelector() {
 
     }
 
+    if (legionSelect) {
+
+        legionSelect.value =
+            String(Number.isFinite(selectedLegion) ? selectedLegion : 1);
+
+        legionSelect.addEventListener("change", () => {
+
+            selectedLegion =
+                Number.parseInt(legionSelect.value, 10);
+
+            localStorage.setItem("legion", String(selectedLegion));
+
+            buildBattlefield();
+
+        });
+
+    }
+
+    syncLegionControls();
+
     input.addEventListener("change",()=>{
 
         const chief =
-            getChiefs().find(c=>
+            getRosterPeople().find(c=>
                 c.displayName.toLowerCase() ===
                 input.value.toLowerCase()
             );
@@ -63,6 +93,8 @@ export function initializeChiefSelector() {
             selectedChief = null;
 
             localStorage.removeItem("chief");
+
+            syncLegionControls();
 
             buildBattlefield();
 
@@ -77,6 +109,8 @@ export function initializeChiefSelector() {
             chief.id
         );
 
+        syncLegionControls();
+
         buildBattlefield();
     });
 
@@ -86,4 +120,45 @@ export function getSelectedChief(){
 
     return selectedChief;
 
+}
+
+export function getActiveLegion() {
+    const chief =
+        getRosterPerson(selectedChief);
+
+    if (chief?.legion) return chief.legion;
+
+    return Number.isFinite(selectedLegion) ? selectedLegion : 1;
+}
+
+function syncLegionControls() {
+    const selector =
+        document.getElementById("legion-selector");
+
+    const identifier =
+        document.getElementById("legion-identifier");
+
+    if (!selector || !identifier) return;
+
+    const chief =
+        getRosterPerson(selectedChief);
+
+    if (chief) {
+
+        selector.hidden = true;
+        identifier.hidden = false;
+        identifier.innerHTML = `
+            <label>Legion</label>
+            <div class="legion-pill">
+                ${chief.legion ? `Legion ${chief.legion}` : "Unassigned"}
+            </div>
+        `;
+
+        return;
+
+    }
+
+    selector.hidden = false;
+    identifier.hidden = true;
+    identifier.innerHTML = "";
 }

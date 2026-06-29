@@ -42,8 +42,6 @@ export function renderMyObjectives() {
         const objective =
             getFoundryObjectives().find(o => o.id === item.objectiveId);
 
-        if (!objective) return;
-
         const card =
             document.createElement("div");
 
@@ -51,13 +49,15 @@ export function renderMyObjectives() {
 
         card.innerHTML = `
 
-            <strong>${objective.name}</strong>
+            <strong>${objective ? objective.name : "General Assignment"}</strong>
 
             <div>${item.assignment}</div>
 
         `;
 
         card.onclick = () => {
+
+            if (!objective) return;
 
             setSelectedObjective(objective);
 

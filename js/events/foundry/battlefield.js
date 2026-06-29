@@ -9,7 +9,8 @@ import { getFoundryObjectives } from "../../data/commandData.js";
 import { getSelectedChief } from "../../chiefs.js";
 import {
     getAssignmentForObjective,
-    getAssignments
+    getAssignments,
+    getCombatantAssignmentsForObjective
 } from "./assignments.js";
 import { renderMyObjectives } from "./myObjectives.js";
 import { renderSummary } from "./summary.js";
@@ -231,6 +232,9 @@ function showObjective(objective) {
 
         );
 
+    const objectiveAssignments =
+        getCombatantAssignmentsForObjective(objective.id);
+
     panel.innerHTML = `
 
         <div class="detail-card">
@@ -257,6 +261,10 @@ function showObjective(objective) {
 
             </p>
 
+            <h3>Assigned Combatants</h3>
+
+            ${renderObjectiveAssignments(objectiveAssignments)}
+
             <h3>Strategy</h3>
 
             <p>
@@ -277,6 +285,25 @@ function showObjective(objective) {
 
     `;
 
+}
+
+function renderObjectiveAssignments(assignments) {
+    if (assignments.length === 0) {
+        return "<p>No combatants assigned.</p>";
+    }
+
+    return `
+        <div class="objective-assignment-list">
+            ${assignments.map(({ combatant, assignment }) => `
+                <div class="objective-assignment-row">
+                    <strong>${combatant.displayName}</strong>
+                    <span>${combatant.power ? combatant.power.toLocaleString() : ""}</span>
+                    <span>${combatant.legion ? `Legion ${combatant.legion}` : ""}</span>
+                    <small>${assignment.assignment}</small>
+                </div>
+            `).join("")}
+        </div>
+    `;
 }
 
 // =========================================

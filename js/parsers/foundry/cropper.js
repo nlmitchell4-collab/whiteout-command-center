@@ -4,8 +4,13 @@ export function cropCanvas(source, region) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    canvas.width = region.width;
-    canvas.height = region.height;
+    const scale =
+        region.scale ?? 1;
+
+    canvas.width = region.width * scale;
+    canvas.height = region.height * scale;
+
+    ctx.imageSmoothingEnabled = false;
 
     ctx.drawImage(
         source,
@@ -15,12 +20,46 @@ export function cropCanvas(source, region) {
         region.height,
         0,
         0,
-        region.width,
-        region.height
+        canvas.width,
+        canvas.height
     );
+
+    if (region.numericOnly) {
+
+        improveNumericContrast(canvas);
+
+    }
 
     return canvas;
 
+}
+
+function improveNumericContrast(canvas) {
+    const ctx = canvas.getContext("2d");
+    const imageData =
+        ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    const data =
+        imageData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+
+        const gray =
+            0.299 * data[i] +
+            0.587 * data[i + 1] +
+            0.114 * data[i + 2];
+
+        const value =
+            gray > 150 ? 255 : 0;
+
+        data[i] = value;
+        data[i + 1] = value;
+        data[i + 2] = value;
+        data[i + 3] = 255;
+
+    }
+
+    ctx.putImageData(imageData, 0, 0);
 }
 
 export function cropFoundryRows(image, anchor) {

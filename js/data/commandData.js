@@ -134,6 +134,30 @@ export function getCombatants() {
     return commandData.combatants;
 }
 
+export function getRosterPeople() {
+    const combatants =
+        getCombatants();
+
+    if (combatants.length > 0) {
+        return combatants.map(combatant => ({
+            ...combatant,
+            displayName: combatant.name,
+            source: "combatants"
+        }));
+    }
+
+    return getChiefs().map(chief => ({
+        ...chief,
+        name: chief.displayName,
+        source: "chiefs"
+    }));
+}
+
+export function getRosterPerson(personId) {
+    return getRosterPeople()
+        .find(person => person.id === personId);
+}
+
 export function getFoundryAssignments() {
     return commandData.foundryAssignments;
 }

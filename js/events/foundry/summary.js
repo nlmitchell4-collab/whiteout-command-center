@@ -3,11 +3,12 @@
 // =========================================
 
 import {
-    getChiefs,
     getFoundryConfig,
-    getFoundryObjectives
+    getFoundryObjectives,
+    getRosterPerson
 } from "../../data/commandData.js";
 import { getSelectedChief } from "../../chiefs.js";
+import { getActiveLegion } from "../../chiefs.js";
 import { getAssignments } from "./assignments.js";
 import { getActivePhase } from "./battlefield.js";
 
@@ -21,16 +22,24 @@ export function renderSummary() {
     const chief =
         getSelectedChief();
 
+    const activeLegion =
+        getActiveLegion();
+
     if (!chief) {
 
-        container.innerHTML = "";
+        container.innerHTML = `
+            <div class="summary-card">
+                <h2>Legion ${activeLegion}</h2>
+                <h3>${getFoundryConfig().phases[getActivePhase()].label}</h3>
+            </div>
+        `;
 
         return;
 
     }
 
     const chiefInfo =
-        getChiefs().find(c => c.id === chief);
+        getRosterPerson(chief);
 
     if (!chiefInfo) {
 
@@ -53,6 +62,8 @@ export function renderSummary() {
 
             <h2>${chiefInfo.displayName}</h2>
 
+            ${renderCombatantMeta(chiefInfo)}
+
             <h3>${phaseName}</h3>
 
             <div id="summary-list"></div>
@@ -69,13 +80,11 @@ export function renderSummary() {
         const objective =
             getFoundryObjectives().find(o => o.id === item.objectiveId);
 
-        if (!objective) return;
-
         list.innerHTML += `
 
             <div class="summary-item">
 
-                <strong>${objective.name}</strong><br>
+                <strong>${objective ? objective.name : "General Assignment"}</strong><br>
 
                 ${item.assignment}
 
@@ -85,4 +94,15 @@ export function renderSummary() {
 
     });
 
+}
+
+function renderCombatantMeta(chiefInfo) {
+    if (chiefInfo.source !== "combatants") return "";
+
+    return `
+        <p>
+            ${chiefInfo.power ? `${chiefInfo.power.toLocaleString()} power` : ""}
+            ${chiefInfo.legion ? ` | Legion ${chiefInfo.legion}` : ""}
+        </p>
+    `;
 }

@@ -163,7 +163,6 @@ function renderCombatantReview(combatants = []) {
             <div class="review-grid">
                 <div class="review-heading">Name</div>
                 <div class="review-heading">Power</div>
-                <div class="review-heading">Legion</div>
                 <div class="review-heading">Assignment</div>
                 <div class="review-heading">Status</div>
                 <div class="review-heading">Engagement</div>
@@ -181,16 +180,11 @@ function renderCombatantReview(combatants = []) {
                         inputmode="numeric"
                         value="${escapeAttribute(String(combatant.power ?? ""))}">
 
-                    <input
-                        data-review-index="${index}"
-                        data-review-field="legion"
-                        inputmode="numeric"
-                        value="${escapeAttribute(String(combatant.legion ?? ""))}">
-
-                    <input
-                        data-review-index="${index}"
-                        data-review-field="assignment"
-                        value="${escapeAttribute(combatant.assignment ?? "")}">
+                    <div class="review-assignment-options">
+                        ${renderAssignmentOption(index, combatant, "Legion 1")}
+                        ${renderAssignmentOption(index, combatant, "Legion 2")}
+                        ${renderAssignmentOption(index, combatant, "No engagement")}
+                    </div>
 
                     <input
                         data-review-index="${index}"
@@ -222,6 +216,25 @@ function renderCombatantReview(combatants = []) {
                 <span id="review-save-status"></span>
             </div>
         </div>
+    `;
+}
+
+function renderAssignmentOption(index, combatant, value) {
+    const assignment =
+        normalizeAssignment(combatant.assignment);
+
+    return `
+        <label class="review-radio-option">
+            <input
+                class="review-assignment-choice"
+                type="radio"
+                name="assignment-${index}"
+                data-review-index="${index}"
+                data-review-field="assignment"
+                value="${escapeAttribute(value)}"
+                ${assignment === value ? "checked" : ""}>
+            <span>${escapeHtml(value)}</span>
+        </label>
     `;
 }
 
@@ -299,7 +312,7 @@ function updateReviewCombatant(input) {
 }
 
 function parseReviewValue(field, value) {
-    if (field === "power" || field === "legion") {
+    if (field === "power") {
         const parsed =
             Number.parseInt(String(value).replace(/,/g, ""), 10);
 
@@ -313,13 +326,16 @@ function normalizeReviewCombatant(combatant) {
     const name =
         combatant.name?.trim() ?? "";
 
+    const assignment =
+        normalizeAssignment(combatant.assignment);
+
     return {
         ...combatant,
         id: createCombatantId(name),
         name,
         power: Number.parseInt(combatant.power, 10) || 0,
-        legion: combatant.legion ? Number.parseInt(combatant.legion, 10) : null,
-        assignment: combatant.assignment?.trim() ?? ""
+        legion: getLegionFromAssignment(assignment),
+        assignment
     };
 }
 
@@ -337,11 +353,21 @@ function suggestAssignment(combatant) {
         return `Legion ${combatant.legion}`;
     }
 
-    if (combatant.engagement) {
-        return combatant.engagement;
+    return "No engagement";
+}
+
+function normalizeAssignment(value) {
+    if (value === "Legion 1" || value === "Legion 2") {
+        return value;
     }
 
-    return "";
+    return "No engagement";
+}
+
+function getLegionFromAssignment(assignment) {
+    if (assignment === "Legion 1") return 1;
+    if (assignment === "Legion 2") return 2;
+    return null;
 }
 
 function createCombatantId(name) {
