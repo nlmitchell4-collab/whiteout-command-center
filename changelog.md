@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.1.2
+
+- Replaced duplicate Battlefield Legion controls with a single conditional Legion context control.
+
 ## v1.1.1
 
 - Fixed Legion assignment precedence so row Join/Substitute actions override noisy dispatched-status OCR.

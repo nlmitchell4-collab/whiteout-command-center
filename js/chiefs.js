@@ -18,9 +18,6 @@ export function initializeChiefSelector() {
     const datalist =
         document.getElementById("chief-list");
 
-    const legionSelect =
-        document.getElementById("legion-select");
-
     if (!input || !datalist) return;
 
     datalist.innerHTML = "";
@@ -57,24 +54,6 @@ export function initializeChiefSelector() {
             input.value = chief.displayName;
 
         }
-
-    }
-
-    if (legionSelect) {
-
-        legionSelect.value =
-            String(Number.isFinite(selectedLegion) ? selectedLegion : 1);
-
-        legionSelect.addEventListener("change", () => {
-
-            selectedLegion =
-                Number.parseInt(legionSelect.value, 10);
-
-            localStorage.setItem("legion", String(selectedLegion));
-
-            buildBattlefield();
-
-        });
 
     }
 
@@ -132,22 +111,17 @@ export function getActiveLegion() {
 }
 
 function syncLegionControls() {
-    const selector =
-        document.getElementById("legion-selector");
+    const context =
+        document.getElementById("legion-context");
 
-    const identifier =
-        document.getElementById("legion-identifier");
-
-    if (!selector || !identifier) return;
+    if (!context) return;
 
     const chief =
         getRosterPerson(selectedChief);
 
     if (chief) {
 
-        selector.hidden = true;
-        identifier.hidden = false;
-        identifier.innerHTML = `
+        context.innerHTML = `
             <label>Legion</label>
             <div class="legion-pill">
                 ${chief.legion ? `Legion ${chief.legion}` : "Unassigned"}
@@ -158,7 +132,34 @@ function syncLegionControls() {
 
     }
 
-    selector.hidden = false;
-    identifier.hidden = true;
-    identifier.innerHTML = "";
+    const activeLegion =
+        Number.isFinite(selectedLegion) ? selectedLegion : 1;
+
+    context.innerHTML = `
+        <label for="legion-select">
+            Legion
+        </label>
+
+        <select id="legion-select">
+            <option value="1" ${activeLegion === 1 ? "selected" : ""}>
+                Legion 1
+            </option>
+            <option value="2" ${activeLegion === 2 ? "selected" : ""}>
+                Legion 2
+            </option>
+        </select>
+    `;
+
+    context
+        .querySelector("#legion-select")
+        .addEventListener("change", event => {
+
+            selectedLegion =
+                Number.parseInt(event.target.value, 10);
+
+            localStorage.setItem("legion", String(selectedLegion));
+
+            buildBattlefield();
+
+        });
 }
