@@ -9,18 +9,83 @@ import {
     getRosterPerson
 } from "../../data/commandData.js";
 
+const LEGION_OBJECTIVES_BY_PHASE = {
+    opening: {
+        1: [
+            "boiler",
+            "workshop-northwest",
+            "prototype-west",
+            "repair-west",
+            "workshop-southwest",
+            "repair-south",
+            "transit"
+        ],
+        2: [
+            "boiler",
+            "repair-north",
+            "workshop-northeast",
+            "prototype-east",
+            "repair-east",
+            "workshop-southeast",
+            "transit"
+        ]
+    },
+    mid: {
+        1: [
+            "boiler",
+            "workshop-northwest",
+            "prototype-west",
+            "repair-west",
+            "workshop-southwest",
+            "repair-south",
+            "mercenary",
+            "munitions",
+            "transit"
+        ],
+        2: [
+            "boiler",
+            "repair-north",
+            "workshop-northeast",
+            "prototype-east",
+            "repair-east",
+            "workshop-southeast",
+            "mercenary",
+            "munitions",
+            "transit"
+        ]
+    },
+    final: {
+        1: [
+            "prototype-west",
+            "workshop-southwest",
+            "repair-west",
+            "repair-south",
+            "imperial",
+            "transit"
+        ],
+        2: [
+            "prototype-east",
+            "workshop-southeast",
+            "repair-east",
+            "repair-north",
+            "imperial",
+            "transit"
+        ]
+    }
+};
+
 export function getAssignments(chiefId, phase) {
 
     if (!chiefId) return [];
 
     const results = [];
 
-    const combatantAssignment =
-        getCombatantAssignment(chiefId);
+    const combatantAssignments =
+        getCombatantAssignments(chiefId, phase);
 
-    if (combatantAssignment) {
+    if (combatantAssignments.length > 0) {
 
-        results.push(combatantAssignment);
+        results.push(...combatantAssignments);
 
     }
 
@@ -59,32 +124,79 @@ export function getAssignmentForObjective(chiefId, phase, objectiveId) {
 
 }
 
-export function getCombatantAssignmentsForObjective(objectiveId) {
+export function getCombatantAssignmentsForObjective(objectiveId, phase) {
     return getRosterPeople()
         .filter(person => person.source === "combatants")
         .map(combatant => ({
             combatant,
-            assignment: getCombatantAssignment(combatant.id)
+            assignments: getCombatantAssignments(combatant.id, phase)
         }))
-        .filter(item => item.assignment?.objectiveId === objectiveId);
+        .flatMap(item =>
+            item.assignments
+                .filter(assignment =>
+                    assignment.objectiveId === objectiveId
+                )
+                .map(assignment => ({
+                    combatant: item.combatant,
+                    assignment
+                }))
+        );
 }
 
-function getCombatantAssignment(chiefId) {
+function getCombatantAssignments(chiefId, phase) {
     const combatant =
         getRosterPerson(chiefId);
 
-    if (!combatant || combatant.source !== "combatants") return null;
+    if (!combatant || combatant.source !== "combatants") return [];
 
     const assignment =
         combatant.assignment?.trim();
 
-    if (!assignment || normalizeValue(assignment) === "no engagement") return null;
+    if (!assignment || normalizeValue(assignment) === "no engagement") return [];
 
-    return {
+    const legion =
+        getLegionFromAssignment(assignment);
+
+    if (legion) {
+
+        return getLegionObjectiveIds(legion, phase)
+            .map(objectiveId => ({
+                objectiveId,
+                assignment,
+                combatant
+            }));
+
+    }
+
+    return [{
         objectiveId: getObjectiveIdFromAssignment(assignment),
         assignment,
         combatant
-    };
+    }];
+}
+
+function getLegionObjectiveIds(legion, phase) {
+    if (phase) {
+        return LEGION_OBJECTIVES_BY_PHASE[phase]?.[legion] ?? [];
+    }
+
+    return [
+        ...new Set(
+            Object.values(LEGION_OBJECTIVES_BY_PHASE)
+                .flatMap(phaseAssignments =>
+                    phaseAssignments[legion] ?? []
+                )
+        )
+    ];
+}
+
+function getLegionFromAssignment(assignment) {
+    const normalized =
+        normalizeValue(assignment);
+
+    if (normalized === "legion 1") return 1;
+    if (normalized === "legion 2") return 2;
+    return null;
 }
 
 function getObjectiveIdFromAssignment(assignment) {

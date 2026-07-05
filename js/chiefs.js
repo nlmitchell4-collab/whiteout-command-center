@@ -20,25 +20,6 @@ export function initializeChiefSelector() {
 
     if (!input || !datalist) return;
 
-    datalist.innerHTML = "";
-
-    getRosterPeople()
-        .slice()
-        .sort((a,b)=>
-            a.displayName.localeCompare(b.displayName)
-        )
-        .forEach(chief=>{
-
-            const option =
-                document.createElement("option");
-
-            option.value =
-                chief.displayName;
-
-            datalist.appendChild(option);
-
-        });
-
     const saved =
         localStorage.getItem("chief");
 
@@ -58,6 +39,33 @@ export function initializeChiefSelector() {
     }
 
     syncLegionControls();
+
+    input.addEventListener("focus", () => {
+
+        renderChiefResults(input.value);
+
+    });
+
+    input.addEventListener("input", () => {
+
+        renderChiefResults(input.value);
+
+        const exactChief =
+            getRosterPeople().find(c =>
+                c.displayName.toLowerCase() ===
+                input.value.toLowerCase()
+            );
+
+        if (!exactChief) {
+
+            selectedChief = null;
+            localStorage.removeItem("chief");
+            syncLegionControls();
+            buildBattlefield();
+
+        }
+
+    });
 
     input.addEventListener("change",()=>{
 
@@ -91,6 +99,23 @@ export function initializeChiefSelector() {
         syncLegionControls();
 
         buildBattlefield();
+
+        hideChiefResults();
+    });
+
+    document.addEventListener("click", event => {
+
+        if (
+            event.target === input ||
+            datalist.contains(event.target)
+        ) {
+
+            return;
+
+        }
+
+        hideChiefResults();
+
     });
 
 }
@@ -162,4 +187,99 @@ function syncLegionControls() {
             buildBattlefield();
 
         });
+}
+
+function renderChiefResults(searchValue) {
+    const results =
+        document.getElementById("chief-list");
+
+    if (!results) return;
+
+    const normalizedSearch =
+        searchValue.trim().toLowerCase();
+
+    const people =
+        getRosterPeople()
+            .slice()
+            .sort((a, b) =>
+                a.displayName.localeCompare(b.displayName)
+            )
+            .filter(person =>
+                !normalizedSearch ||
+                person.displayName.toLowerCase().includes(normalizedSearch)
+            );
+
+    if (people.length === 0) {
+
+        results.innerHTML =
+            "<div class=\"chief-result-empty\">No chiefs found.</div>";
+        results.hidden = false;
+        return;
+
+    }
+
+    results.innerHTML =
+        people.map(person => `
+            <button
+                type="button"
+                class="chief-result"
+                data-chief-id="${person.id}">
+                <span>${escapeHtml(person.displayName)}</span>
+                <small>
+                    ${person.legion ? `Legion ${person.legion}` : ""}
+                    ${person.power ? ` ${person.power.toLocaleString()}` : ""}
+                </small>
+            </button>
+        `).join("");
+
+    results
+        .querySelectorAll("[data-chief-id]")
+        .forEach(button => {
+
+            button.addEventListener("click", () => {
+
+                selectChief(button.dataset.chiefId);
+
+            });
+
+        });
+
+    results.hidden = false;
+}
+
+function selectChief(chiefId) {
+    const chief =
+        getRosterPerson(chiefId);
+
+    const input =
+        document.getElementById("chief-search");
+
+    if (!chief || !input) return;
+
+    selectedChief = chief.id;
+    input.value = chief.displayName;
+
+    localStorage.setItem("chief", chief.id);
+
+    syncLegionControls();
+    hideChiefResults();
+    buildBattlefield();
+}
+
+function hideChiefResults() {
+    const results =
+        document.getElementById("chief-list");
+
+    if (results) {
+        results.hidden = true;
+    }
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }

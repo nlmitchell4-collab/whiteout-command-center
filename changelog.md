@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.1.4
+
+- Fixed Import review row alignment, including manually added combatants.
+- Replaced native Chief datalist with a searchable roster dropdown.
+- Expanded Legion 1 and Legion 2 combatant assignments into phase-aware Battlefield objective groups.
+
 ## v1.1.3
 
 - Added Import page support for loading current combatants into the review editor.

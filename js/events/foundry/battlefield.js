@@ -233,7 +233,7 @@ function showObjective(objective) {
         );
 
     const objectiveAssignments =
-        getCombatantAssignmentsForObjective(objective.id);
+        getCombatantAssignmentsForObjective(objective.id, activePhase);
 
     panel.innerHTML = `
 

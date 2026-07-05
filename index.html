@@ -62,7 +62,7 @@
 
         <footer>
 
-            Version 1.1.3
+            Version 1.1.4
 
         </footer>
 
@@ -108,11 +108,14 @@
 
                     <input
                         id="chief-search"
-                        list="chief-list"
                         placeholder="Type your name..."
                         autocomplete="off">
 
-                    <datalist id="chief-list"></datalist>
+                    <div
+                        id="chief-list"
+                        class="chief-results"
+                        hidden>
+                    </div>
                 </div>
 
                 <div

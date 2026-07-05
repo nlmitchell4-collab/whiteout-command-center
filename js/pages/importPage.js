@@ -189,56 +189,62 @@ function renderImportResults(container, results) {
 }
 
 function renderCombatantReview(combatants = []) {
-    if (combatants.length === 0) {
-        return "<p>No combatants parsed.</p>";
-    }
-
     return `
         <div class="review-panel">
             <h3>Review Combatants</h3>
 
+            ${
+                combatants.length === 0
+                    ? "<p>No combatants loaded.</p>"
+                    : ""
+            }
+
             <div class="review-grid">
-                <div class="review-heading">Name</div>
-                <div class="review-heading">Power</div>
-                <div class="review-heading">Assignment</div>
-                <div class="review-heading">Status</div>
-                <div class="review-heading">Engagement</div>
-                <div class="review-heading"></div>
+                <div class="review-row review-header">
+                    <div class="review-heading">Name</div>
+                    <div class="review-heading">Power</div>
+                    <div class="review-heading">Assignment</div>
+                    <div class="review-heading">Status</div>
+                    <div class="review-heading">Engagement</div>
+                    <div class="review-heading"></div>
+                </div>
 
                 ${combatants.map((combatant, index) => `
-                    <input
-                        data-review-index="${index}"
-                        data-review-field="name"
-                        value="${escapeAttribute(combatant.name)}">
+                    <div class="review-row">
+                        <input
+                            data-review-index="${index}"
+                            data-review-field="name"
+                            value="${escapeAttribute(combatant.name)}">
 
-                    <input
-                        data-review-index="${index}"
-                        data-review-field="power"
-                        inputmode="numeric"
-                        value="${escapeAttribute(String(combatant.power ?? ""))}">
+                        <input
+                            data-review-index="${index}"
+                            data-review-field="power"
+                            inputmode="numeric"
+                            value="${escapeAttribute(String(combatant.power ?? ""))}">
 
-                    <div class="review-assignment-options">
-                        ${renderAssignmentOption(index, combatant, "Legion 1")}
-                        ${renderAssignmentOption(index, combatant, "Legion 2")}
-                        ${renderAssignmentOption(index, combatant, "No engagement")}
+                        <div class="review-assignment-options">
+                            ${renderAssignmentOption(index, combatant, "Legion 1")}
+                            ${renderAssignmentOption(index, combatant, "Legion 2")}
+                            ${renderAssignmentOption(index, combatant, "No engagement")}
+                        </div>
+
+                        <input
+                            data-review-index="${index}"
+                            data-review-field="status"
+                            value="${escapeAttribute(combatant.status ?? "")}">
+
+                        <input
+                            data-review-index="${index}"
+                            data-review-field="engagement"
+                            value="${escapeAttribute(combatant.engagement ?? "")}">
+
+                        <button
+                            type="button"
+                            class="remove-review-row"
+                            data-remove-review-index="${index}">
+                            Remove
+                        </button>
                     </div>
-
-                    <input
-                        data-review-index="${index}"
-                        data-review-field="status"
-                        value="${escapeAttribute(combatant.status ?? "")}">
-
-                    <input
-                        data-review-index="${index}"
-                        data-review-field="engagement"
-                        value="${escapeAttribute(combatant.engagement ?? "")}">
-
-                    <button
-                        type="button"
-                        class="remove-review-row"
-                        data-remove-review-index="${index}">
-                        Remove
-                    </button>
                 `).join("")}
             </div>
 

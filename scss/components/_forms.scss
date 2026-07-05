@@ -69,18 +69,22 @@ input[type="submit"] {
 
 .review-grid {
     display: grid;
+    gap: 8px;
+    margin: 16px 0;
+    overflow-x: auto;
+}
+
+.review-row {
+    display: grid;
     grid-template-columns:
         minmax(140px, 1.4fr)
         minmax(90px, .7fr)
-        minmax(80px, .6fr)
+        minmax(260px, 1.4fr)
         minmax(130px, 1fr)
         minmax(160px, 1.2fr)
-        minmax(130px, 1fr)
         auto;
     gap: 8px;
     align-items: center;
-    margin: 16px 0;
-    overflow-x: auto;
 }
 
 .review-heading {
@@ -89,7 +93,7 @@ input[type="submit"] {
     font-weight: 700;
 }
 
-.review-grid input {
+.review-row input {
     min-width: 0;
     padding: 8px 10px;
 }
@@ -129,11 +133,11 @@ input[type="submit"] {
 }
 
 @media (max-width: 900px) {
-    .review-grid {
+    .review-row {
         grid-template-columns: 1fr;
     }
 
-    .review-heading {
+    .review-header {
         display: none;
     }
 }
