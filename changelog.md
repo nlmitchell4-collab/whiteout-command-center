@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.2.9
+
+- Updated GitHub Actions checkout and setup-node actions to v5 to avoid Node.js 20 runtime deprecation warnings.
+
 ## v1.2.8
 
 - Switched automatic Firebase Hosting deploys from the legacy hosting action to the Firebase CLI.
