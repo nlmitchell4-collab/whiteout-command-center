@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.2.11
+
+- Fixed shell quoting in the GitHub Actions Firebase service account file write step.
+
 ## v1.2.10
 
 - Added GitHub Actions secret validation before production builds.
