@@ -1,6 +1,6 @@
 // =========================================
 // Foundry Objectives
-// Version 0.1.11
+// Version 0.1.12
 // =========================================
 
 export const foundryObjectives = [
@@ -21,14 +21,14 @@ export const foundryObjectives = [
             why: "Building capture speed buff."
         },
         mid: {
-            priority: "High",
+            priority: "Critical",
             strategy: "Maintain control.",
-            why: "Still valuable throughout the match."
+            why: "Critical Phase 2 control objective."
         },
         final: {
-            priority: "Medium",
-            strategy: "Defend only if nearby.",
-            why: "Imperial takes priority."
+            priority: "Critical",
+            strategy: "Maintain control.",
+            why: "Critical Phase 3 control objective."
         }
     }
 },
@@ -49,14 +49,14 @@ export const foundryObjectives = [
             why:"Extra points."
         },
         mid:{
-            priority:"Medium",
-            strategy:"Maintain if uncontested.",
-            why:"Secondary objective."
+            priority:"Low",
+            strategy:"Rotate away unless needed.",
+            why:"Lower Phase 2 priority."
         },
         final:{
-            priority:"Low",
-            strategy:"Abandon if needed.",
-            why:"Imperial comes first."
+            priority:"Medium",
+            strategy:"Hold as a secondary objective.",
+            why:"Medium Phase 3 support value."
         }
     }
 },
@@ -68,18 +68,18 @@ export const foundryObjectives = [
     x:20,
     y:15,
 
-    unlockPhase:"opening",
+    unlockPhase:"final",
 
     phases:{
         opening:{
-            priority:"High",
-            strategy:"Capture early.",
-            why:"Combat buffs."
+            priority:"Low",
+            strategy:"Locked.",
+            why:"Unlocks in Phase 3."
         },
         mid:{
-            priority:"High",
-            strategy:"Maintain control.",
-            why:"Supports Prototype."
+            priority:"Low",
+            strategy:"Locked.",
+            why:"Unlocks in Phase 3."
         },
         final:{
             priority:"Medium",
@@ -105,14 +105,14 @@ export const foundryObjectives = [
             why:"Unavailable."
         },
         mid:{
-            priority:"High",
+            priority:"Critical",
             strategy:"Capture immediately.",
-            why:"High point value."
+            why:"Critical Phase 2 objective."
         },
         final:{
-            priority:"Medium",
-            strategy:"Hold if uncontested.",
-            why:"Support objective."
+            priority:"High",
+            strategy:"Maintain control.",
+            why:"High Phase 3 objective."
         }
     }
 },
@@ -124,18 +124,18 @@ export const foundryObjectives = [
     x:70,
     y:20,
 
-    unlockPhase:"opening",
+    unlockPhase:"final",
 
     phases:{
         opening:{
-            priority:"High",
-            strategy:"Capture early.",
-            why:"Combat buffs."
+            priority:"Low",
+            strategy:"Locked.",
+            why:"Unlocks in Phase 3."
         },
         mid:{
-            priority:"High",
-            strategy:"Maintain control.",
-            why:"Supports Prototype."
+            priority:"Low",
+            strategy:"Locked.",
+            why:"Unlocks in Phase 3."
         },
         final:{
             priority:"Medium",
@@ -156,19 +156,19 @@ export const foundryObjectives = [
 
     phases:{
         opening:{
-            priority:"Critical",
+            priority:"High",
             strategy:"Capture immediately.",
-            why:"Major scoring objective."
+            why:"High Phase 1 objective."
         },
         mid:{
-            priority:"Critical",
-            strategy:"Hold at all costs.",
-            why:"Excellent point generation."
+            priority:"High",
+            strategy:"Maintain control.",
+            why:"High Phase 2 objective."
         },
         final:{
-            priority:"Critical",
-            strategy:"Never abandon unless ordered.",
-            why:"Still one of the highest priorities."
+            priority:"Low",
+            strategy:"Rotate away unless specifically ordered.",
+            why:"Lower Phase 3 priority."
         }
     }
 },
@@ -189,26 +189,26 @@ export const foundryObjectives = [
             why:"Additional points."
         },
         mid:{
-            priority:"Medium",
-            strategy:"Maintain if uncontested.",
-            why:"Useful support."
+            priority:"Low",
+            strategy:"Rotate away unless needed.",
+            why:"Lower Phase 2 priority."
         },
         final:{
-            priority:"Low",
-            strategy:"Ignore if needed.",
-            why:"Imperial first."
+            priority:"Medium",
+            strategy:"Hold as a secondary objective.",
+            why:"Medium Phase 3 support value."
         }
     }
 },
 
 {
     id:"imperial",
-    name:"Imperial Institute",
+    name:"Imperial Foundry",
 
     x:45,
     y:35,
 
-    unlockPhase:"final",
+    unlockPhase:"mid",
 
     phases:{
         opening:{
@@ -217,9 +217,9 @@ export const foundryObjectives = [
             why:"Unavailable."
         },
         mid:{
-            priority:"Low",
-            strategy:"Prepare rotation.",
-            why:"Unlocks in Final."
+            priority:"High",
+            strategy:"Capture and contest.",
+            why:"High Phase 2 objective."
         },
         final:{
             priority:"Critical",
@@ -245,14 +245,14 @@ export const foundryObjectives = [
             why:"Additional points."
         },
         mid:{
-            priority:"Medium",
-            strategy:"Maintain if uncontested.",
-            why:"Useful support."
+            priority:"Low",
+            strategy:"Rotate away unless needed.",
+            why:"Lower Phase 2 priority."
         },
         final:{
-            priority:"Low",
-            strategy:"Ignore if needed.",
-            why:"Imperial first."
+            priority:"Medium",
+            strategy:"Hold as a secondary objective.",
+            why:"Medium Phase 3 support value."
         }
     }
 },
@@ -268,19 +268,19 @@ export const foundryObjectives = [
 
     phases:{
         opening:{
-            priority:"Critical",
+            priority:"High",
             strategy:"Capture immediately.",
-            why:"Major scoring objective."
+            why:"High Phase 1 objective."
         },
         mid:{
-            priority:"Critical",
-            strategy:"Hold at all costs.",
-            why:"Excellent point generation."
+            priority:"High",
+            strategy:"Maintain control.",
+            why:"High Phase 2 objective."
         },
         final:{
-            priority:"Critical",
-            strategy:"Never abandon unless ordered.",
-            why:"Still one of the highest priorities."
+            priority:"Low",
+            strategy:"Rotate away unless specifically ordered.",
+            why:"Lower Phase 3 priority."
         }
     }
 },
@@ -292,18 +292,18 @@ export const foundryObjectives = [
     x:26,
     y:55,
 
-    unlockPhase:"opening",
+    unlockPhase:"final",
 
     phases:{
         opening:{
-            priority:"High",
-            strategy:"Capture early.",
-            why:"Combat buffs."
+            priority:"Low",
+            strategy:"Locked.",
+            why:"Unlocks in Phase 3."
         },
         mid:{
-            priority:"High",
-            strategy:"Maintain control.",
-            why:"Supports Transit."
+            priority:"Low",
+            strategy:"Locked.",
+            why:"Unlocks in Phase 3."
         },
         final:{
             priority:"Medium",
@@ -320,18 +320,18 @@ export const foundryObjectives = [
     x:61,
     y:60,
 
-    unlockPhase:"opening",
+    unlockPhase:"final",
 
     phases:{
         opening:{
-            priority:"High",
-            strategy:"Capture early.",
-            why:"Combat buffs."
+            priority:"Low",
+            strategy:"Locked.",
+            why:"Unlocks in Phase 3."
         },
         mid:{
-            priority:"High",
-            strategy:"Maintain control.",
-            why:"Supports Transit."
+            priority:"Low",
+            strategy:"Locked.",
+            why:"Unlocks in Phase 3."
         },
         final:{
             priority:"Medium",
@@ -364,7 +364,7 @@ export const foundryObjectives = [
         final:{
             priority:"High",
             strategy:"Maintain control.",
-            why:"Strong late-game buff."
+            why:"High Phase 3 objective."
         }
     }
 },
@@ -385,14 +385,14 @@ export const foundryObjectives = [
             why:"Additional points."
         },
         mid:{
-            priority:"Medium",
-            strategy:"Maintain if uncontested.",
-            why:"Useful support."
+            priority:"Low",
+            strategy:"Rotate away unless needed.",
+            why:"Lower Phase 2 priority."
         },
         final:{
-            priority:"Low",
-            strategy:"Ignore if needed.",
-            why:"Imperial first."
+            priority:"Medium",
+            strategy:"Hold as a secondary objective.",
+            why:"Medium Phase 3 support value."
         }
     }
 },
@@ -413,14 +413,14 @@ export const foundryObjectives = [
             why:"Major mobility advantage."
         },
         mid:{
-            priority:"Critical",
-            strategy:"Maintain control.",
-            why:"Fast rotations."
+            priority:"Medium",
+            strategy:"Hold if practical.",
+            why:"Medium Phase 2 rotation value."
         },
         final:{
-            priority:"High",
-            strategy:"Support Imperial.",
-            why:"Quick reinforcement."
+            priority:"Low",
+            strategy:"Use only when needed for rotations.",
+            why:"Lower Phase 3 priority."
         }
     }
 }

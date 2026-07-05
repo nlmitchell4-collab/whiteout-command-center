@@ -3,6 +3,7 @@ import {
     getCombatants,
     saveCommandDataEntry
 } from "../data/commandData.js";
+import { buildBattlefield } from "../events/foundry/battlefield.js";
 
 let reviewCombatants = [];
 
@@ -351,7 +352,9 @@ function bindReviewEvents(container) {
                 reviewCombatants.map(normalizeReviewCombatant)
             );
 
-            status.textContent = "Saved.";
+            buildBattlefield();
+
+            status.textContent = "Saved. Battlefield assignments refreshed.";
 
         }
         catch (error) {

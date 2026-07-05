@@ -13,68 +13,78 @@ const LEGION_OBJECTIVES_BY_PHASE = {
     opening: {
         1: [
             "boiler",
-            "workshop-northwest",
             "prototype-west",
             "repair-west",
-            "workshop-southwest",
             "repair-south",
             "transit"
         ],
         2: [
             "boiler",
             "repair-north",
-            "workshop-northeast",
             "prototype-east",
             "repair-east",
-            "workshop-southeast",
             "transit"
         ]
     },
     mid: {
         1: [
             "boiler",
-            "workshop-northwest",
             "prototype-west",
             "repair-west",
-            "workshop-southwest",
             "repair-south",
             "mercenary",
             "munitions",
+            "imperial",
             "transit"
         ],
         2: [
             "boiler",
             "repair-north",
-            "workshop-northeast",
             "prototype-east",
             "repair-east",
-            "workshop-southeast",
             "mercenary",
             "munitions",
+            "imperial",
             "transit"
         ]
     },
     final: {
         1: [
-            "prototype-west",
+            "boiler",
+            "imperial",
+            "munitions",
+            "mercenary",
+            "workshop-northwest",
             "workshop-southwest",
             "repair-west",
             "repair-south",
-            "imperial",
             "transit"
         ],
         2: [
-            "prototype-east",
+            "boiler",
+            "imperial",
+            "munitions",
+            "mercenary",
+            "workshop-northeast",
             "workshop-southeast",
             "repair-east",
             "repair-north",
-            "imperial",
             "transit"
         ]
     }
 };
 
 const ASSIGNMENT_COUNT = 3;
+const PRIORITY_WEIGHT = 100;
+const PRIMARY_SECONDARY_DISTANCE_WEIGHT = 2.5;
+const SECONDARY_TERTIARY_DISTANCE_WEIGHT = 1.5;
+const LOW_POWER_PERCENTILE = 0.1;
+const LOW_POWER_SAFE_ZONE_WEIGHT = 2;
+
+const SAFE_ZONE = {
+    x: 100,
+    y: 50
+};
 
 const PRIORITY_SCORES = {
     critical: 4,
@@ -251,10 +261,15 @@ function getPrimaryObjectiveIdsForCombatant(combatant, legion, phase) {
     const clusters =
         getObjectiveClusters(candidates, phaseKey);
 
-    const clusterIndex =
-        getCombatantLegionRank(combatant, legion) % clusters.length;
+    const rankedClusters =
+        isLowPowerCombatant(combatant, legion)
+            ? getSafeZoneRankedClusters(clusters)
+            : clusters;
 
-    return clusters[clusterIndex]
+    const clusterIndex =
+        getCombatantLegionRank(combatant, legion) % rankedClusters.length;
+
+    return rankedClusters[clusterIndex]
         .objectives
         .map(objective => objective.id);
 }
@@ -278,11 +293,11 @@ function getObjectiveClusters(objectives, phase) {
         for (let second = first + 1; second < objectives.length - 1; second += 1) {
             for (let third = second + 1; third < objectives.length; third += 1) {
 
-                const clusterObjectives = [
+                const clusterObjectives = orderClusterObjectives([
                     objectives[first],
                     objectives[second],
                     objectives[third]
-                ];
+                ], phase);
 
                 clusters.push({
                     objectives: clusterObjectives,
@@ -305,11 +320,62 @@ function getClusterScore(objectives, phase) {
         );
 
     const proximityPenalty =
-        getPairDistance(objectives[0], objectives[1]) +
-        getPairDistance(objectives[0], objectives[2]) +
-        getPairDistance(objectives[1], objectives[2]);
+        getClusterProximityPenalty(objectives);
 
-    return (priorityScore * 100) - proximityPenalty;
+    return (priorityScore * PRIORITY_WEIGHT) - proximityPenalty;
+}
+
+function orderClusterObjectives(objectives, phase) {
+    return [...objectives]
+        .sort((first, second) =>
+            getObjectivePriorityScore(second, phase) -
+            getObjectivePriorityScore(first, phase) ||
+            first.name.localeCompare(second.name)
+        );
+}
+
+function getClusterProximityPenalty(objectives) {
+    const [
+        primary,
+        secondary,
+        tertiary
+    ] = objectives;
+
+    return (
+        getPairDistance(primary, secondary) *
+            PRIMARY_SECONDARY_DISTANCE_WEIGHT +
+        getPairDistance(primary, tertiary) *
+            PRIMARY_SECONDARY_DISTANCE_WEIGHT +
+        getPairDistance(secondary, tertiary) *
+            SECONDARY_TERTIARY_DISTANCE_WEIGHT
+    );
+}
+
+function getSafeZoneRankedClusters(clusters) {
+    return [...clusters]
+        .sort((first, second) =>
+            getLowPowerClusterScore(second) -
+            getLowPowerClusterScore(first)
+        );
+}
+
+function getLowPowerClusterScore(cluster) {
+    return cluster.score -
+        (
+            getClusterSafeZoneDistance(cluster.objectives) *
+            LOW_POWER_SAFE_ZONE_WEIGHT
+        );
+}
+
+function getClusterSafeZoneDistance(objectives) {
+    return objectives.reduce(
+        (total, objective) =>
+            total + Math.hypot(
+                objective.x - SAFE_ZONE.x,
+                objective.y - SAFE_ZONE.y
+            ),
+        0
+    );
 }
 
 function getObjectivePriorityScore(objective, phase) {
@@ -328,21 +394,44 @@ function getPairDistance(first, second) {
 
 function getCombatantLegionRank(combatant, legion) {
     const legionCombatants =
-        getRosterPeople()
-            .filter(person =>
-                person.source === "combatants" &&
-                person.legion === legion &&
-                normalizeValue(person.assignment) !== "no engagement"
-            )
-            .sort((a, b) =>
-                (b.power ?? 0) - (a.power ?? 0) ||
-                a.displayName.localeCompare(b.displayName)
-            );
+        getRankedLegionCombatants(legion);
 
     return Math.max(
         0,
         legionCombatants.findIndex(person => person.id === combatant.id)
     );
+}
+
+function isLowPowerCombatant(combatant, legion) {
+    const legionCombatants =
+        getRankedLegionCombatants(legion);
+
+    const weakCombatantCount =
+        Math.max(
+            1,
+            Math.ceil(legionCombatants.length * LOW_POWER_PERCENTILE)
+        );
+
+    const combatantIndex =
+        legionCombatants.findIndex(person => person.id === combatant.id);
+
+    return (
+        combatantIndex >= 0 &&
+        combatantIndex >= legionCombatants.length - weakCombatantCount
+    );
+}
+
+function getRankedLegionCombatants(legion) {
+    return getRosterPeople()
+        .filter(person =>
+            person.source === "combatants" &&
+            person.legion === legion &&
+            normalizeValue(person.assignment) !== "no engagement"
+        )
+        .sort((a, b) =>
+            (b.power ?? 0) - (a.power ?? 0) ||
+            a.displayName.localeCompare(b.displayName)
+        );
 }
 
 function getObjectiveIdFromAssignment(assignment) {

@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.2.7
+
+- Refreshed battlefield assignments immediately after combatant saves.
+- Reset Foundry objective priorities by phase and moved Imperial Foundry to Phase 2 unlock.
+- Locked weapon workshops until Phase 3 and updated phase assignment candidate lists.
+- Weighted secondary and tertiary objectives more strongly by proximity, with bottom-10% combatants biased toward east-edge safe-zone objectives.
+
 ## v1.2.6
 
 - Added a GitHub Actions workflow to build and deploy Firebase Hosting on pushes to `master`.
