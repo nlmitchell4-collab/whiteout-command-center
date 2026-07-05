@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.2.13
+
+- Added Firebase service account PEM validation before Hosting deploy authentication.
+
 ## v1.2.12
 
 - Normalized Firebase service account private-key newlines before Hosting deploy authentication.

@@ -75,8 +75,20 @@ jobs:
           node -e '
           const fs = require("fs");
           const path = require("path");
+          const crypto = require("crypto");
           const credentials = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-          credentials.private_key = credentials.private_key.replace(/\\n/g, "\n");
+          if (!credentials.private_key) {
+            throw new Error("Firebase service account JSON is missing private_key.");
+          }
+          credentials.private_key = credentials.private_key
+            .replace(/\\\\n/g, "\n")
+            .replace(/\\n/g, "\n")
+            .replace(/\r\n/g, "\n")
+            .trim();
+          if (!credentials.private_key.includes("-----BEGIN PRIVATE KEY-----")) {
+            throw new Error("Firebase service account private_key is not a Google service account PEM key.");
+          }
+          crypto.createPrivateKey(credentials.private_key);
           fs.writeFileSync(
             path.join(process.env.RUNNER_TEMP, "firebase-service-account.json"),
             JSON.stringify(credentials)
