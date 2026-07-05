@@ -10,7 +10,7 @@ Command center for planning and reviewing Whiteout Survival Foundry assignments.
 - Review panel for correcting parsed or existing combatants before saving.
 - Assignment choices for Legion 1, Legion 2, or No engagement.
 - Searchable Battlefield combatant selector.
-- Legion assignment groups that light relevant Battlefield objectives.
+- Legion assignment engine that narrows each combatant to nearby high-priority objective clusters.
 - Firestore-first command data with local file fallback for testing.
 - Local build output in `dist/` for Firebase Hosting.
 
@@ -41,4 +41,4 @@ If Firebase values are blank, the app uses bundled local data files under `data/
 
 ## Version
 
-Current version: `1.1.4`
+Current version: `1.2.0`

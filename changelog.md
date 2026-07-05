@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.2.0
+
+- Enhanced the Foundry assignment engine to generate about three primary objectives per combatant per phase.
+- Scored objective clusters by building priority and map proximity.
+- Distributed primary clusters across same-legion combatants by power-ranked roster order.
+
 ## v1.1.4
 
 - Fixed Import review row alignment, including manually added combatants.

@@ -74,6 +74,15 @@ const LEGION_OBJECTIVES_BY_PHASE = {
     }
 };
 
+const ASSIGNMENT_COUNT = 3;
+
+const PRIORITY_SCORES = {
+    critical: 4,
+    high: 3,
+    medium: 2,
+    low: 1
+};
+
 export function getAssignments(chiefId, phase) {
 
     if (!chiefId) return [];
@@ -159,10 +168,10 @@ function getCombatantAssignments(chiefId, phase) {
 
     if (legion) {
 
-        return getLegionObjectiveIds(legion, phase)
-            .map(objectiveId => ({
+        return getPrimaryObjectiveIdsForCombatant(combatant, legion, phase)
+            .map((objectiveId, index) => ({
                 objectiveId,
-                assignment,
+                assignment: `${assignment} primary ${index + 1}`,
                 combatant
             }));
 
@@ -175,21 +184,6 @@ function getCombatantAssignments(chiefId, phase) {
     }];
 }
 
-function getLegionObjectiveIds(legion, phase) {
-    if (phase) {
-        return LEGION_OBJECTIVES_BY_PHASE[phase]?.[legion] ?? [];
-    }
-
-    return [
-        ...new Set(
-            Object.values(LEGION_OBJECTIVES_BY_PHASE)
-                .flatMap(phaseAssignments =>
-                    phaseAssignments[legion] ?? []
-                )
-        )
-    ];
-}
-
 function getLegionFromAssignment(assignment) {
     const normalized =
         normalizeValue(assignment);
@@ -197,6 +191,114 @@ function getLegionFromAssignment(assignment) {
     if (normalized === "legion 1") return 1;
     if (normalized === "legion 2") return 2;
     return null;
+}
+
+function getPrimaryObjectiveIdsForCombatant(combatant, legion, phase) {
+    const phaseKey =
+        phase ?? "opening";
+
+    const candidates =
+        getLegionObjectives(legion, phaseKey);
+
+    if (candidates.length <= ASSIGNMENT_COUNT) {
+        return candidates.map(objective => objective.id);
+    }
+
+    const clusters =
+        getObjectiveClusters(candidates, phaseKey);
+
+    const clusterIndex =
+        getCombatantLegionRank(combatant, legion) % clusters.length;
+
+    return clusters[clusterIndex]
+        .objectives
+        .map(objective => objective.id);
+}
+
+function getLegionObjectives(legion, phase) {
+    const objectiveIds =
+        LEGION_OBJECTIVES_BY_PHASE[phase]?.[legion] ?? [];
+
+    return objectiveIds
+        .map(objectiveId =>
+            getFoundryObjectives()
+                .find(objective => objective.id === objectiveId)
+        )
+        .filter(Boolean);
+}
+
+function getObjectiveClusters(objectives, phase) {
+    const clusters = [];
+
+    for (let first = 0; first < objectives.length - 2; first += 1) {
+        for (let second = first + 1; second < objectives.length - 1; second += 1) {
+            for (let third = second + 1; third < objectives.length; third += 1) {
+
+                const clusterObjectives = [
+                    objectives[first],
+                    objectives[second],
+                    objectives[third]
+                ];
+
+                clusters.push({
+                    objectives: clusterObjectives,
+                    score: getClusterScore(clusterObjectives, phase)
+                });
+
+            }
+        }
+    }
+
+    return clusters.sort((a, b) => b.score - a.score);
+}
+
+function getClusterScore(objectives, phase) {
+    const priorityScore =
+        objectives.reduce(
+            (total, objective) =>
+                total + getObjectivePriorityScore(objective, phase),
+            0
+        );
+
+    const proximityPenalty =
+        getPairDistance(objectives[0], objectives[1]) +
+        getPairDistance(objectives[0], objectives[2]) +
+        getPairDistance(objectives[1], objectives[2]);
+
+    return (priorityScore * 100) - proximityPenalty;
+}
+
+function getObjectivePriorityScore(objective, phase) {
+    const priority =
+        objective.phases[phase]?.priority?.toLowerCase() ?? "low";
+
+    return PRIORITY_SCORES[priority] ?? PRIORITY_SCORES.low;
+}
+
+function getPairDistance(first, second) {
+    return Math.hypot(
+        first.x - second.x,
+        first.y - second.y
+    );
+}
+
+function getCombatantLegionRank(combatant, legion) {
+    const legionCombatants =
+        getRosterPeople()
+            .filter(person =>
+                person.source === "combatants" &&
+                person.legion === legion &&
+                normalizeValue(person.assignment) !== "no engagement"
+            )
+            .sort((a, b) =>
+                (b.power ?? 0) - (a.power ?? 0) ||
+                a.displayName.localeCompare(b.displayName)
+            );
+
+    return Math.max(
+        0,
+        legionCombatants.findIndex(person => person.id === combatant.id)
+    );
 }
 
 function getObjectiveIdFromAssignment(assignment) {
