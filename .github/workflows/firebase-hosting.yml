@@ -23,6 +23,42 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Validate deployment secrets
+        shell: bash
+        run: |
+          missing=0
+
+          for name in \
+            VITE_ADMIN_PASSWORD \
+            VITE_FIREBASE_API_KEY \
+            VITE_FIREBASE_AUTH_DOMAIN \
+            VITE_FIREBASE_PROJECT_ID \
+            VITE_FIREBASE_STORAGE_BUCKET \
+            VITE_FIREBASE_MESSAGING_SENDER_ID \
+            VITE_FIREBASE_APP_ID \
+            FIREBASE_SERVICE_ACCOUNT_WOS_COMMAND_CENTER
+          do
+            if [ -z "${!name}" ]; then
+              echo "::error::$name is missing or empty."
+              missing=1
+            fi
+          done
+
+          if [ "$missing" -ne 0 ]; then
+            exit 1
+          fi
+
+          node -e "JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_WOS_COMMAND_CENTER); console.log('Firebase service account JSON is valid.');"
+        env:
+          VITE_ADMIN_PASSWORD: ${{ secrets.VITE_ADMIN_PASSWORD }}
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+          FIREBASE_SERVICE_ACCOUNT_WOS_COMMAND_CENTER: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_WOS_COMMAND_CENTER }}
+
       - name: Build
         run: npm run build
         env:
@@ -35,11 +71,13 @@ jobs:
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
 
       - name: Write Firebase service account
-        run: |
-          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase-service-account.json"
-          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/firebase-service-account.json" >> "$GITHUB_ENV"
+        run: node -e "require('fs').writeFileSync(`${process.env.RUNNER_TEMP}/firebase-service-account.json`, process.env.FIREBASE_SERVICE_ACCOUNT);"
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_WOS_COMMAND_CENTER }}
 
       - name: Deploy to Firebase Hosting
-        run: npx firebase-tools@latest deploy --only hosting --project wos-command-center --non-interactive
+        run: npx --yes firebase-tools@latest deploy --only hosting --project wos-command-center --non-interactive --debug
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-service-account.json
+          GOOGLE_CLOUD_PROJECT: wos-command-center
+          GCLOUD_PROJECT: wos-command-center

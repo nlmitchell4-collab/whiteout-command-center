@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.2.10
+
+- Added GitHub Actions secret validation before production builds.
+- Enabled Firebase CLI debug output for automatic Hosting deploy failures.
+- Passed Firebase service account credentials directly to the deploy step.
+
 ## v1.2.9
 
 - Updated GitHub Actions checkout and setup-node actions to v5 to avoid Node.js 20 runtime deprecation warnings.
