@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.2.3
+
+- Initialized navigation and the import UI before command data loading.
+- Added a command data load timeout/fallback so slow Firebase reads cannot leave deployed navigation inert.
+
 ## v1.2.2
 
 - Added non-secret Firebase configuration diagnostics that report missing environment variable names.
