@@ -27,6 +27,8 @@ const FIRESTORE_DOCUMENTS = {
     foundryObjectives: "foundryObjectives"
 };
 
+const FIRESTORE_TIMEOUT_MS = 8000;
+
 function isLocalRuntime() {
     const hostname =
         globalThis.location?.hostname;
@@ -48,6 +50,38 @@ function readDocumentPayload(snapshot, key) {
     }
 
     return data.value ?? data;
+}
+
+function withTimeout(promise, message) {
+    return Promise.race([
+        promise,
+        new Promise((_, reject) => {
+            setTimeout(
+                () => reject(new Error(message)),
+                FIRESTORE_TIMEOUT_MS
+            );
+        })
+    ]);
+}
+
+function isFirestoreOfflineError(error) {
+    return (
+        error?.code === "unavailable" ||
+        error?.message?.toLowerCase().includes("client is offline") ||
+        error?.message?.toLowerCase().includes("offline")
+    );
+}
+
+function getFirestoreSaveError(error) {
+    if (isFirestoreOfflineError(error)) {
+        return new Error(
+            "Combatants were not saved. Firestore is configured, but the app cannot reach Firebase from this browser. Check network access, Firestore setup, and Firebase Hosting env build settings."
+        );
+    }
+
+    return new Error(
+        `Combatants were not saved to Firebase. ${error.message}`
+    );
 }
 
 export async function loadCommandData() {
@@ -82,7 +116,10 @@ export async function loadCommandData() {
             Object.entries(FIRESTORE_DOCUMENTS).map(async ([key, documentId]) => [
                 key,
                 readDocumentPayload(
-                    await getDoc(doc(db, FIRESTORE_COLLECTION, documentId)),
+                    await withTimeout(
+                        getDoc(doc(db, FIRESTORE_COLLECTION, documentId)),
+                        `Timed out loading ${documentId} from Firebase.`
+                    ),
                     key
                 )
             ])
@@ -148,14 +185,26 @@ export async function saveCommandDataEntry(key, value) {
             ? { items: value }
             : { value };
 
-    await setDoc(
-        doc(db, FIRESTORE_COLLECTION, documentId),
-        {
-            ...payload,
-            updatedAt: serverTimestamp()
-        },
-        { merge: true }
-    );
+    try {
+
+        await withTimeout(
+            setDoc(
+                doc(db, FIRESTORE_COLLECTION, documentId),
+                {
+                    ...payload,
+                    updatedAt: serverTimestamp()
+                },
+                { merge: true }
+            ),
+            `Timed out saving ${documentId} to Firebase.`
+        );
+
+    }
+    catch (error) {
+
+        throw getFirestoreSaveError(error);
+
+    }
 
     commandData = {
         ...commandData,

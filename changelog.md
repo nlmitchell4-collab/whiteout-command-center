@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.2.4
+
+- Added Firestore load/save timeouts for command data.
+- Improved combatant save errors when Firebase is configured but unreachable or offline.
+
 ## v1.2.3
 
 - Initialized navigation and the import UI before command data loading.
