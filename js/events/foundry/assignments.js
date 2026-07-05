@@ -134,8 +134,19 @@ export function getAssignmentForObjective(chiefId, phase, objectiveId) {
 }
 
 export function getCombatantAssignmentsForObjective(objectiveId, phase) {
+    return getCombatantAssignmentsForObjectiveByLegion(objectiveId, phase);
+}
+
+export function getCombatantAssignmentsForObjectiveByLegion(
+    objectiveId,
+    phase,
+    legion = null
+) {
     return getRosterPeople()
-        .filter(person => person.source === "combatants")
+        .filter(person =>
+            person.source === "combatants" &&
+            (!legion || person.legion === legion)
+        )
         .map(combatant => ({
             combatant,
             assignments: getCombatantAssignments(combatant.id, phase)
@@ -150,6 +161,39 @@ export function getCombatantAssignmentsForObjective(objectiveId, phase) {
                     assignment
                 }))
         );
+}
+
+export function getLegionAssignments(legion, phase) {
+    const assignmentsByObjective = new Map();
+
+    getRosterPeople()
+        .filter(person =>
+            person.source === "combatants" &&
+            person.legion === legion
+        )
+        .forEach(combatant => {
+            getCombatantAssignments(combatant.id, phase)
+                .forEach(assignment => {
+                    if (!assignment.objectiveId) return;
+
+                    if (!assignmentsByObjective.has(assignment.objectiveId)) {
+                        assignmentsByObjective.set(assignment.objectiveId, []);
+                    }
+
+                    assignmentsByObjective
+                        .get(assignment.objectiveId)
+                        .push({
+                            combatant,
+                            assignment
+                        });
+                });
+        });
+
+    return [...assignmentsByObjective.entries()]
+        .map(([objectiveId, assignments]) => ({
+            objectiveId,
+            assignments
+        }));
 }
 
 function getCombatantAssignments(chiefId, phase) {

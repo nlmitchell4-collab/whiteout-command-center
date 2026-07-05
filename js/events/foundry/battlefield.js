@@ -6,11 +6,15 @@ let activePhase = "opening";
 let selectedObjective = null;
 
 import { getFoundryObjectives } from "../../data/commandData.js";
-import { getSelectedChief } from "../../chiefs.js";
+import {
+    getActiveLegion,
+    getSelectedChief
+} from "../../chiefs.js";
 import {
     getAssignmentForObjective,
     getAssignments,
-    getCombatantAssignmentsForObjective
+    getCombatantAssignmentsForObjectiveByLegion,
+    getLegionAssignments
 } from "./assignments.js";
 import { renderMyObjectives } from "./myObjectives.js";
 import { renderSummary } from "./summary.js";
@@ -74,6 +78,12 @@ export function buildBattlefield() {
     const assignments =
         getAssignments(chief, activePhase);
 
+    const activeLegion =
+        getActiveLegion();
+
+    const legionAssignments =
+        chief ? [] : getLegionAssignments(activeLegion, activePhase);
+
     getFoundryObjectives().forEach(objective => {
 
         const tile =
@@ -124,6 +134,22 @@ tile.dataset.id = objective.id;
 
             const assigned =
                 assignments.some(a =>
+                    a.objectiveId === objective.id
+                );
+
+            tile.classList.add(
+
+                assigned
+                    ? "assigned"
+                    : "unassigned"
+
+            );
+
+        }
+        else {
+
+            const assigned =
+                legionAssignments.some(a =>
                     a.objectiveId === objective.id
                 );
 
@@ -233,7 +259,11 @@ function showObjective(objective) {
         );
 
     const objectiveAssignments =
-        getCombatantAssignmentsForObjective(objective.id, activePhase);
+        getCombatantAssignmentsForObjectiveByLegion(
+            objective.id,
+            activePhase,
+            getActiveLegion()
+        );
 
     panel.innerHTML = `
 

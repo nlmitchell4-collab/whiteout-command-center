@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.2.5
+
+- Filtered commander battlefield assignment details by active legion.
+- Lit objective tiles and objective cards from the active legion when no chief is selected.
+
 ## v1.2.4
 
 - Added Firestore load/save timeouts for command data.

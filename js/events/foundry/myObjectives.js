@@ -3,8 +3,14 @@
 // =========================================
 
 import { getFoundryObjectives } from "../../data/commandData.js";
-import { getSelectedChief } from "../../chiefs.js";
-import { getAssignments } from "./assignments.js";
+import {
+    getActiveLegion,
+    getSelectedChief
+} from "../../chiefs.js";
+import {
+    getAssignments,
+    getLegionAssignments
+} from "./assignments.js";
 import {
     buildBattlefield,
     getActivePhase,
@@ -23,10 +29,14 @@ export function renderMyObjectives() {
 
     container.innerHTML = "";
 
-    if (!chief) return;
-
     const assignments =
-        getAssignments(chief, getActivePhase());
+        chief
+            ? getAssignments(chief, getActivePhase())
+            : getLegionAssignments(getActiveLegion(), getActivePhase())
+                .map(item => ({
+                    objectiveId: item.objectiveId,
+                    assignment: `${item.assignments.length} assigned combatants`
+                }));
 
     if (assignments.length === 0) {
 
