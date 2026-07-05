@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.2.8
+
+- Switched automatic Firebase Hosting deploys from the legacy hosting action to the Firebase CLI.
+- Updated the deploy workflow to run on Node.js 24.
+
 ## v1.2.7
 
 - Refreshed battlefield assignments immediately after combatant saves.
