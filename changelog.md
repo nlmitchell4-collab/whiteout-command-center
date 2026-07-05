@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.2.6
+
+- Added a GitHub Actions workflow to build and deploy Firebase Hosting on pushes to `master`.
+- Documented required GitHub Secrets for automatic Firebase deploys.
+
 ## v1.2.5
 
 - Filtered commander battlefield assignment details by active legion.

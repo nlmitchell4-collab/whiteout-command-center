@@ -33,6 +33,22 @@ npm.cmd run dev
 npm.cmd run build
 ```
 
+## Automatic Deployment
+
+Commits pushed to `master` run the GitHub Actions workflow in `.github/workflows/firebase-hosting.yml`.
+The workflow installs dependencies, builds the Vite app, and deploys `dist/` to Firebase Hosting.
+
+Add these GitHub repository secrets before relying on automatic deploys:
+
+- `FIREBASE_SERVICE_ACCOUNT_WOS_COMMAND_CENTER`
+- `VITE_ADMIN_PASSWORD`
+- `VITE_FIREBASE_API_KEY`
+- `VITE_FIREBASE_AUTH_DOMAIN`
+- `VITE_FIREBASE_PROJECT_ID`
+- `VITE_FIREBASE_STORAGE_BUCKET`
+- `VITE_FIREBASE_MESSAGING_SENDER_ID`
+- `VITE_FIREBASE_APP_ID`
+
 ## Environment
 
 Copy `.env.example` to `.env` and fill in local values.
@@ -46,4 +62,4 @@ After changing `.env`, restart the Vite dev server. For production, rebuild and 
 
 ## Version
 
-Current version: `1.2.5`
+Current version: `1.2.6`
