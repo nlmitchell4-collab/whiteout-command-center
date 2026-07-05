@@ -3,7 +3,11 @@ import { combatants as defaultCombatants } from "../../data/combatants.js";
 import { foundryAssignments as defaultFoundryAssignments } from "../../data/foundry/assignments.js";
 import { foundryConfig as defaultFoundryConfig } from "../../data/foundry/config.js";
 import { foundryObjectives as defaultFoundryObjectives } from "../../data/foundry/objectives.js";
-import { getFirebaseDb, isFirebaseConfigured } from "../common/firebase.js";
+import {
+    getFirebaseConfigStatus,
+    getFirebaseDb,
+    isFirebaseConfigured
+} from "../common/firebase.js";
 
 let commandData = {
     chiefs: defaultChiefs,
@@ -50,8 +54,12 @@ export async function loadCommandData() {
     if (!isFirebaseConfigured()) {
 
         if (!isLocalRuntime()) {
+            const status =
+                getFirebaseConfigStatus();
+
             console.warn(
-                "Firebase is not configured. Using bundled local data fallback."
+                "Firebase is not configured. Using bundled local data fallback.",
+                status.missingKeys
             );
         }
 
@@ -102,8 +110,11 @@ export async function saveCommandDataEntry(key, value) {
     if (!isFirebaseConfigured()) {
 
         if (!isLocalRuntime()) {
+            const status =
+                getFirebaseConfigStatus();
+
             throw new Error(
-                "Firebase is not configured. Production combatant changes cannot be saved."
+                `Firebase is not configured. Missing: ${status.missingKeys.join(", ")}. Production combatant changes cannot be saved.`
             );
         }
 

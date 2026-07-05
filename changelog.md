@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.2.2
+
+- Added non-secret Firebase configuration diagnostics that report missing environment variable names.
+- Documented that Vite requires a dev-server restart or production rebuild after `.env` changes.
+
 ## v1.2.1
 
 - Clarified production combatant persistence through Firestore.

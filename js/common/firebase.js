@@ -7,15 +7,30 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
+const REQUIRED_CONFIG_KEYS = {
+    VITE_FIREBASE_API_KEY: firebaseConfig.apiKey,
+    VITE_FIREBASE_PROJECT_ID: firebaseConfig.projectId,
+    VITE_FIREBASE_APP_ID: firebaseConfig.appId
+};
+
 let firebaseApp = null;
 let firestoreDb = null;
 
 export function isFirebaseConfigured() {
-    return Boolean(
-        firebaseConfig.apiKey &&
-        firebaseConfig.projectId &&
-        firebaseConfig.appId
-    );
+    return getMissingFirebaseConfigKeys().length === 0;
+}
+
+export function getMissingFirebaseConfigKeys() {
+    return Object.entries(REQUIRED_CONFIG_KEYS)
+        .filter(([, value]) => !value)
+        .map(([key]) => key);
+}
+
+export function getFirebaseConfigStatus() {
+    return {
+        configured: isFirebaseConfigured(),
+        missingKeys: getMissingFirebaseConfigKeys()
+    };
 }
 
 export async function getFirebaseApp() {

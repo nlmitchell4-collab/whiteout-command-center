@@ -42,6 +42,8 @@ Deploying the frontend does not overwrite that Firestore document.
 
 If Firebase values are blank during local development, the app uses bundled local data files under `data/`. Local saves without Firebase are in-memory only and are intended for testing.
 
+After changing `.env`, restart the Vite dev server. For production, rebuild and redeploy because Vite injects `VITE_` environment variables at build time.
+
 ## Version
 
-Current version: `1.2.1`
+Current version: `1.2.2`
