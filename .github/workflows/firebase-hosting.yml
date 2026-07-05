@@ -71,7 +71,17 @@ jobs:
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
 
       - name: Write Firebase service account
-        run: node -e 'const fs = require("fs"); const path = require("path"); fs.writeFileSync(path.join(process.env.RUNNER_TEMP, "firebase-service-account.json"), process.env.FIREBASE_SERVICE_ACCOUNT);'
+        run: |
+          node -e '
+          const fs = require("fs");
+          const path = require("path");
+          const credentials = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+          credentials.private_key = credentials.private_key.replace(/\\n/g, "\n");
+          fs.writeFileSync(
+            path.join(process.env.RUNNER_TEMP, "firebase-service-account.json"),
+            JSON.stringify(credentials)
+          );
+          '
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_WOS_COMMAND_CENTER }}
 

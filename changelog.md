@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.2.12
+
+- Normalized Firebase service account private-key newlines before Hosting deploy authentication.
+
 ## v1.2.11
 
 - Fixed shell quoting in the GitHub Actions Firebase service account file write step.
