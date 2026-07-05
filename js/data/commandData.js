@@ -23,6 +23,17 @@ const FIRESTORE_DOCUMENTS = {
     foundryObjectives: "foundryObjectives"
 };
 
+function isLocalRuntime() {
+    const hostname =
+        globalThis.location?.hostname;
+
+    return (
+        hostname === "localhost" ||
+        hostname === "127.0.0.1" ||
+        hostname === ""
+    );
+}
+
 function readDocumentPayload(snapshot, key) {
     if (!snapshot.exists()) return commandData[key];
 
@@ -36,7 +47,17 @@ function readDocumentPayload(snapshot, key) {
 }
 
 export async function loadCommandData() {
-    if (!isFirebaseConfigured()) return commandData;
+    if (!isFirebaseConfigured()) {
+
+        if (!isLocalRuntime()) {
+            console.warn(
+                "Firebase is not configured. Using bundled local data fallback."
+            );
+        }
+
+        return commandData;
+
+    }
 
     try {
         const [
@@ -79,6 +100,13 @@ export async function saveCommandDataEntry(key, value) {
     }
 
     if (!isFirebaseConfigured()) {
+
+        if (!isLocalRuntime()) {
+            throw new Error(
+                "Firebase is not configured. Production combatant changes cannot be saved."
+            );
+        }
+
         commandData = {
             ...commandData,
             [key]: value

@@ -37,8 +37,11 @@ npm.cmd run build
 
 Copy `.env.example` to `.env` and fill in local values.
 
-If Firebase values are blank, the app uses bundled local data files under `data/`.
+Production combatant data persists in Firestore at `commandData/combatants`.
+Deploying the frontend does not overwrite that Firestore document.
+
+If Firebase values are blank during local development, the app uses bundled local data files under `data/`. Local saves without Firebase are in-memory only and are intended for testing.
 
 ## Version
 
-Current version: `1.2.0`
+Current version: `1.2.1`

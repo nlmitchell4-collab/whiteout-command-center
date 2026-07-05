@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.2.1
+
+- Clarified production combatant persistence through Firestore.
+- Added a production save guard so combatant edits cannot silently save only in memory when Firebase is not configured.
+- Marked `data/combatants.js` as local fallback data for development and parser testing.
+
 ## v1.2.0
 
 - Enhanced the Foundry assignment engine to generate about three primary objectives per combatant per phase.
