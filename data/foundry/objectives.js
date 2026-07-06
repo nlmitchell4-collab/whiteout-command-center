@@ -54,8 +54,8 @@ export const foundryObjectives = [
             why:"Lower Phase 2 priority."
         },
         final:{
-            priority:"Medium",
-            strategy:"Hold as a secondary objective.",
+            priority:"Low",
+            strategy:"Rotate away unless needed.",
             why:"Medium Phase 3 support value."
         }
     }
@@ -83,7 +83,7 @@ export const foundryObjectives = [
         },
         final:{
             priority:"Medium",
-            strategy:"Hold if practical.",
+            strategy:"Gather for points.",
             why:"Secondary objective."
         }
     }
@@ -139,7 +139,7 @@ export const foundryObjectives = [
         },
         final:{
             priority:"Medium",
-            strategy:"Hold if practical.",
+            strategy:"Gather for points.",
             why:"Secondary objective."
         }
     }
@@ -194,9 +194,9 @@ export const foundryObjectives = [
             why:"Lower Phase 2 priority."
         },
         final:{
-            priority:"Medium",
+            priority:"Low",
             strategy:"Hold as a secondary objective.",
-            why:"Medium Phase 3 support value."
+            why:"Low Phase 3 support value."
         }
     }
 },
@@ -250,9 +250,9 @@ export const foundryObjectives = [
             why:"Lower Phase 2 priority."
         },
         final:{
-            priority:"Medium",
+            priority:"Low",
             strategy:"Hold as a secondary objective.",
-            why:"Medium Phase 3 support value."
+            why:"Low Phase 3 support value."
         }
     }
 },
@@ -307,7 +307,7 @@ export const foundryObjectives = [
         },
         final:{
             priority:"Medium",
-            strategy:"Hold if practical.",
+            strategy:"Gather for points.",
             why:"Secondary objective."
         }
     }
@@ -335,7 +335,7 @@ export const foundryObjectives = [
         },
         final:{
             priority:"Medium",
-            strategy:"Hold if practical.",
+            strategy:"Gather for points.",
             why:"Secondary objective."
         }
     }
@@ -390,7 +390,7 @@ export const foundryObjectives = [
             why:"Lower Phase 2 priority."
         },
         final:{
-            priority:"Medium",
+            priority:"Low",
             strategy:"Hold as a secondary objective.",
             why:"Medium Phase 3 support value."
         }
