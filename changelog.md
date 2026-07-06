@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.2.14
+
+- Included both Prototype objectives in each legion assignment pool.
+- Restored both Prototypes as equal high-priority Phase 3 objectives with a small east-side safe-zone scoring advantage.
+
 ## v1.2.13
 
 - Added Firebase service account PEM validation before Hosting deploy authentication.

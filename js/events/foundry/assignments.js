@@ -14,6 +14,7 @@ const LEGION_OBJECTIVES_BY_PHASE = {
         1: [
             "boiler",
             "prototype-west",
+            "prototype-east",
             "repair-west",
             "repair-south",
             "transit"
@@ -21,6 +22,7 @@ const LEGION_OBJECTIVES_BY_PHASE = {
         2: [
             "boiler",
             "repair-north",
+            "prototype-west",
             "prototype-east",
             "repair-east",
             "transit"
@@ -30,6 +32,7 @@ const LEGION_OBJECTIVES_BY_PHASE = {
         1: [
             "boiler",
             "prototype-west",
+            "prototype-east",
             "repair-west",
             "repair-south",
             "mercenary",
@@ -40,6 +43,7 @@ const LEGION_OBJECTIVES_BY_PHASE = {
         2: [
             "boiler",
             "repair-north",
+            "prototype-west",
             "prototype-east",
             "repair-east",
             "mercenary",
@@ -52,6 +56,8 @@ const LEGION_OBJECTIVES_BY_PHASE = {
         1: [
             "boiler",
             "imperial",
+            "prototype-west",
+            "prototype-east",
             "munitions",
             "mercenary",
             "workshop-northwest",
@@ -63,6 +69,8 @@ const LEGION_OBJECTIVES_BY_PHASE = {
         2: [
             "boiler",
             "imperial",
+            "prototype-west",
+            "prototype-east",
             "munitions",
             "mercenary",
             "workshop-northeast",
@@ -76,6 +84,7 @@ const LEGION_OBJECTIVES_BY_PHASE = {
 
 const ASSIGNMENT_COUNT = 3;
 const PRIORITY_WEIGHT = 100;
+const SAFE_ZONE_CLUSTER_WEIGHT = 0.25;
 const PRIMARY_SECONDARY_DISTANCE_WEIGHT = 2.5;
 const SECONDARY_TERTIARY_DISTANCE_WEIGHT = 1.5;
 const LOW_POWER_PERCENTILE = 0.1;
@@ -322,7 +331,12 @@ function getClusterScore(objectives, phase) {
     const proximityPenalty =
         getClusterProximityPenalty(objectives);
 
-    return (priorityScore * PRIORITY_WEIGHT) - proximityPenalty;
+    const safeZonePenalty =
+        getClusterSafeZoneDistance(objectives) * SAFE_ZONE_CLUSTER_WEIGHT;
+
+    return (priorityScore * PRIORITY_WEIGHT) -
+        proximityPenalty -
+        safeZonePenalty;
 }
 
 function orderClusterObjectives(objectives, phase) {

@@ -166,9 +166,9 @@ export const foundryObjectives = [
             why:"High Phase 2 objective."
         },
         final:{
-            priority:"Low",
-            strategy:"Rotate away unless specifically ordered.",
-            why:"Lower Phase 3 priority."
+            priority:"High",
+            strategy:"Maintain control if practical.",
+            why:"Equal high-priority Prototype objective."
         }
     }
 },
@@ -278,9 +278,9 @@ export const foundryObjectives = [
             why:"High Phase 2 objective."
         },
         final:{
-            priority:"Low",
-            strategy:"Rotate away unless specifically ordered.",
-            why:"Lower Phase 3 priority."
+            priority:"High",
+            strategy:"Maintain control if practical.",
+            why:"Equal high-priority Prototype objective."
         }
     }
 },
