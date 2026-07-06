@@ -1,10 +1,15 @@
+import { getRosterPeople } from "../data/commandData.js";
+
 export function renderRosterPage(combatants = []) {
 
     const container = document.getElementById("roster-page");
 
     if (!container) return;
 
-    if (combatants.length === 0) {
+    const rosterPeople =
+        getRosterRows(combatants);
+
+    if (rosterPeople.length === 0) {
 
         container.innerHTML = `
             <div class="card">
@@ -22,7 +27,7 @@ export function renderRosterPage(combatants = []) {
 
     }
 
-    const sortedCombatants = [...combatants]
+    const sortedCombatants = [...rosterPeople]
         .sort((a, b) =>
             getTroopPower(b) - getTroopPower(a)
         );
@@ -65,6 +70,14 @@ export function renderRosterPage(combatants = []) {
 
     });
 
+}
+
+function getRosterRows(combatants) {
+    if (Array.isArray(combatants) && combatants.length > 0) {
+        return combatants;
+    }
+
+    return getRosterPeople();
 }
 
 function getTroopPower(combatant) {

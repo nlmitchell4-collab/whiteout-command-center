@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.1
+
+- Restored roster population by rendering from the shared roster source when combatant data is empty or unavailable.
+
 ## v1.0.0
 
 - Reworked top-level navigation into Events, Roster and password-protected Import.
