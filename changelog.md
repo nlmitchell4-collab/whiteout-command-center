@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.2.15
+
+- Added priority-based percentage caps for combatant assignments per objective.
+- Seeded each available objective with at least one combatant before filling additional objective slots.
+
 ## v1.2.14
 
 - Included both Prototype objectives in each legion assignment pool.
