@@ -4,6 +4,7 @@ import {
     saveCommandDataEntry
 } from "../data/commandData.js";
 import { buildBattlefield } from "../events/foundry/battlefield.js";
+import { renderRosterPage } from "./rosterPage.js";
 
 let reviewCombatants = [];
 
@@ -16,10 +17,11 @@ export function renderImportPage() {
     container.innerHTML = `
         <div class="card">
 
-            <h2>Import Combatants</h2>
+            <h2>Import & Roster Editor</h2>
 
             <p>
-                Select an event and upload one or more screenshots.
+                Manually maintain shared combatant data or upload screenshots
+                when an event parser is available.
             </p>
 
             <label for="event-select">
@@ -203,10 +205,11 @@ function renderCombatantReview(combatants = []) {
             <div class="review-grid">
                 <div class="review-row review-header">
                     <div class="review-heading">Name</div>
-                    <div class="review-heading">Power</div>
-                    <div class="review-heading">Assignment</div>
-                    <div class="review-heading">Status</div>
-                    <div class="review-heading">Engagement</div>
+                    <div class="review-heading">Troop Power</div>
+                    <div class="review-heading">Foundry Assignment</div>
+                    <div class="review-heading">Canyon Assignment</div>
+                    <div class="review-heading">Hero Total Power</div>
+                    <div class="review-heading">Labyrinth Levels</div>
                     <div class="review-heading"></div>
                 </div>
 
@@ -215,29 +218,38 @@ function renderCombatantReview(combatants = []) {
                         <input
                             data-review-index="${index}"
                             data-review-field="name"
+                            required
                             value="${escapeAttribute(combatant.name)}">
 
                         <input
                             data-review-index="${index}"
-                            data-review-field="power"
+                            data-review-field="troopPower"
                             inputmode="numeric"
-                            value="${escapeAttribute(String(combatant.power ?? ""))}">
+                            value="${escapeAttribute(String(getCombatantTroopPower(combatant) ?? ""))}">
 
                         <div class="review-assignment-options">
-                            ${renderAssignmentOption(index, combatant, "Legion 1")}
-                            ${renderAssignmentOption(index, combatant, "Legion 2")}
-                            ${renderAssignmentOption(index, combatant, "No engagement")}
+                            ${renderAssignmentOption(index, combatant, "foundryAssignment", "Legion 1")}
+                            ${renderAssignmentOption(index, combatant, "foundryAssignment", "Legion 2")}
+                            ${renderAssignmentOption(index, combatant, "foundryAssignment", "No engagement")}
+                        </div>
+
+                        <div class="review-assignment-options">
+                            ${renderAssignmentOption(index, combatant, "canyonAssignment", "Legion 1")}
+                            ${renderAssignmentOption(index, combatant, "canyonAssignment", "Legion 2")}
+                            ${renderAssignmentOption(index, combatant, "canyonAssignment", "No engagement")}
                         </div>
 
                         <input
                             data-review-index="${index}"
-                            data-review-field="status"
-                            value="${escapeAttribute(combatant.status ?? "")}">
+                            data-review-field="heroTotalPower"
+                            inputmode="numeric"
+                            value="${escapeAttribute(String(combatant.heroTotalPower ?? ""))}">
 
                         <input
                             data-review-index="${index}"
-                            data-review-field="engagement"
-                            value="${escapeAttribute(combatant.engagement ?? "")}">
+                            data-review-field="labyrinthLevels"
+                            inputmode="numeric"
+                            value="${escapeAttribute(String(combatant.labyrinthLevels ?? ""))}">
 
                         <button
                             type="button"
@@ -269,18 +281,22 @@ function renderCombatantReview(combatants = []) {
     `;
 }
 
-function renderAssignmentOption(index, combatant, value) {
+function renderAssignmentOption(index, combatant, field, value) {
     const assignment =
-        normalizeAssignment(combatant.assignment);
+        normalizeAssignment(
+            field === "foundryAssignment"
+                ? getCombatantFoundryAssignment(combatant)
+                : combatant[field]
+        );
 
     return `
         <label class="review-radio-option">
             <input
                 class="review-assignment-choice"
                 type="radio"
-                name="assignment-${index}"
+                name="${field}-${index}"
                 data-review-index="${index}"
-                data-review-field="assignment"
+                data-review-field="${field}"
                 value="${escapeAttribute(value)}"
                 ${assignment === value ? "checked" : ""}>
             <span>${escapeHtml(value)}</span>
@@ -346,6 +362,14 @@ function bindReviewEvents(container) {
         status.textContent = "Saving...";
 
         try {
+            if (
+                reviewCombatants.some(combatant =>
+                    !combatant.name?.trim()
+                )
+            ) {
+                status.textContent = "Name is required for every combatant.";
+                return;
+            }
 
             await saveCommandDataEntry(
                 "combatants",
@@ -353,6 +377,7 @@ function bindReviewEvents(container) {
             );
 
             buildBattlefield();
+            renderRosterPage(getCombatants());
 
             status.textContent = "Saved. Battlefield assignments refreshed.";
 
@@ -382,7 +407,11 @@ function updateReviewCombatant(input) {
 }
 
 function parseReviewValue(field, value) {
-    if (field === "power") {
+    if (
+        field === "troopPower" ||
+        field === "heroTotalPower" ||
+        field === "labyrinthLevels"
+    ) {
         const parsed =
             Number.parseInt(String(value).replace(/,/g, ""), 10);
 
@@ -397,24 +426,40 @@ function normalizeReviewCombatant(combatant) {
         combatant.name?.trim() ?? "";
 
     const assignment =
-        normalizeAssignment(combatant.assignment);
+        normalizeAssignment(getCombatantFoundryAssignment(combatant));
+
+    const canyonAssignment =
+        normalizeAssignment(combatant.canyonAssignment);
+
+    const troopPower =
+        Number.parseInt(getCombatantTroopPower(combatant), 10) || 0;
 
     return {
         ...combatant,
         id: createCombatantId(name),
         name,
-        power: Number.parseInt(combatant.power, 10) || 0,
+        troopPower,
+        power: troopPower,
         legion: getLegionFromAssignment(assignment),
-        assignment
+        foundryAssignment: assignment,
+        assignment,
+        canyonAssignment,
+        heroTotalPower: Number.parseInt(combatant.heroTotalPower, 10) || 0,
+        labyrinthLevels: Number.parseInt(combatant.labyrinthLevels, 10) || 0
     };
 }
 
 function withSuggestedAssignment(combatant) {
     return {
         ...combatant,
-        assignment:
+        troopPower: getCombatantTroopPower(combatant),
+        foundryAssignment:
+            combatant.foundryAssignment ??
             combatant.assignment ??
-            suggestAssignment(combatant)
+            suggestAssignment(combatant),
+        canyonAssignment:
+            combatant.canyonAssignment ??
+            "No engagement"
     };
 }
 
@@ -422,11 +467,14 @@ function createBlankCombatant() {
     return {
         id: "",
         name: "",
+        troopPower: 0,
         power: 0,
         legion: null,
+        foundryAssignment: "No engagement",
         assignment: "No engagement",
-        status: "",
-        engagement: "",
+        canyonAssignment: "No engagement",
+        heroTotalPower: 0,
+        labyrinthLevels: 0,
         sourceFile: "manual",
         sourceRow: null,
         sourceY: null
@@ -447,6 +495,14 @@ function normalizeAssignment(value) {
     }
 
     return "No engagement";
+}
+
+function getCombatantTroopPower(combatant) {
+    return combatant.troopPower ?? combatant.power ?? 0;
+}
+
+function getCombatantFoundryAssignment(combatant) {
+    return combatant.foundryAssignment ?? combatant.assignment;
 }
 
 function getLegionFromAssignment(assignment) {

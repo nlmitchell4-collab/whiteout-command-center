@@ -6,6 +6,8 @@ import {
     initializePhaseSelector
 } from "./events/foundry/battlefield.js";
 import { renderImportPage } from "./pages/importPage.js";
+import { renderRosterPage } from "./pages/rosterPage.js";
+import { getCombatants } from "./data/commandData.js";
 
 export async function initializeApp() {
 
@@ -17,6 +19,7 @@ export async function initializeApp() {
     initializeChiefSelector();
     initializePhaseSelector();
     buildBattlefield();
+    renderRosterPage(getCombatants());
 
 }
 

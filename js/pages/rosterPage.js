@@ -23,14 +23,23 @@ export function renderRosterPage(combatants = []) {
     }
 
     const sortedCombatants = [...combatants]
-        .sort((a, b) => b.power - a.power);
+        .sort((a, b) =>
+            getTroopPower(b) - getTroopPower(a)
+        );
 
     container.innerHTML = `
         <div class="card">
 
             <h2>Combatant Roster</h2>
 
-            <div id="roster-list"></div>
+            <div id="roster-list">
+                <div class="roster-row roster-heading">
+                    <span>Name</span>
+                    <span>Troop Power</span>
+                    <span>Foundry Assignment</span>
+                    <span>Canyon Assignment</span>
+                </div>
+            </div>
 
         </div>
     `;
@@ -47,12 +56,17 @@ export function renderRosterPage(combatants = []) {
 
         row.innerHTML = `
             <span>${player.name}</span>
-            <span>${player.power.toLocaleString()}</span>
-            <span>Legion ${player.legion}</span>
+            <span>${getTroopPower(player).toLocaleString()}</span>
+            <span>${player.foundryAssignment ?? player.assignment ?? ""}</span>
+            <span>${player.canyonAssignment ?? ""}</span>
         `;
 
         rosterList.appendChild(row);
 
     });
 
+}
+
+function getTroopPower(combatant) {
+    return combatant.troopPower ?? combatant.power ?? 0;
 }

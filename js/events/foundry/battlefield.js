@@ -327,13 +327,17 @@ function renderObjectiveAssignments(assignments) {
             ${assignments.map(({ combatant, assignment }) => `
                 <div class="objective-assignment-row">
                     <strong>${combatant.displayName}</strong>
-                    <span>${combatant.power ? combatant.power.toLocaleString() : ""}</span>
+                    <span>${getTroopPower(combatant) ? getTroopPower(combatant).toLocaleString() : ""}</span>
                     <span>${combatant.legion ? `Legion ${combatant.legion}` : ""}</span>
                     <small>${assignment.assignment}</small>
                 </div>
             `).join("")}
         </div>
     `;
+}
+
+function getTroopPower(combatant) {
+    return combatant.troopPower ?? combatant.power ?? 0;
 }
 
 // =========================================

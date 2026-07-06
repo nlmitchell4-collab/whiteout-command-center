@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Whiteout Foundry Command Center</title>
+    <title>Whiteout Command Center</title>
 
-  <script type="module" crossorigin src="/assets/index-CM2UK0N4.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-C5JIiV1T.css">
+  <script type="module" crossorigin src="/assets/index-DDm8WkTp.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-Da2gLfGM.css">
 </head>
 
 <body>
@@ -19,10 +19,10 @@
         <div class="logo">
 
             <h1>WHITEOUT</h1>
-            <h2>Foundry Command Center</h2>
+            <h2>Command Center</h2>
 
             <div class="operation">
-                Operation Foundry
+                Multi-Event Planning
             </div>
 
         </div>
@@ -30,40 +30,28 @@
         <nav>
 
             <button class="nav-button active"
-                    data-page="mission">
-                Mission
+                    data-page="events"
+                    data-nav-group="main">
+                Events
             </button>
 
             <button class="nav-button"
-                    data-page="timeline">
-                Timeline
+                    data-page="roster"
+                    data-nav-group="main">
+                Roster
             </button>
 
             <button class="nav-button"
-                    data-page="battlefield">
-                Battlefield
-            </button>
-
-            <button class="nav-button"
-                    data-page="import">
+                    data-page="import"
+                    data-nav-group="main">
                 Import
-            </button>
-
-            <button class="nav-button"
-                    data-page="teams">
-                Teams
-            </button>
-
-            <button class="nav-button"
-                    data-page="rules">
-                Rules
             </button>
 
         </nav>
 
         <footer>
 
-            Version 1.2.15
+            Version 1.0.0
 
         </footer>
 
@@ -71,26 +59,110 @@
 
     <main id="content">
 
-        <section id="mission" class="page active">
+        <section id="events" class="page active">
 
-            <h1>Mission</h1>
+            <h1>Events</h1>
 
             <p>
-                Establish an early point advantage through superior
-                objective control. Prioritize combat buffs and map
-                control before committing to Imperial. Protect
-                Prototype whenever possible and avoid unnecessary
-                battles that sacrifice objectives.
+                Choose an event workspace. Each event has direct-link pages
+                for overview, live planning and rules so you can share the
+                exact view your team needs.
             </p>
+
+            <div class="event-grid">
+
+                <article class="event-card">
+                    <h2>Foundry</h2>
+                    <p>
+                        Live objective planning, roster-based legion
+                        assignments and phase-specific building priorities.
+                    </p>
+                    <div class="event-links">
+                        <button class="subnav-button"
+                                data-page="foundry-overview"
+                                data-nav-group="foundry">
+                            Overview
+                        </button>
+                        <button class="subnav-button"
+                                data-page="battlefield"
+                                data-nav-group="foundry">
+                            Battlefield
+                        </button>
+                        <button class="subnav-button"
+                                data-page="foundry-rules"
+                                data-nav-group="foundry">
+                            Rules & Best Practices
+                        </button>
+                    </div>
+                </article>
+
+                <article class="event-card">
+                    <h2>Canyon</h2>
+                    <p>
+                        Placeholder workspace for future Canyon roster
+                        planning, objective guidance and event-specific
+                        assignments.
+                    </p>
+                    <div class="event-links">
+                        <button class="subnav-button"
+                                data-page="canyon-overview"
+                                data-nav-group="canyon">
+                            Overview
+                        </button>
+                        <button class="subnav-button"
+                                data-page="canyon-battlefield"
+                                data-nav-group="canyon">
+                            Battlefield
+                        </button>
+                        <button class="subnav-button"
+                                data-page="canyon-rules"
+                                data-nav-group="canyon">
+                            Rules & Best Practices
+                        </button>
+                    </div>
+                </article>
+
+            </div>
 
         </section>
 
-        <section id="timeline" class="page">
+        <section id="foundry-overview" class="page">
 
-            <h1>Timeline</h1>
+            <h1>Foundry Overview</h1>
+
+            <div class="subnav">
+                <button class="subnav-button active"
+                        data-page="foundry-overview"
+                        data-nav-group="foundry">
+                    Overview
+                </button>
+                <button class="subnav-button"
+                        data-page="battlefield"
+                        data-nav-group="foundry">
+                    Battlefield
+                </button>
+                <button class="subnav-button"
+                        data-page="foundry-rules"
+                        data-nav-group="foundry">
+                    Rules & Best Practices
+                </button>
+            </div>
 
             <p>
-                Timeline coming in Commit #2.
+                Foundry planning is built around objective control, not
+                scattered fighting. The assignment engine prioritizes
+                high-value buildings, keeps secondary targets close to
+                each combatant's primary objective and limits overcrowding
+                by capping assignments per building based on priority.
+            </p>
+
+            <p>
+                Phase 1 emphasizes Boiler, Transit and both Prototypes.
+                Phase 2 shifts attention toward Mercenary Camp, Munitions,
+                Boiler, Imperial Foundry and Prototypes. Phase 3 keeps
+                Imperial Foundry and Boiler at the top while maintaining
+                Munitions, Mercenary Camp, Prototypes and nearby support
+                buildings.
             </p>
 
         </section>
@@ -98,6 +170,23 @@
         <section id="battlefield" class="page">
 
             <h1>Battlefield</h1>
+            <div class="subnav">
+                <button class="subnav-button"
+                        data-page="foundry-overview"
+                        data-nav-group="foundry">
+                    Overview
+                </button>
+                <button class="subnav-button active"
+                        data-page="battlefield"
+                        data-nav-group="foundry">
+                    Battlefield
+                </button>
+                <button class="subnav-button"
+                        data-page="foundry-rules"
+                        data-nav-group="foundry">
+                    Rules & Best Practices
+                </button>
+            </div>
             <div id="assignment-summary"></div>
 
             <div id="chief-bar">
@@ -167,41 +256,151 @@
 
         </section>
 
-        <section id="import" class="page">
+        <section id="foundry-rules" class="page">
 
-            <h1>Import Combatants</h1>
+            <h1>Rules & Best Practices</h1>
 
-            <div id="import-page"></div>
+            <div class="subnav">
+                <button class="subnav-button"
+                        data-page="foundry-overview"
+                        data-nav-group="foundry">
+                    Overview
+                </button>
+                <button class="subnav-button"
+                        data-page="battlefield"
+                        data-nav-group="foundry">
+                    Battlefield
+                </button>
+                <button class="subnav-button active"
+                        data-page="foundry-rules"
+                        data-nav-group="foundry">
+                    Rules & Best Practices
+                </button>
+            </div>
+
+            <ul>
+                <li>Capture buildings before chasing fights; points and buffs compound faster than random trades.</li>
+                <li>Do not overload one building. Critical objectives can carry more combatants, but every available objective should have coverage first.</li>
+                <li>Keep each combatant's secondary and tertiary objectives near their primary objective so rotations are realistic.</li>
+                <li>Lower-power combatants should lean toward east-side safe-zone objectives when possible.</li>
+                <li>In Phase 1, secure Boiler and Transit quickly while contesting both Prototypes.</li>
+                <li>In Phase 2, prioritize Mercenary Camp, Munitions and Boiler while keeping pressure on Imperial Foundry and both Prototypes.</li>
+                <li>In Phase 3, Imperial Foundry and Boiler are the primary anchors; Munitions, Mercenary Camp, Prototypes, Workshops and Repairs support the endgame.</li>
+            </ul>
 
         </section>
 
-        <section id="teams" class="page">
+        <section id="canyon-overview" class="page">
 
-            <h1>Teams</h1>
+            <h1>Canyon Overview</h1>
+
+            <div class="subnav">
+                <button class="subnav-button active"
+                        data-page="canyon-overview"
+                        data-nav-group="canyon">
+                    Overview
+                </button>
+                <button class="subnav-button"
+                        data-page="canyon-battlefield"
+                        data-nav-group="canyon">
+                    Battlefield
+                </button>
+                <button class="subnav-button"
+                        data-page="canyon-rules"
+                        data-nav-group="canyon">
+                    Rules & Best Practices
+                </button>
+            </div>
 
             <p>
-                Team assignments coming soon.
+                Canyon planning will use the shared roster and Canyon
+                assignment field. This placeholder keeps the navigation
+                shape ready while the event-specific rules and assignment
+                engine are designed.
             </p>
 
         </section>
 
-        <section id="rules" class="page">
+        <section id="canyon-battlefield" class="page">
 
-            <h1>Rules</h1>
+            <h1>Canyon Battlefield</h1>
+
+            <div class="subnav">
+                <button class="subnav-button"
+                        data-page="canyon-overview"
+                        data-nav-group="canyon">
+                    Overview
+                </button>
+                <button class="subnav-button active"
+                        data-page="canyon-battlefield"
+                        data-nav-group="canyon">
+                    Battlefield
+                </button>
+                <button class="subnav-button"
+                        data-page="canyon-rules"
+                        data-nav-group="canyon">
+                    Rules & Best Practices
+                </button>
+            </div>
+
+            <p>
+                Canyon battlefield tools are not active yet. This page is
+                reserved for future map views, team assignments and direct
+                links once Canyon logic is added.
+            </p>
+
+        </section>
+
+        <section id="canyon-rules" class="page">
+
+            <h1>Canyon Rules & Best Practices</h1>
+
+            <div class="subnav">
+                <button class="subnav-button"
+                        data-page="canyon-overview"
+                        data-nav-group="canyon">
+                    Overview
+                </button>
+                <button class="subnav-button"
+                        data-page="canyon-battlefield"
+                        data-nav-group="canyon">
+                    Battlefield
+                </button>
+                <button class="subnav-button active"
+                        data-page="canyon-rules"
+                        data-nav-group="canyon">
+                    Rules & Best Practices
+                </button>
+            </div>
 
             <ul>
-
-                <li>Buildings win Foundry.</li>
-
-                <li>Capture before fighting.</li>
-
-                <li>Protect Prototype.</li>
-
-                <li>Imperial is a late-game objective.</li>
-
-                <li>Follow R4 instructions.</li>
-
+                <li>Use the roster Canyon Assignment field to stage future event-specific team planning.</li>
+                <li>Keep manual notes close to the roster until Canyon scoring, objectives and assignment rules are defined.</li>
+                <li>This page will become the direct-link reference for Canyon strategy once the module is implemented.</li>
             </ul>
+
+        </section>
+
+        <section id="roster" class="page">
+
+            <h1>Roster</h1>
+
+            <p>
+                The roster is shared across events. Import remains the
+                protected editing surface for now, while this view provides
+                a read-only planning reference for combatant data used by
+                Foundry and future event modules.
+            </p>
+
+            <div id="roster-page"></div>
+
+        </section>
+
+        <section id="import" class="page">
+
+            <h1>Import & Roster Editor</h1>
+
+            <div id="import-page"></div>
 
         </section>
 

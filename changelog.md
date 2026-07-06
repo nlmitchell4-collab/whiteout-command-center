@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.0.0
+
+- Reworked top-level navigation into Events, Roster and password-protected Import.
+- Added Foundry sub-navigation for Overview, Battlefield and Rules & Best Practices.
+- Added an Events hub with Canyon placeholder pages using the same Overview, Battlefield and Rules & Best Practices structure.
+- Added hash permalinks for direct links to top-level and event sub-pages.
+- Updated roster editing fields for troop power, Foundry assignment, Canyon assignment, hero power and Labyrinth levels.
+- Added roster table headings for the shared combatant reference grid.
+
 ## v1.2.15
 
 - Added priority-based percentage caps for combatant assignments per objective.

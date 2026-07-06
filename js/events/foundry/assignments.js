@@ -578,9 +578,13 @@ function getRankedLegionCombatants(legion) {
             normalizeValue(person.assignment) !== "no engagement"
         )
         .sort((a, b) =>
-            (b.power ?? 0) - (a.power ?? 0) ||
+            getTroopPower(b) - getTroopPower(a) ||
             a.displayName.localeCompare(b.displayName)
         );
+}
+
+function getTroopPower(combatant) {
+    return combatant.troopPower ?? combatant.power ?? 0;
 }
 
 function getObjectiveIdFromAssignment(assignment) {

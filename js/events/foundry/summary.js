@@ -101,8 +101,12 @@ function renderCombatantMeta(chiefInfo) {
 
     return `
         <p>
-            ${chiefInfo.power ? `${chiefInfo.power.toLocaleString()} power` : ""}
+            ${getTroopPower(chiefInfo) ? `${getTroopPower(chiefInfo).toLocaleString()} troop power` : ""}
             ${chiefInfo.legion ? ` | Legion ${chiefInfo.legion}` : ""}
         </p>
     `;
+}
+
+function getTroopPower(combatant) {
+    return combatant.troopPower ?? combatant.power ?? 0;
 }

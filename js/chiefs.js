@@ -227,7 +227,7 @@ function renderChiefResults(searchValue) {
                 <span>${escapeHtml(person.displayName)}</span>
                 <small>
                     ${person.legion ? `Legion ${person.legion}` : ""}
-                    ${person.power ? ` ${person.power.toLocaleString()}` : ""}
+                    ${getTroopPower(person) ? ` ${getTroopPower(person).toLocaleString()}` : ""}
                 </small>
             </button>
         `).join("");
@@ -282,4 +282,8 @@ function escapeHtml(value) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+}
+
+function getTroopPower(person) {
+    return person.troopPower ?? person.power ?? 0;
 }

@@ -78,10 +78,11 @@ input[type="submit"] {
     display: grid;
     grid-template-columns:
         minmax(140px, 1.4fr)
-        minmax(90px, .7fr)
+        minmax(110px, .8fr)
         minmax(260px, 1.4fr)
-        minmax(130px, 1fr)
-        minmax(160px, 1.2fr)
+        minmax(260px, 1.4fr)
+        minmax(130px, .9fr)
+        minmax(130px, .9fr)
         auto;
     gap: 8px;
     align-items: center;
