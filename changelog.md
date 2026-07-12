@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.2
+
+- Improved mobile battlefield usability with a fixed phase switcher, compact assignment cards and wrapped objective names.
+
 ## v1.0.1
 
 - Restored roster population by rendering from the shared roster source when combatant data is empty or unavailable.

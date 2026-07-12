@@ -57,3 +57,69 @@
     grid-column: 1 / -1;
     color: var(--text-muted);
 }
+
+@media (max-width: 600px) {
+
+    .summary-card,
+    .assignment-card,
+    .objective-card {
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 8px;
+    }
+
+    .summary-card h2 {
+        font-size: 20px;
+        margin-bottom: 4px;
+    }
+
+    .summary-card h3 {
+        font-size: 15px;
+    }
+
+    #my-objectives {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    #my-objectives p {
+        grid-column: 1 / -1;
+    }
+
+    .assignment-card {
+        min-height: 52px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .assignment-card strong {
+        font-size: 14px;
+        line-height: 1.2;
+    }
+
+    .assignment-card-meta {
+        margin-top: 4px;
+        color: var(--text-muted);
+        font-size: 12px;
+        line-height: 1.2;
+    }
+
+    .objective-assignment-list {
+        gap: 6px;
+        margin: 8px 0 12px;
+    }
+
+    .objective-assignment-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        padding: 8px;
+        font-size: 13px;
+    }
+
+    .objective-assignment-row small {
+        display: none;
+    }
+
+}

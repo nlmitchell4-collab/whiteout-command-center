@@ -108,3 +108,45 @@
 .objective[data-id="transit"] {
     margin-top: 6px;
 }
+
+@media (max-width: 600px) {
+
+    .objective {
+        width: clamp(52px, 14vw, 72px);
+        min-height: clamp(38px, 10vw, 54px);
+        padding: 3px;
+        border-width: 1px;
+        border-radius: 6px;
+    }
+
+    .objective::after {
+        bottom: -6px;
+        border-left-width: 5px;
+        border-right-width: 5px;
+        border-top-width: 6px;
+    }
+
+    .objective-name {
+        max-width: 100%;
+        font-size: 9px;
+        line-height: 1.1;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+
+    .objective-priority {
+        margin-bottom: 2px;
+        font-size: 11px;
+        line-height: 1;
+    }
+
+    .objective.selected {
+        border-width: 2px;
+        box-shadow: 0 0 14px rgba(255, 213, 74, .75);
+    }
+
+    .objective.assigned {
+        box-shadow: 0 0 10px rgba(255, 215, 0, .45);
+    }
+
+}

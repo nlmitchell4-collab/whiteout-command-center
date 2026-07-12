@@ -53,3 +53,16 @@
     background: var(--gold-dark);
     border-color: var(--gold);
 }
+
+@media (max-width: 600px) {
+
+    .phase-button {
+        min-height: 40px;
+        border-width: 1px;
+        border-radius: 8px;
+        padding: 8px 6px;
+        font-size: 12px;
+        line-height: 1.15;
+    }
+
+}

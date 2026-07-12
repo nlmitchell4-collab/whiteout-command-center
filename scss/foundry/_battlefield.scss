@@ -7,6 +7,12 @@
     width: 100%;
 }
 
+#phase-selector {
+    display: flex;
+    gap: 10px;
+    margin: 16px 0 0;
+}
+
 #battlefield-map {
     position: relative;
 
@@ -115,6 +121,61 @@
 
     #chief-bar {
         grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    #phase-selector {
+        position: fixed;
+        right: 10px;
+        bottom: 10px;
+        left: 10px;
+        z-index: 200;
+        gap: 6px;
+        margin: 0;
+        padding: 8px;
+
+        background: rgba(16, 24, 38, .96);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+    }
+
+    #battlefield-container {
+        gap: 12px;
+        margin-top: 12px;
+    }
+
+    #battlefield-map {
+        max-height: calc(100vh - 220px);
+    }
+
+    #objective-panel {
+        border-width: 1px;
+        border-radius: 8px;
+        padding: 12px;
+    }
+
+    #objective-panel h2 {
+        font-size: 22px;
+        margin-bottom: 8px;
+    }
+
+    #objective-panel h3 {
+        margin-top: 12px;
+        margin-bottom: 8px;
+    }
+
+    #objective-panel p {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    #battlefield {
+        padding-bottom: 72px;
     }
 
 }

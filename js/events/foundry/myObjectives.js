@@ -61,7 +61,7 @@ export function renderMyObjectives() {
 
             <strong>${objective ? objective.name : "General Assignment"}</strong>
 
-            <div>${item.assignment}</div>
+            <div class="assignment-card-meta">${item.assignment}</div>
 
         `;
 
