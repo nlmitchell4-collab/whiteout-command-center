@@ -302,27 +302,17 @@ function getLegionAssignmentPlan(legion, phase) {
                 plan.get(combatant.id);
 
             const objective =
-                pass === 0
-                    ? getNextPrimaryObjective(
-                        candidates,
-                        combatant,
-                        legion,
-                        phaseKey,
-                        currentAssignments,
-                        assignmentCounts,
-                        assignmentPower,
-                        capacities
-                    )
-                    : getNextProximityObjective(
-                        candidates,
-                        combatant,
-                        legion,
-                        phaseKey,
-                        currentAssignments,
-                        assignmentCounts,
-                        assignmentPower,
-                        capacities
-                    );
+                getNextObjectiveForPass(
+                    pass,
+                    candidates,
+                    combatant,
+                    legion,
+                    phaseKey,
+                    currentAssignments,
+                    assignmentCounts,
+                    assignmentPower,
+                    capacities
+                );
 
             if (!objective) return;
 
@@ -355,6 +345,64 @@ function getLegionObjectives(legion, phase) {
                 .find(objective => objective.id === objectiveId)
         )
         .filter(Boolean);
+}
+
+function getNextObjectiveForPass(
+    pass,
+    candidates,
+    combatant,
+    legion,
+    phase,
+    currentAssignments,
+    assignmentCounts,
+    assignmentPower,
+    capacities
+) {
+    if (pass === 0) {
+        return getNextPrimaryObjective(
+            candidates,
+            combatant,
+            legion,
+            phase,
+            currentAssignments,
+            assignmentCounts,
+            assignmentPower,
+            capacities
+        );
+    }
+
+    if (pass === ASSIGNMENT_COUNT - 1) {
+        return getNextTertiaryCoverageObjective(
+            candidates,
+            combatant,
+            legion,
+            phase,
+            currentAssignments,
+            assignmentCounts,
+            capacities
+        ) ??
+            getNextProximityObjective(
+                candidates,
+                combatant,
+                legion,
+                phase,
+                currentAssignments,
+                assignmentCounts,
+                assignmentPower,
+                capacities
+            );
+    }
+
+    return getNextProximityObjective(
+        candidates,
+        combatant,
+        legion,
+        phase,
+        currentAssignments,
+        assignmentCounts,
+        assignmentPower,
+        capacities
+    );
 }
 
 function getNextPrimaryObjective(
@@ -423,6 +471,41 @@ function getNextProximityObjective(
                 getSecondaryScore(first, primary, phase, assignmentCounts, assignmentPower) ||
             getSecondaryTieBreaker(first, combatant, legion) -
                 getSecondaryTieBreaker(second, combatant, legion) ||
+            first.name.localeCompare(second.name)
+        )[0] ?? null;
+}
+
+function getNextTertiaryCoverageObjective(
+    candidates,
+    combatant,
+    legion,
+    phase,
+    currentAssignments,
+    assignmentCounts,
+    capacities
+) {
+    const primary =
+        candidates.find(objective =>
+            objective.id === currentAssignments[0]
+        );
+
+    return [...candidates]
+        .filter(objective =>
+            canAssignObjective(
+                objective,
+                currentAssignments,
+                assignmentCounts,
+                capacities
+            ) &&
+            isAllowedForCombatantPower(objective, combatant, legion, phase) &&
+            isCompatibleWithAssignments(objective, currentAssignments, candidates) &&
+            (assignmentCounts.get(objective.id) ?? 0) === 0
+        )
+        .sort((first, second) =>
+            getObjectivePriorityScore(first, phase) -
+                getObjectivePriorityScore(second, phase) ||
+            getCoverageDistance(first, primary) -
+                getCoverageDistance(second, primary) ||
             first.name.localeCompare(second.name)
         )[0] ?? null;
 }
@@ -561,6 +644,12 @@ function getPairDistance(first, second) {
         first.x - second.x,
         first.y - second.y
     );
+}
+
+function getCoverageDistance(objective, primary) {
+    if (!primary) return getSafeZoneDistance(objective);
+
+    return getPairDistance(objective, primary);
 }
 
 function isLowPowerCombatant(combatant, legion) {

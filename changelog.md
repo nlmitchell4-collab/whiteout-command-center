@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.5
+
+- Added tertiary coverage logic so compatible lower-priority Foundry objectives get assigned before nearby objectives are overfilled.
+
 ## v1.0.4
 
 - Restricted top-power Foundry combatants to High and Critical objectives only.
