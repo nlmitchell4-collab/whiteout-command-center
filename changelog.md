@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.8
+
+- Removed east-side safe-zone bias from Foundry assignment scoring so objective selection uses priority, troop power balance, coverage and direct proximity only.
+- Expanded the shared Foundry objective pools to include all repair and workshop objectives for both legions.
+
 ## v1.0.7
 
 - Unified Foundry objective pools so Legion 1 and Legion 2 use the same east-side assignment logic in every phase.

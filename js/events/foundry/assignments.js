@@ -16,6 +16,8 @@ const SHARED_OBJECTIVES_BY_PHASE = {
         "prototype-east",
         "repair-north",
         "repair-east",
+        "repair-west",
+        "repair-south",
         "transit"
     ],
     mid: [
@@ -24,6 +26,8 @@ const SHARED_OBJECTIVES_BY_PHASE = {
         "prototype-east",
         "repair-north",
         "repair-east",
+        "repair-west",
+        "repair-south",
         "mercenary",
         "munitions",
         "imperial",
@@ -36,10 +40,14 @@ const SHARED_OBJECTIVES_BY_PHASE = {
         "prototype-east",
         "munitions",
         "mercenary",
+        "workshop-northwest",
         "workshop-northeast",
+        "workshop-southwest",
         "workshop-southeast",
         "repair-east",
         "repair-north",
+        "repair-west",
+        "repair-south",
         "transit"
     ]
 };
@@ -62,14 +70,8 @@ const LEGION_OBJECTIVES_BY_PHASE = {
 const ASSIGNMENT_COUNT = 3;
 const PRIORITY_WEIGHT = 100;
 const TOP_POWER_PERCENTILE = 0.25;
-const LOW_POWER_PERCENTILE = 0.1;
 const PROXIMITY_WEIGHT = 3;
 const POWER_BALANCE_WEIGHT = 0.000001;
-
-const SAFE_ZONE = {
-    x: 100,
-    y: 50
-};
 
 const PRIORITY_SCORES = {
     critical: 4,
@@ -523,8 +525,6 @@ function getNextPrimaryObjective(
                 getAverageAssignedPower(second, assignmentCounts, assignmentPower) ||
             (assignmentCounts.get(first.id) ?? 0) -
                 (assignmentCounts.get(second.id) ?? 0) ||
-            getPrimaryTieBreaker(first, combatant, legion) -
-                getPrimaryTieBreaker(second, combatant, legion) ||
             first.name.localeCompare(second.name)
         )[0] ?? null;
 }
@@ -560,8 +560,6 @@ function getNextProximityObjective(
         .sort((first, second) =>
             getSecondaryScore(second, primary, phase, assignmentCounts, assignmentPower) -
                 getSecondaryScore(first, primary, phase, assignmentCounts, assignmentPower) ||
-            getSecondaryTieBreaker(first, combatant, legion) -
-                getSecondaryTieBreaker(second, combatant, legion) ||
             first.name.localeCompare(second.name)
         )[0] ?? null;
 }
@@ -624,12 +622,6 @@ function getAverageAssignedPower(
     return (assignmentPower.get(objective.id) ?? 0) / count;
 }
 
-function getPrimaryTieBreaker(objective, combatant, legion) {
-    return isLowPowerCombatant(combatant, legion)
-        ? getSafeZoneDistance(objective)
-        : 0;
-}
-
 function getSecondaryScore(
     objective,
     primary,
@@ -642,19 +634,6 @@ function getSecondaryScore(
         getPairDistance(primary, objective) * PROXIMITY_WEIGHT -
         getAverageAssignedPower(objective, assignmentCounts, assignmentPower) *
             POWER_BALANCE_WEIGHT
-    );
-}
-
-function getSecondaryTieBreaker(objective, combatant, legion) {
-    return isLowPowerCombatant(combatant, legion)
-        ? getSafeZoneDistance(objective)
-        : getSafeZoneDistance(objective) * 0.01;
-}
-
-function getSafeZoneDistance(objective) {
-    return Math.hypot(
-        objective.x - SAFE_ZONE.x,
-        objective.y - SAFE_ZONE.y
     );
 }
 
@@ -707,7 +686,7 @@ function getCoverageCombatantDistance(objective, combatant, plan, candidates) {
         plan.get(combatant.id) ?? [];
 
     if (currentAssignments.length === 0) {
-        return getSafeZoneDistance(objective);
+        return 0;
     }
 
     return currentAssignments.reduce((total, objectiveId) => {
@@ -718,25 +697,6 @@ function getCoverageCombatantDistance(objective, combatant, plan, candidates) {
 
         return total + getPairDistance(objective, assignedObjective);
     }, 0);
-}
-
-function isLowPowerCombatant(combatant, legion) {
-    const legionCombatants =
-        getRankedLegionCombatants(legion);
-
-    const weakCombatantCount =
-        Math.max(
-            1,
-            Math.ceil(legionCombatants.length * LOW_POWER_PERCENTILE)
-        );
-
-    const combatantIndex =
-        legionCombatants.findIndex(person => person.id === combatant.id);
-
-    return (
-        combatantIndex >= 0 &&
-        combatantIndex >= legionCombatants.length - weakCombatantCount
-    );
 }
 
 function isTopPowerCombatant(combatant, legion) {
