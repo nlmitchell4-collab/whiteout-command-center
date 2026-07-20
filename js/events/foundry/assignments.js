@@ -9,76 +9,53 @@ import {
     getRosterPerson
 } from "../../data/commandData.js";
 
+const SHARED_OBJECTIVES_BY_PHASE = {
+    opening: [
+        "boiler",
+        "prototype-west",
+        "prototype-east",
+        "repair-north",
+        "repair-east",
+        "transit"
+    ],
+    mid: [
+        "boiler",
+        "prototype-west",
+        "prototype-east",
+        "repair-north",
+        "repair-east",
+        "mercenary",
+        "munitions",
+        "imperial",
+        "transit"
+    ],
+    final: [
+        "boiler",
+        "imperial",
+        "prototype-west",
+        "prototype-east",
+        "munitions",
+        "mercenary",
+        "workshop-northeast",
+        "workshop-southeast",
+        "repair-east",
+        "repair-north",
+        "transit"
+    ]
+};
+
 const LEGION_OBJECTIVES_BY_PHASE = {
     opening: {
-        1: [
-            "boiler",
-            "prototype-west",
-            "prototype-east",
-            "repair-west",
-            "repair-south",
-            "transit"
-        ],
-        2: [
-            "boiler",
-            "repair-north",
-            "prototype-west",
-            "prototype-east",
-            "repair-east",
-            "transit"
-        ]
+        1: SHARED_OBJECTIVES_BY_PHASE.opening,
+        2: SHARED_OBJECTIVES_BY_PHASE.opening
     },
     mid: {
-        1: [
-            "boiler",
-            "prototype-west",
-            "prototype-east",
-            "repair-west",
-            "repair-south",
-            "mercenary",
-            "munitions",
-            "imperial",
-            "transit"
-        ],
-        2: [
-            "boiler",
-            "repair-north",
-            "prototype-west",
-            "prototype-east",
-            "repair-east",
-            "mercenary",
-            "munitions",
-            "imperial",
-            "transit"
-        ]
+        1: SHARED_OBJECTIVES_BY_PHASE.mid,
+        2: SHARED_OBJECTIVES_BY_PHASE.mid
     },
     final: {
-        1: [
-            "boiler",
-            "imperial",
-            "prototype-west",
-            "prototype-east",
-            "munitions",
-            "mercenary",
-            "workshop-northwest",
-            "workshop-southwest",
-            "repair-west",
-            "repair-south",
-            "transit"
-        ],
-        2: [
-            "boiler",
-            "imperial",
-            "prototype-west",
-            "prototype-east",
-            "munitions",
-            "mercenary",
-            "workshop-northeast",
-            "workshop-southeast",
-            "repair-east",
-            "repair-north",
-            "transit"
-        ]
+        1: SHARED_OBJECTIVES_BY_PHASE.final,
+        2: SHARED_OBJECTIVES_BY_PHASE.final
     }
 };
 

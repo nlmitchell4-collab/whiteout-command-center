@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.7
+
+- Unified Foundry objective pools so Legion 1 and Legion 2 use the same east-side assignment logic in every phase.
+
 ## v1.0.6
 
 - Changed tertiary Foundry coverage to assign uncovered objectives from the objective side first, so repairs and other gaps are filled before remaining third slots use proximity.
