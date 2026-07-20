@@ -1,0 +1,1 @@
+import{t as e}from"./index-DgrXQQm8.js";import{f as t,m as n,p as r}from"./index.esm-DU3C6dKd.js";e((()=>{t(),t(),n(`firebase`,`12.15.0`,`app`)}))();export{r as initializeApp};

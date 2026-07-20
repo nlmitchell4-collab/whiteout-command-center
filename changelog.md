@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.9
+
+- Improved battlefield chief search responsiveness by avoiding full battlefield rebuilds while typing.
+
 ## v1.0.8
 
 - Removed east-side safe-zone bias from Foundry assignment scoring so objective selection uses priority, troop power balance, coverage and direct proximity only.

@@ -50,18 +50,14 @@ export function initializeChiefSelector() {
 
         renderChiefResults(input.value);
 
-        const exactChief =
-            getRosterPeople().find(c =>
-                c.displayName.toLowerCase() ===
-                input.value.toLowerCase()
-            );
-
-        if (!exactChief) {
+        if (
+            selectedChief &&
+            input.value.trim() !== getSelectedChiefName()
+        ) {
 
             selectedChief = null;
             localStorage.removeItem("chief");
             syncLegionControls();
-            buildBattlefield();
 
         }
 
@@ -273,6 +269,13 @@ function hideChiefResults() {
     if (results) {
         results.hidden = true;
     }
+}
+
+function getSelectedChiefName() {
+    const chief =
+        getRosterPerson(selectedChief);
+
+    return chief?.displayName ?? "";
 }
 
 function escapeHtml(value) {
