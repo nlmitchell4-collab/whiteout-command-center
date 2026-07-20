@@ -62,4 +62,4 @@ After changing `.env`, restart the Vite dev server. For production, rebuild and 
 
 ## Version
 
-Current version: `1.0.3`
+Current version: `1.0.4`

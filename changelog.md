@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.4
+
+- Restricted top-power Foundry combatants to High and Critical objectives only.
+
 ## v1.0.3
 
 - Rebalanced Foundry assignment planning so strongest combatants take highest-priority objectives first while troop power is spread across those objectives.

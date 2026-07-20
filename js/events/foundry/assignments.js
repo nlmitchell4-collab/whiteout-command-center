@@ -84,6 +84,7 @@ const LEGION_OBJECTIVES_BY_PHASE = {
 
 const ASSIGNMENT_COUNT = 3;
 const PRIORITY_WEIGHT = 100;
+const TOP_POWER_PERCENTILE = 0.25;
 const LOW_POWER_PERCENTILE = 0.1;
 const PROXIMITY_WEIGHT = 3;
 const POWER_BALANCE_WEIGHT = 0.000001;
@@ -373,7 +374,8 @@ function getNextPrimaryObjective(
                 currentAssignments,
                 assignmentCounts,
                 capacities
-            )
+            ) &&
+            isAllowedForCombatantPower(objective, combatant, legion, phase)
         )
         .sort((first, second) =>
             getObjectivePriorityScore(second, phase) -
@@ -413,6 +415,7 @@ function getNextProximityObjective(
                 assignmentCounts,
                 capacities
             ) &&
+            isAllowedForCombatantPower(objective, combatant, legion, phase) &&
             isCompatibleWithAssignments(objective, currentAssignments, candidates)
         )
         .sort((first, second) =>
@@ -523,6 +526,13 @@ function getObjectivePriorityScore(objective, phase) {
     return PRIORITY_SCORES[priority] ?? PRIORITY_SCORES.low;
 }
 
+function isAllowedForCombatantPower(objective, combatant, legion, phase) {
+    if (!isTopPowerCombatant(combatant, legion)) return true;
+
+    return getObjectivePriorityScore(objective, phase) >=
+        PRIORITY_SCORES.high;
+}
+
 function getObjectiveCapacities(objectives, phase, combatantCount) {
     return new Map(
         objectives.map(objective => [
@@ -569,6 +579,25 @@ function isLowPowerCombatant(combatant, legion) {
     return (
         combatantIndex >= 0 &&
         combatantIndex >= legionCombatants.length - weakCombatantCount
+    );
+}
+
+function isTopPowerCombatant(combatant, legion) {
+    const legionCombatants =
+        getRankedLegionCombatants(legion);
+
+    const strongCombatantCount =
+        Math.max(
+            1,
+            Math.ceil(legionCombatants.length * TOP_POWER_PERCENTILE)
+        );
+
+    const combatantIndex =
+        legionCombatants.findIndex(person => person.id === combatant.id);
+
+    return (
+        combatantIndex >= 0 &&
+        combatantIndex < strongCombatantCount
     );
 }
 
