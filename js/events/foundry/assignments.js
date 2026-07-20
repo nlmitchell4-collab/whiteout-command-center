@@ -87,6 +87,12 @@ const OBJECTIVE_CAPACITY_PERCENT = {
     low: 0.1
 };
 
+const assignmentPlanCache =
+    new Map();
+
+const topPowerCombatantCache =
+    new Map();
+
 export function getAssignments(chiefId, phase) {
 
     if (!chiefId) return [];
@@ -252,6 +258,13 @@ function getLegionAssignmentPlan(legion, phase) {
     const phaseKey =
         phase ?? "opening";
 
+    const cacheKey =
+        getAssignmentPlanCacheKey(legion, phaseKey);
+
+    if (assignmentPlanCache.has(cacheKey)) {
+        return assignmentPlanCache.get(cacheKey);
+    }
+
     const candidates =
         getLegionObjectives(legion, phaseKey);
 
@@ -262,6 +275,7 @@ function getLegionAssignmentPlan(legion, phase) {
         new Map(combatants.map(combatant => [combatant.id, []]));
 
     if (candidates.length === 0 || combatants.length === 0) {
+        assignmentPlanCache.set(cacheKey, plan);
         return plan;
     }
 
@@ -346,6 +360,8 @@ function getLegionAssignmentPlan(legion, phase) {
         );
     });
 
+    assignmentPlanCache.set(cacheKey, plan);
+
     return plan;
 }
 
@@ -356,9 +372,35 @@ function getLegionObjectives(legion, phase) {
     return objectiveIds
         .map(objectiveId =>
             getFoundryObjectives()
-                .find(objective => objective.id === objectiveId)
+        .find(objective => objective.id === objectiveId)
         )
         .filter(Boolean);
+}
+
+function getAssignmentPlanCacheKey(legion, phase) {
+    return [
+        legion,
+        phase,
+        getLegionCombatantSignature(legion)
+    ].join("|");
+}
+
+function getLegionCombatantSignature(legion) {
+    return getRosterPeople()
+        .filter(person =>
+            person.source === "combatants" &&
+            person.legion === legion &&
+            normalizeValue(person.assignment) !== "no engagement"
+        )
+        .map(person => [
+            person.id,
+            person.displayName,
+            person.assignment,
+            person.foundryAssignment,
+            getTroopPower(person)
+        ].join(":"))
+        .sort()
+        .join(",");
 }
 
 function getNextObjectiveForPass(
@@ -700,6 +742,25 @@ function getCoverageCombatantDistance(objective, combatant, plan, candidates) {
 }
 
 function isTopPowerCombatant(combatant, legion) {
+    const cacheKey =
+        [
+            legion,
+            getLegionCombatantSignature(legion)
+        ].join("|");
+
+    if (!topPowerCombatantCache.has(cacheKey)) {
+        topPowerCombatantCache.set(
+            cacheKey,
+            getTopPowerCombatantIds(legion)
+        );
+    }
+
+    return topPowerCombatantCache
+        .get(cacheKey)
+        .has(combatant.id);
+}
+
+function getTopPowerCombatantIds(legion) {
     const legionCombatants =
         getRankedLegionCombatants(legion);
 
@@ -709,12 +770,10 @@ function isTopPowerCombatant(combatant, legion) {
             Math.ceil(legionCombatants.length * TOP_POWER_PERCENTILE)
         );
 
-    const combatantIndex =
-        legionCombatants.findIndex(person => person.id === combatant.id);
-
-    return (
-        combatantIndex >= 0 &&
-        combatantIndex < strongCombatantCount
+    return new Set(
+        legionCombatants
+            .slice(0, strongCombatantCount)
+            .map(person => person.id)
     );
 }
 

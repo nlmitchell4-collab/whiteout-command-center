@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.10
+
+- Cached Foundry assignment plans and top-power roster checks to speed up battlefield interactions.
+
 ## v1.0.9
 
 - Improved battlefield chief search responsiveness by avoiding full battlefield rebuilds while typing.
