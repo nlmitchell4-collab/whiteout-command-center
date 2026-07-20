@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.6
+
+- Changed tertiary Foundry coverage to assign uncovered objectives from the objective side first, so repairs and other gaps are filled before remaining third slots use proximity.
+
 ## v1.0.5
 
 - Added tertiary coverage logic so compatible lower-priority Foundry objectives get assigned before nearby objectives are overfilled.

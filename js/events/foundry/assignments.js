@@ -295,7 +295,7 @@ function getLegionAssignmentPlan(legion, phase) {
     const assignmentPower =
         new Map(candidates.map(objective => [objective.id, 0]));
 
-    for (let pass = 0; pass < ASSIGNMENT_COUNT; pass += 1) {
+    for (let pass = 0; pass < ASSIGNMENT_COUNT - 1; pass += 1) {
 
         combatants.forEach(combatant => {
             const currentAssignments =
@@ -316,21 +316,56 @@ function getLegionAssignmentPlan(legion, phase) {
 
             if (!objective) return;
 
-            currentAssignments.push(objective.id);
-
-            assignmentCounts.set(
-                objective.id,
-                (assignmentCounts.get(objective.id) ?? 0) + 1
-            );
-
-            assignmentPower.set(
-                objective.id,
-                (assignmentPower.get(objective.id) ?? 0) +
-                    getTroopPower(combatant)
+            assignObjectiveToCombatant(
+                objective,
+                combatant,
+                currentAssignments,
+                assignmentCounts,
+                assignmentPower
             );
         });
 
     }
+
+    assignTertiaryCoverageObjectives(
+        candidates,
+        combatants,
+        legion,
+        phaseKey,
+        plan,
+        assignmentCounts,
+        assignmentPower,
+        capacities
+    );
+
+    combatants.forEach(combatant => {
+        const currentAssignments =
+            plan.get(combatant.id);
+
+        if (currentAssignments.length >= ASSIGNMENT_COUNT) return;
+
+        const objective =
+            getNextProximityObjective(
+                candidates,
+                combatant,
+                legion,
+                phaseKey,
+                currentAssignments,
+                assignmentCounts,
+                assignmentPower,
+                capacities
+            );
+
+        if (!objective) return;
+
+        assignObjectiveToCombatant(
+            objective,
+            combatant,
+            currentAssignments,
+            assignmentCounts,
+            assignmentPower
+        );
+    });
 
     return plan;
 }
@@ -371,28 +406,6 @@ function getNextObjectiveForPass(
         );
     }
 
-    if (pass === ASSIGNMENT_COUNT - 1) {
-        return getNextTertiaryCoverageObjective(
-            candidates,
-            combatant,
-            legion,
-            phase,
-            currentAssignments,
-            assignmentCounts,
-            capacities
-        ) ??
-            getNextProximityObjective(
-                candidates,
-                combatant,
-                legion,
-                phase,
-                currentAssignments,
-                assignmentCounts,
-                assignmentPower,
-                capacities
-            );
-    }
-
     return getNextProximityObjective(
         candidates,
         combatant,
@@ -402,6 +415,107 @@ function getNextObjectiveForPass(
         assignmentCounts,
         assignmentPower,
         capacities
+    );
+}
+
+function assignTertiaryCoverageObjectives(
+    candidates,
+    combatants,
+    legion,
+    phase,
+    plan,
+    assignmentCounts,
+    assignmentPower,
+    capacities
+) {
+    getUncoveredCoverageObjectives(candidates, phase)
+        .forEach(objective => {
+            if ((assignmentCounts.get(objective.id) ?? 0) > 0) return;
+
+            const combatant =
+                getBestCoverageCombatant(
+                    objective,
+                    candidates,
+                    combatants,
+                    legion,
+                    phase,
+                    plan,
+                    assignmentCounts,
+                    capacities
+                );
+
+            if (!combatant) return;
+
+            assignObjectiveToCombatant(
+                objective,
+                combatant,
+                plan.get(combatant.id),
+                assignmentCounts,
+                assignmentPower
+            );
+        });
+}
+
+function getUncoveredCoverageObjectives(candidates, phase) {
+    return [...candidates]
+        .sort((first, second) =>
+            getObjectivePriorityScore(first, phase) -
+                getObjectivePriorityScore(second, phase) ||
+            first.name.localeCompare(second.name)
+        );
+}
+
+function getBestCoverageCombatant(
+    objective,
+    candidates,
+    combatants,
+    legion,
+    phase,
+    plan,
+    assignmentCounts,
+    capacities
+) {
+    return [...combatants]
+        .filter(combatant => {
+            const currentAssignments =
+                plan.get(combatant.id);
+
+            return currentAssignments.length < ASSIGNMENT_COUNT &&
+                canAssignObjective(
+                    objective,
+                    currentAssignments,
+                    assignmentCounts,
+                    capacities
+                ) &&
+                isAllowedForCombatantPower(objective, combatant, legion, phase) &&
+                isCompatibleWithAssignments(objective, currentAssignments, candidates);
+        })
+        .sort((first, second) =>
+            getCoverageCombatantDistance(objective, first, plan, candidates) -
+                getCoverageCombatantDistance(objective, second, plan, candidates) ||
+            getTroopPower(first) - getTroopPower(second) ||
+            first.displayName.localeCompare(second.displayName)
+        )[0] ?? null;
+}
+
+function assignObjectiveToCombatant(
+    objective,
+    combatant,
+    currentAssignments,
+    assignmentCounts,
+    assignmentPower
+) {
+    currentAssignments.push(objective.id);
+
+    assignmentCounts.set(
+        objective.id,
+        (assignmentCounts.get(objective.id) ?? 0) + 1
+    );
+
+    assignmentPower.set(
+        objective.id,
+        (assignmentPower.get(objective.id) ?? 0) +
+            getTroopPower(combatant)
     );
 }
 
@@ -471,41 +585,6 @@ function getNextProximityObjective(
                 getSecondaryScore(first, primary, phase, assignmentCounts, assignmentPower) ||
             getSecondaryTieBreaker(first, combatant, legion) -
                 getSecondaryTieBreaker(second, combatant, legion) ||
-            first.name.localeCompare(second.name)
-        )[0] ?? null;
-}
-
-function getNextTertiaryCoverageObjective(
-    candidates,
-    combatant,
-    legion,
-    phase,
-    currentAssignments,
-    assignmentCounts,
-    capacities
-) {
-    const primary =
-        candidates.find(objective =>
-            objective.id === currentAssignments[0]
-        );
-
-    return [...candidates]
-        .filter(objective =>
-            canAssignObjective(
-                objective,
-                currentAssignments,
-                assignmentCounts,
-                capacities
-            ) &&
-            isAllowedForCombatantPower(objective, combatant, legion, phase) &&
-            isCompatibleWithAssignments(objective, currentAssignments, candidates) &&
-            (assignmentCounts.get(objective.id) ?? 0) === 0
-        )
-        .sort((first, second) =>
-            getObjectivePriorityScore(first, phase) -
-                getObjectivePriorityScore(second, phase) ||
-            getCoverageDistance(first, primary) -
-                getCoverageDistance(second, primary) ||
             first.name.localeCompare(second.name)
         )[0] ?? null;
 }
@@ -646,10 +725,22 @@ function getPairDistance(first, second) {
     );
 }
 
-function getCoverageDistance(objective, primary) {
-    if (!primary) return getSafeZoneDistance(objective);
+function getCoverageCombatantDistance(objective, combatant, plan, candidates) {
+    const currentAssignments =
+        plan.get(combatant.id) ?? [];
 
-    return getPairDistance(objective, primary);
+    if (currentAssignments.length === 0) {
+        return getSafeZoneDistance(objective);
+    }
+
+    return currentAssignments.reduce((total, objectiveId) => {
+        const assignedObjective =
+            candidates.find(item => item.id === objectiveId);
+
+        if (!assignedObjective) return total;
+
+        return total + getPairDistance(objective, assignedObjective);
+    }, 0);
 }
 
 function isLowPowerCombatant(combatant, legion) {
