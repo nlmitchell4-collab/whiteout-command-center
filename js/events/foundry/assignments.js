@@ -84,11 +84,9 @@ const LEGION_OBJECTIVES_BY_PHASE = {
 
 const ASSIGNMENT_COUNT = 3;
 const PRIORITY_WEIGHT = 100;
-const SAFE_ZONE_CLUSTER_WEIGHT = 0.25;
-const PRIMARY_SECONDARY_DISTANCE_WEIGHT = 2.5;
-const SECONDARY_TERTIARY_DISTANCE_WEIGHT = 1.5;
 const LOW_POWER_PERCENTILE = 0.1;
-const LOW_POWER_SAFE_ZONE_WEIGHT = 2;
+const PROXIMITY_WEIGHT = 3;
+const POWER_BALANCE_WEIGHT = 0.000001;
 
 const SAFE_ZONE = {
     x: 100,
@@ -287,13 +285,13 @@ function getLegionAssignmentPlan(legion, phase) {
         return plan;
     }
 
-    const clusters =
-        getObjectiveClusters(candidates, phaseKey);
-
     const capacities =
         getObjectiveCapacities(candidates, phaseKey, combatants.length);
 
     const assignmentCounts =
+        new Map(candidates.map(objective => [objective.id, 0]));
+
+    const assignmentPower =
         new Map(candidates.map(objective => [objective.id, 0]));
 
     for (let pass = 0; pass < ASSIGNMENT_COUNT; pass += 1) {
@@ -302,24 +300,28 @@ function getLegionAssignmentPlan(legion, phase) {
             const currentAssignments =
                 plan.get(combatant.id);
 
-            const rankedClusters =
-                isLowPowerCombatant(combatant, legion)
-                    ? getSafeZoneRankedClusters(clusters)
-                    : clusters;
-
             const objective =
-                getNextCoverageObjective(
-                    candidates,
-                    currentAssignments,
-                    assignmentCounts,
-                    capacities
-                ) ??
-                getNextClusterObjective(
-                    rankedClusters,
-                    currentAssignments,
-                    assignmentCounts,
-                    capacities
-                );
+                pass === 0
+                    ? getNextPrimaryObjective(
+                        candidates,
+                        combatant,
+                        legion,
+                        phaseKey,
+                        currentAssignments,
+                        assignmentCounts,
+                        assignmentPower,
+                        capacities
+                    )
+                    : getNextProximityObjective(
+                        candidates,
+                        combatant,
+                        legion,
+                        phaseKey,
+                        currentAssignments,
+                        assignmentCounts,
+                        assignmentPower,
+                        capacities
+                    );
 
             if (!objective) return;
 
@@ -328,6 +330,12 @@ function getLegionAssignmentPlan(legion, phase) {
             assignmentCounts.set(
                 objective.id,
                 (assignmentCounts.get(objective.id) ?? 0) + 1
+            );
+
+            assignmentPower.set(
+                objective.id,
+                (assignmentPower.get(objective.id) ?? 0) +
+                    getTroopPower(combatant)
             );
         });
 
@@ -348,70 +356,72 @@ function getLegionObjectives(legion, phase) {
         .filter(Boolean);
 }
 
-function getObjectiveClusters(objectives, phase) {
-    const clusters = [];
-
-    for (let first = 0; first < objectives.length - 2; first += 1) {
-        for (let second = first + 1; second < objectives.length - 1; second += 1) {
-            for (let third = second + 1; third < objectives.length; third += 1) {
-
-                const clusterObjectives = orderClusterObjectives([
-                    objectives[first],
-                    objectives[second],
-                    objectives[third]
-                ], phase);
-
-                clusters.push({
-                    objectives: clusterObjectives,
-                    score: getClusterScore(clusterObjectives, phase)
-                });
-
-            }
-        }
-    }
-
-    return clusters.sort((a, b) => b.score - a.score);
-}
-
-function getNextCoverageObjective(
+function getNextPrimaryObjective(
     candidates,
+    combatant,
+    legion,
+    phase,
     currentAssignments,
     assignmentCounts,
+    assignmentPower,
     capacities
 ) {
-    return getCoverageRankedObjectives(candidates)
-        .find(objective =>
+    return [...candidates]
+        .filter(objective =>
+            canAssignObjective(
+                objective,
+                currentAssignments,
+                assignmentCounts,
+                capacities
+            )
+        )
+        .sort((first, second) =>
+            getObjectivePriorityScore(second, phase) -
+                getObjectivePriorityScore(first, phase) ||
+            getAverageAssignedPower(first, assignmentCounts, assignmentPower) -
+                getAverageAssignedPower(second, assignmentCounts, assignmentPower) ||
+            (assignmentCounts.get(first.id) ?? 0) -
+                (assignmentCounts.get(second.id) ?? 0) ||
+            getPrimaryTieBreaker(first, combatant, legion) -
+                getPrimaryTieBreaker(second, combatant, legion) ||
+            first.name.localeCompare(second.name)
+        )[0] ?? null;
+}
+
+function getNextProximityObjective(
+    candidates,
+    combatant,
+    legion,
+    phase,
+    currentAssignments,
+    assignmentCounts,
+    assignmentPower,
+    capacities
+) {
+    const primary =
+        candidates.find(objective =>
+            objective.id === currentAssignments[0]
+        );
+
+    if (!primary) return null;
+
+    return [...candidates]
+        .filter(objective =>
             canAssignObjective(
                 objective,
                 currentAssignments,
                 assignmentCounts,
                 capacities
             ) &&
-            (assignmentCounts.get(objective.id) ?? 0) === 0
-        ) ?? null;
-}
-
-function getNextClusterObjective(
-    rankedClusters,
-    currentAssignments,
-    assignmentCounts,
-    capacities
-) {
-    for (const cluster of rankedClusters) {
-        const objective =
-            cluster.objectives.find(item =>
-                canAssignObjective(
-                    item,
-                    currentAssignments,
-                    assignmentCounts,
-                    capacities
-                )
-            );
-
-        if (objective) return objective;
-    }
-
-    return null;
+            isCompatibleWithAssignments(objective, currentAssignments, candidates)
+        )
+        .sort((first, second) =>
+            getSecondaryScore(second, primary, phase, assignmentCounts, assignmentPower) -
+                getSecondaryScore(first, primary, phase, assignmentCounts, assignmentPower) ||
+            getSecondaryTieBreaker(first, combatant, legion) -
+                getSecondaryTieBreaker(second, combatant, legion) ||
+            first.name.localeCompare(second.name)
+        )[0] ?? null;
 }
 
 function canAssignObjective(
@@ -426,85 +436,77 @@ function canAssignObjective(
         (capacities.get(objective.id) ?? 0);
 }
 
-function getCoverageRankedObjectives(objectives) {
-    return [...objectives]
-        .sort((first, second) =>
-            getSafeZoneDistance(first) -
-            getSafeZoneDistance(second) ||
-            first.name.localeCompare(second.name)
-        );
+function isCompatibleWithAssignments(
+    objective,
+    currentAssignments,
+    candidates
+) {
+    return currentAssignments.every(objectiveId => {
+        const assignedObjective =
+            candidates.find(item => item.id === objectiveId);
+
+        return !assignedObjective ||
+            !areOppositeMapSides(objective, assignedObjective);
+    });
 }
 
-function getClusterScore(objectives, phase) {
-    const priorityScore =
-        objectives.reduce(
-            (total, objective) =>
-                total + getObjectivePriorityScore(objective, phase),
-            0
-        );
+function areOppositeMapSides(first, second) {
+    const firstSide =
+        getMapSide(first);
 
-    const proximityPenalty =
-        getClusterProximityPenalty(objectives);
-
-    const safeZonePenalty =
-        getClusterSafeZoneDistance(objectives) * SAFE_ZONE_CLUSTER_WEIGHT;
-
-    return (priorityScore * PRIORITY_WEIGHT) -
-        proximityPenalty -
-        safeZonePenalty;
-}
-
-function orderClusterObjectives(objectives, phase) {
-    return [...objectives]
-        .sort((first, second) =>
-            getObjectivePriorityScore(second, phase) -
-            getObjectivePriorityScore(first, phase) ||
-            first.name.localeCompare(second.name)
-        );
-}
-
-function getClusterProximityPenalty(objectives) {
-    const [
-        primary,
-        secondary,
-        tertiary
-    ] = objectives;
+    const secondSide =
+        getMapSide(second);
 
     return (
-        getPairDistance(primary, secondary) *
-            PRIMARY_SECONDARY_DISTANCE_WEIGHT +
-        getPairDistance(primary, tertiary) *
-            PRIMARY_SECONDARY_DISTANCE_WEIGHT +
-        getPairDistance(secondary, tertiary) *
-            SECONDARY_TERTIARY_DISTANCE_WEIGHT
+        (firstSide === "west" && secondSide === "east") ||
+        (firstSide === "east" && secondSide === "west")
     );
 }
 
-function getSafeZoneRankedClusters(clusters) {
-    return [...clusters]
-        .sort((first, second) =>
-            getLowPowerClusterScore(second) -
-            getLowPowerClusterScore(first)
-        );
+function getMapSide(objective) {
+    if (objective.x <= 40) return "west";
+    if (objective.x >= 60) return "east";
+    return "center";
 }
 
-function getLowPowerClusterScore(cluster) {
-    return cluster.score -
-        (
-            getClusterSafeZoneDistance(cluster.objectives) *
-            LOW_POWER_SAFE_ZONE_WEIGHT
-        );
+function getAverageAssignedPower(
+    objective,
+    assignmentCounts,
+    assignmentPower
+) {
+    const count =
+        assignmentCounts.get(objective.id) ?? 0;
+
+    if (count === 0) return 0;
+
+    return (assignmentPower.get(objective.id) ?? 0) / count;
 }
 
-function getClusterSafeZoneDistance(objectives) {
-    return objectives.reduce(
-        (total, objective) =>
-            total + Math.hypot(
-                objective.x - SAFE_ZONE.x,
-                objective.y - SAFE_ZONE.y
-            ),
-        0
+function getPrimaryTieBreaker(objective, combatant, legion) {
+    return isLowPowerCombatant(combatant, legion)
+        ? getSafeZoneDistance(objective)
+        : 0;
+}
+
+function getSecondaryScore(
+    objective,
+    primary,
+    phase,
+    assignmentCounts,
+    assignmentPower
+) {
+    return (
+        getObjectivePriorityScore(objective, phase) * PRIORITY_WEIGHT -
+        getPairDistance(primary, objective) * PROXIMITY_WEIGHT -
+        getAverageAssignedPower(objective, assignmentCounts, assignmentPower) *
+            POWER_BALANCE_WEIGHT
     );
+}
+
+function getSecondaryTieBreaker(objective, combatant, legion) {
+    return isLowPowerCombatant(combatant, legion)
+        ? getSafeZoneDistance(objective)
+        : getSafeZoneDistance(objective) * 0.01;
 }
 
 function getSafeZoneDistance(objective) {

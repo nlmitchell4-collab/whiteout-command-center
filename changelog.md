@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.3
+
+- Rebalanced Foundry assignment planning so strongest combatants take highest-priority objectives first while troop power is spread across those objectives.
+- Shifted secondary and tertiary assignments toward nearby objectives and blocked opposite-side objective pairings for the same combatant.
+
 ## v1.0.2
 
 - Improved mobile battlefield usability with a fixed phase switcher, compact assignment cards and wrapped objective names.
