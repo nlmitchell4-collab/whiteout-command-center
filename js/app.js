@@ -7,12 +7,14 @@ import {
 } from "./events/foundry/battlefield.js";
 import { renderImportPage } from "./pages/importPage.js";
 import { renderRosterPage } from "./pages/rosterPage.js";
+import { renderSvsMinistryFormPage } from "./pages/svsMinistryFormPage.js";
 import { getCombatants } from "./data/commandData.js";
 
 export async function initializeApp() {
 
     initializeNavigation();
     renderImportPage();
+    renderSvsMinistryFormPage();
 
     await loadDataWithFallback();
 

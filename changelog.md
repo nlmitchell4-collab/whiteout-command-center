@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.12
+
+- Added a password-protected SVS Ministry Form page to the top navigation.
+- Added an SVS Apps Script web endpoint that embeds the stored Google Form from script metadata.
+
 ## v1.0.11
 
 - Added the SVS Form Apps Script source tree and deployment workflow using clasp.

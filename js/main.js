@@ -13,6 +13,7 @@ import "./common/utils.js";
 import "./pages/importPage.js";
 import "./pages/rosterPage.js";
 import "./pages/loginModal.js";
+import "./pages/svsMinistryFormPage.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     // app.js handles application initialization

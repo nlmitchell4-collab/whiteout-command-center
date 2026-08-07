@@ -11,6 +11,7 @@ Command center for planning and reviewing Whiteout Survival Foundry assignments.
 - Assignment choices for Legion 1, Legion 2, or No engagement.
 - Searchable Battlefield combatant selector.
 - Legion assignment engine that narrows each combatant to nearby high-priority objective clusters.
+- Password-protected SVS Ministry Form page backed by the SVS Apps Script project.
 - Firestore-first command data with local file fallback for testing.
 - Local build output in `dist/` for Firebase Hosting.
 
@@ -53,6 +54,9 @@ Add these GitHub repository secrets before relying on automatic deploys:
 
 Copy `.env.example` to `.env` and fill in local values.
 
+The SVS Ministry Form page uses the basic page password `3133Rox`.
+It embeds the SVS Apps Script web app, which reads the stored form id from Apps Script properties and renders the published Google Form.
+
 Production combatant data persists in Firestore at `commandData/combatants`.
 Deploying the frontend does not overwrite that Firestore document.
 
@@ -62,4 +66,4 @@ After changing `.env`, restart the Vite dev server. For production, rebuild and 
 
 ## Version
 
-Current version: `1.0.11`
+Current version: `1.0.12`

@@ -3,6 +3,14 @@
 // =========================================
 import { isAdmin } from "./auth.js";
 import { showLoginModal } from "./pages/loginModal.js";
+
+const PAGE_PASSWORDS = {
+    "svs-ministry-form": {
+        password: "3133Rox",
+        sessionKey: "svsMinistryFormAccess"
+    }
+};
+
 export function initializeNavigation() {
 
     const pages =
@@ -76,6 +84,11 @@ export function initializeNavigation() {
             return;
         }
 
+        if (requiresPagePassword(pageId)) {
+            promptForPagePassword(pageId, openTargetPage);
+            return;
+        }
+
         openTargetPage();
     };
 
@@ -107,4 +120,31 @@ function getPageGroup(pageId) {
         document.querySelector(`[data-page="${pageId}"]`);
 
     return button?.dataset.navGroup ?? null;
+}
+
+function requiresPagePassword(pageId) {
+    const pagePassword =
+        PAGE_PASSWORDS[pageId];
+
+    if (!pagePassword) return false;
+
+    return sessionStorage.getItem(pagePassword.sessionKey) !== "true";
+}
+
+function promptForPagePassword(pageId, onSuccess) {
+    const pagePassword =
+        PAGE_PASSWORDS[pageId];
+
+    const password =
+        prompt("Page Password");
+
+    if (password === null) return;
+
+    if (password === pagePassword.password) {
+        sessionStorage.setItem(pagePassword.sessionKey, "true");
+        onSuccess();
+        return;
+    }
+
+    alert("Incorrect password.");
 }
