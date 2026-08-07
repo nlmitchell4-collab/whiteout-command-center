@@ -4,6 +4,11 @@ import {
     saveCommandDataEntry
 } from "../data/commandData.js";
 import { buildBattlefield } from "../events/foundry/battlefield.js";
+import {
+    bindCanyonConfigControls,
+    buildCanyonBattlefield,
+    renderCanyonConfigControls
+} from "../events/canyon/battlefield.js";
 import { renderRosterPage } from "./rosterPage.js";
 
 let reviewCombatants = [];
@@ -83,7 +88,13 @@ export function renderImportPage() {
             </div>
 
         </div>
+
+        <div id="canyon-import-settings">
+            ${renderCanyonConfigControls()}
+        </div>
     `;
+
+    bindCanyonConfigControls(container);
 
     document
         .getElementById("process-images")
@@ -377,6 +388,7 @@ function bindReviewEvents(container) {
             );
 
             buildBattlefield();
+            buildCanyonBattlefield();
             renderRosterPage(getCombatants());
 
             status.textContent = "Saved. Battlefield assignments refreshed.";

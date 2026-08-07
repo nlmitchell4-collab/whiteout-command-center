@@ -55,6 +55,8 @@ button,
 input[type="button"],
 input[type="submit"] {
     cursor: pointer;
+    background: var(--panel-light);
+    color: var(--text);
 }
 
 .button-row {

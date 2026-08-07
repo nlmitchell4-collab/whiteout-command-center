@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.0.15
+
+- Added Canyon Clash battlefield planning with Blue, Green, Red and Yellow balanced roster teams.
+- Assigned Canyon team leaders from the four highest troop-power eligible combatants.
+- Added configurable Canyon legion map colors on the Import page.
+
 ## v1.0.14
 
 - Added a basic-auth SVS admin modal with a Google-verified archive/reset action.

@@ -5,6 +5,7 @@ import {
     buildBattlefield,
     initializePhaseSelector
 } from "./events/foundry/battlefield.js";
+import { initializeCanyonBattlefield } from "./events/canyon/battlefield.js";
 import { renderImportPage } from "./pages/importPage.js";
 import { renderRosterPage } from "./pages/rosterPage.js";
 import { renderSvsMinistryFormPage } from "./pages/svsMinistryFormPage.js";
@@ -18,9 +19,11 @@ export async function initializeApp() {
 
     await loadDataWithFallback();
 
+    renderImportPage();
     initializeChiefSelector();
     initializePhaseSelector();
     buildBattlefield();
+    initializeCanyonBattlefield();
     renderRosterPage(getCombatants());
 
 }

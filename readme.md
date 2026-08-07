@@ -13,6 +13,7 @@ Command center for planning and reviewing Whiteout Survival Foundry assignments.
 - Legion assignment engine that narrows each combatant to nearby high-priority objective clusters.
 - Password-protected SVS Ministry Form page backed by the SVS Apps Script project.
 - Basic-auth SVS admin modal with Google-verified archive/reset action.
+- Canyon Clash battlefield with four balanced color teams and configurable legion map colors.
 - SVS Apps Script archive/reset helpers for preserving form cycles before clearing live data.
 - Firestore-first command data with local file fallback for testing.
 - Local build output in `dist/` for Firebase Hosting.
@@ -62,6 +63,7 @@ The SVS admin modal uses `VITE_ADMIN_PASSWORD` to unlock controls, then requires
 Configure the Apps Script `SVS_ADMIN_EMAILS` script property as a comma-separated list of Google accounts allowed to archive and reset SVS data.
 
 Production combatant data persists in Firestore at `commandData/combatants`.
+Canyon Clash settings persist in Firestore at `commandData/canyonConfig`.
 Deploying the frontend does not overwrite that Firestore document.
 
 If Firebase values are blank during local development, the app uses bundled local data files under `data/`. Local saves without Firebase are in-memory only and are intended for testing.
@@ -70,4 +72,4 @@ After changing `.env`, restart the Vite dev server. For production, rebuild and 
 
 ## Version
 
-Current version: `1.0.14`
+Current version: `1.0.15`

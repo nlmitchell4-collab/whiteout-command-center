@@ -15,6 +15,9 @@ import "./pages/rosterPage.js";
 import "./pages/loginModal.js";
 import "./pages/svsMinistryFormPage.js";
 
+import "./events/canyon/battlefield.js";
+import "./events/canyon/assignments.js";
+
 document.addEventListener("DOMContentLoaded", () => {
     // app.js handles application initialization
 });

@@ -56,7 +56,7 @@
 
         <footer>
 
-            Version 1.0.11
+            Version 1.0.15
 
         </footer>
 
@@ -104,9 +104,8 @@
                 <article class="event-card">
                     <h2>Canyon</h2>
                     <p>
-                        Placeholder workspace for future Canyon roster
-                        planning, objective guidance and event-specific
-                        assignments.
+                        Four-team roster balancing, leader assignment and
+                        configurable map-color planning for Canyon Clash.
                     </p>
                     <div class="event-links">
                         <button class="subnav-button"
@@ -318,10 +317,16 @@
             </div>
 
             <p>
-                Canyon planning will use the shared roster and Canyon
-                assignment field. This placeholder keeps the navigation
-                shape ready while the event-specific rules and assignment
-                engine are designed.
+                Canyon Clash planning uses the shared roster and the Canyon
+                Assignment field. Eligible combatants are divided into Blue,
+                Green, Red and Yellow teams with the four highest troop-power
+                players assigned as leaders.
+            </p>
+
+            <p>
+                Admins can set the active Canyon legion and WOS map color on
+                the Import page. The battlefield highlights the assigned map
+                color so direct links stay aligned with the current match.
             </p>
 
         </section>
@@ -348,11 +353,21 @@
                 </button>
             </div>
 
-            <p>
-                Canyon battlefield tools are not active yet. This page is
-                reserved for future map views, team assignments and direct
-                links once Canyon logic is added.
-            </p>
+            <div class="battlefield-control canyon-legion-control">
+                <label for="canyon-legion-select">Canyon Legion</label>
+                <select id="canyon-legion-select">
+                    <option value="Flameguard">Flameguard</option>
+                    <option value="Iceguard">Iceguard</option>
+                    <option value="Stormrage">Stormrage</option>
+                </select>
+            </div>
+
+            <div id="canyon-battlefield-container">
+                <div id="canyon-map"></div>
+                <div id="canyon-panel"></div>
+            </div>
+
+            <div id="canyon-teams" class="canyon-team-grid"></div>
 
         </section>
 
@@ -379,9 +394,11 @@
             </div>
 
             <ul>
-                <li>Use the roster Canyon Assignment field to stage future event-specific team planning.</li>
-                <li>Keep manual notes close to the roster until Canyon scoring, objectives and assignment rules are defined.</li>
-                <li>This page will become the direct-link reference for Canyon strategy once the module is implemented.</li>
+                <li>Mark Canyon participants in the roster editor before the match; No engagement players are excluded from team balancing.</li>
+                <li>The top four eligible troop-power players become Blue, Green, Red and Yellow leaders.</li>
+                <li>Remaining players are assigned to the smallest and lowest-power team first so teams stay even.</li>
+                <li>Teams should protect their nearby lane first, then collapse toward center only after local control is stable.</li>
+                <li>Use the Import page Canyon settings to match the current WOS map color for Flameguard, Iceguard or Stormrage.</li>
             </ul>
 
         </section>
