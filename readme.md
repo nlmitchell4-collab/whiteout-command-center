@@ -12,6 +12,7 @@ Command center for planning and reviewing Whiteout Survival Foundry assignments.
 - Searchable Battlefield combatant selector.
 - Legion assignment engine that narrows each combatant to nearby high-priority objective clusters.
 - Password-protected SVS Ministry Form page backed by the SVS Apps Script project.
+- SVS Apps Script archive/reset helpers for preserving form cycles before clearing live data.
 - Firestore-first command data with local file fallback for testing.
 - Local build output in `dist/` for Firebase Hosting.
 
@@ -66,4 +67,4 @@ After changing `.env`, restart the Vite dev server. For production, rebuild and 
 
 ## Version
 
-Current version: `1.0.12`
+Current version: `1.0.13`

@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.13
+
+- Cleaned up the SVS Apps Script archive module while preserving archive and reset entry points.
+- Added safer archive snapshot handling and shared empty-state reset helpers.
+
 ## v1.0.12
 
 - Added a password-protected SVS Ministry Form page to the top navigation.
