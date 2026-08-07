@@ -1,5 +1,32 @@
 # Changelog
 
+## v1.0.20
+
+- Added exact Canyon route sequences that can flow from home territory into enemy territory.
+- Generated matching Iceguard and Flameguard route variants from the Stormrage path numbers.
+
+## v1.0.19
+
+- Removed visible Canyon objective labels from the battlefield map so route color is the primary signal.
+- Added phase-specific Canyon path highlighting for each team route.
+
+## v1.0.18
+
+- Simplified Canyon Clash planning around four team routes instead of scattered per-objective assignments.
+- Added ordered Canyon route waypoints for Blue, Green, Red and Yellow teams on the full territory map.
+- Updated chief and commander Canyon views to highlight route ownership and route team movement.
+
+## v1.0.17
+
+- Reworked Canyon Clash to assign each roster legion to one Canyon map from Import configuration.
+- Added Canyon commander/chief battlefield controls and legion-filtered team assignments.
+- Added configurable Canyon team leaders with automatic highest-power fallback.
+- Added config-driven Canyon objective IDs, phase unlocks, priorities and map-specific display names.
+
+## v1.0.16
+
+- Removed the Canyon map selector from the Battlefield page so the map is driven only by Import page configuration.
+
 ## v1.0.15
 
 - Added Canyon Clash battlefield planning with Blue, Green, Red and Yellow balanced roster teams.

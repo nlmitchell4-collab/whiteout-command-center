@@ -1,6 +1,7 @@
 import { chiefs as defaultChiefs } from "../../data/chiefs.js";
 import { combatants as defaultCombatants } from "../../data/combatants.js";
 import { canyonConfig as defaultCanyonConfig } from "../../data/canyon/config.js";
+import { canyonMaps as defaultCanyonMaps } from "../../data/canyon/maps.js";
 import { foundryAssignments as defaultFoundryAssignments } from "../../data/foundry/assignments.js";
 import { foundryConfig as defaultFoundryConfig } from "../../data/foundry/config.js";
 import { foundryObjectives as defaultFoundryObjectives } from "../../data/foundry/objectives.js";
@@ -14,6 +15,7 @@ let commandData = {
     chiefs: defaultChiefs,
     combatants: defaultCombatants,
     canyonConfig: defaultCanyonConfig,
+    canyonMaps: defaultCanyonMaps,
     foundryAssignments: defaultFoundryAssignments,
     foundryConfig: defaultFoundryConfig,
     foundryObjectives: defaultFoundryObjectives
@@ -263,4 +265,8 @@ export function getFoundryObjectives() {
 
 export function getCanyonConfig() {
     return commandData.canyonConfig;
+}
+
+export function getCanyonMaps() {
+    return commandData.canyonMaps;
 }

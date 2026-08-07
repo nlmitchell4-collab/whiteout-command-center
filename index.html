@@ -56,7 +56,7 @@
 
         <footer>
 
-            Version 1.0.15
+            Version 1.0.20
 
         </footer>
 
@@ -318,15 +318,15 @@
 
             <p>
                 Canyon Clash planning uses the shared roster and the Canyon
-                Assignment field. Eligible combatants are divided into Blue,
-                Green, Red and Yellow teams with the four highest troop-power
-                players assigned as leaders.
+                Assignment field. Each roster legion is assigned to one Canyon
+                map from the Import page, then divided into Blue, Green, Red
+                and Yellow route teams that move together.
             </p>
 
             <p>
-                Admins can set the active Canyon legion and WOS map color on
-                the Import page. The battlefield highlights the assigned map
-                color so direct links stay aligned with the current match.
+                Admins can set the Canyon map and optional team leaders on the
+                Import page. If leaders are not selected, the highest troop-power
+                combatants become leaders automatically.
             </p>
 
         </section>
@@ -353,13 +353,53 @@
                 </button>
             </div>
 
-            <div class="battlefield-control canyon-legion-control">
-                <label for="canyon-legion-select">Canyon Legion</label>
-                <select id="canyon-legion-select">
-                    <option value="Flameguard">Flameguard</option>
-                    <option value="Iceguard">Iceguard</option>
-                    <option value="Stormrage">Stormrage</option>
-                </select>
+            <div id="canyon-chief-bar">
+
+                <div class="battlefield-control">
+                    <label for="canyon-chief-search">
+                        Chief
+                    </label>
+
+                    <input
+                        id="canyon-chief-search"
+                        placeholder="Type your name..."
+                        autocomplete="off">
+
+                    <div
+                        id="canyon-chief-list"
+                        class="chief-results"
+                        hidden>
+                    </div>
+                </div>
+
+                <div
+                    id="canyon-legion-context"
+                    class="battlefield-control">
+                </div>
+
+            </div>
+
+            <div id="canyon-my-objectives"></div>
+
+            <div id="canyon-phase-selector">
+                <button
+                    type="button"
+                    class="canyon-phase-button active"
+                    data-canyon-phase="opening">
+                    Seize & Conquer
+                </button>
+                <button
+                    type="button"
+                    class="canyon-phase-button"
+                    data-canyon-phase="fortress">
+                    Fortress Occupation
+                </button>
+                <button
+                    type="button"
+                    class="canyon-phase-button"
+                    data-canyon-phase="citadel">
+                    Citadel Onslaught
+                </button>
             </div>
 
             <div id="canyon-battlefield-container">
@@ -395,10 +435,12 @@
 
             <ul>
                 <li>Mark Canyon participants in the roster editor before the match; No engagement players are excluded from team balancing.</li>
-                <li>The top four eligible troop-power players become Blue, Green, Red and Yellow leaders.</li>
+                <li>The highest eligible troop-power players become Blue, Green, Red and Yellow leaders unless Import page leader overrides are set.</li>
                 <li>Remaining players are assigned to the smallest and lowest-power team first so teams stay even.</li>
-                <li>Teams should protect their nearby lane first, then collapse toward center only after local control is stable.</li>
-                <li>Use the Import page Canyon settings to match the current WOS map color for Flameguard, Iceguard or Stormrage.</li>
+                <li>Teams should move together along their assigned route, then collapse toward center only after local control is stable.</li>
+                <li>Use the Import page Canyon settings to assign Legion 1 and Legion 2 to their WOS Canyon maps.</li>
+                <li>Fortresses unlock in the second battle stage and should be treated as critical income and fuel-control targets.</li>
+                <li>Prepare routes before Frozen Citadel opens in the final stage; it can decide close matches with its end bonus.</li>
             </ul>
 
         </section>

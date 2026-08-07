@@ -1,3 +1,35 @@
+#canyon-chief-bar {
+    display: grid;
+    grid-template-columns: minmax(220px, 360px) minmax(180px, 240px);
+    gap: 12px;
+    align-items: end;
+    margin: 16px 0;
+}
+
+#canyon-phase-selector {
+    display: flex;
+    gap: 10px;
+    margin: 16px 0 0;
+}
+
+.canyon-phase-button {
+    flex: 1;
+    padding: 14px;
+
+    background: #1a2436;
+    color: white;
+
+    border: 2px solid var(--border);
+    border-radius: 12px;
+
+    font-weight: 800;
+}
+
+.canyon-phase-button.active {
+    background: var(--gold-dark);
+    border-color: var(--gold);
+}
+
 #canyon-battlefield-container {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
@@ -9,117 +41,83 @@
 #canyon-map {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1821 / 1280;
 
     overflow: hidden;
 
-    background:
-        radial-gradient(circle at center, rgba(215, 179, 106, .28), transparent 20%),
-        linear-gradient(135deg, #18263a, #0d1422 48%, #18263a);
+    background-color: #18263a;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+
     border: 2px solid var(--border);
     border-radius: 14px;
     box-shadow: var(--shadow);
 }
 
-.canyon-lane {
-    position: absolute;
-    background: rgba(255, 255, 255, .08);
-}
-
-.canyon-lane-horizontal {
-    top: 48%;
-    left: 10%;
-    right: 10%;
-    height: 4%;
-}
-
-.canyon-lane-vertical {
-    top: 10%;
-    bottom: 10%;
-    left: 48%;
-    width: 4%;
-}
-
-.canyon-center-label {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    width: 18%;
-    aspect-ratio: 1;
-    display: grid;
-    place-items: center;
-
-    background: #111827;
-    border: 2px solid var(--gold);
-    border-radius: 50%;
-    color: var(--gold);
-    font-weight: 800;
-}
-
-.canyon-start {
-    position: absolute;
-    width: 30%;
-    min-height: 16%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 4px;
-    padding: 12px;
-
-    border: 2px solid rgba(255, 255, 255, .28);
-    border-radius: 10px;
-    background: rgba(15, 23, 42, .88);
-}
-
-.canyon-start.active {
-    border-color: var(--gold);
-    box-shadow: 0 0 0 4px rgba(215, 179, 106, .22);
-}
-
-.canyon-start.blue {
-    top: 5%;
-    left: 5%;
-}
-
-.canyon-start.green {
-    top: 5%;
-    right: 5%;
-}
-
-.canyon-start.red {
-    bottom: 5%;
-    left: 5%;
-}
-
-.canyon-start.yellow {
-    right: 5%;
-    bottom: 5%;
-}
-
-.canyon-start strong {
-    font-size: 1.15rem;
-}
-
-.canyon-start span {
-    color: var(--text-muted);
-    font-size: .85rem;
-}
-
 .canyon-objective {
     position: absolute;
     transform: translate(-50%, -50%);
-    width: clamp(86px, 14vw, 132px);
-    min-height: 46px;
-    padding: 8px;
+    width: clamp(16px, 1.8vw, 26px);
+    height: clamp(16px, 1.8vw, 26px);
+    min-height: 0;
+    padding: 0;
 
-    border: 2px solid rgba(255, 255, 255, .28);
-    border-radius: 8px;
-    background: #111827;
+    border: 2px solid rgba(255, 255, 255, .82);
+    border-radius: 999px;
+    background: rgba(17, 24, 39, .78);
     color: white;
     font-weight: 800;
     line-height: 1.15;
+    backdrop-filter: blur(2px);
+}
+
+.canyon-objective.enemy-territory {
+    opacity: .16;
+}
+
+.canyon-objective.center-territory,
+.canyon-objective.home-territory {
+    opacity: 1;
+}
+
+.canyon-objective.locked {
+    opacity: .12;
+    filter: grayscale(.75);
+}
+
+.canyon-objective.selected {
+    box-shadow: 0 0 0 5px rgba(215, 179, 106, .34);
+    border-color: var(--gold);
+}
+
+.canyon-objective.assigned {
+    outline: 2px solid white;
+}
+
+.canyon-objective.active-path {
+    opacity: .94;
+}
+
+.canyon-objective.inactive-path {
+    opacity: .18;
+    filter: grayscale(.65);
+}
+
+.canyon-objective.blue.active-path {
+    background: #2563eb;
+}
+
+.canyon-objective.green.active-path {
+    background: #059669;
+}
+
+.canyon-objective.red.active-path {
+    background: #dc2626;
+}
+
+.canyon-objective.yellow.active-path {
+    background: #ca8a04;
 }
 
 .canyon-team-grid {
@@ -134,6 +132,11 @@
     background: var(--panel);
     border: 2px solid var(--border);
     border-radius: 10px;
+}
+
+.canyon-team-card.selected {
+    box-shadow: 0 0 0 4px rgba(215, 179, 106, .20);
+    border-color: var(--gold);
 }
 
 .canyon-team-heading {
@@ -206,9 +209,85 @@
     margin: 14px 0;
 }
 
-.canyon-color-grid label {
+.canyon-config-grid {
+    display: grid;
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.canyon-config-legion {
+    display: grid;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--panel-light);
+}
+
+.canyon-config-legion h3 {
+    margin: 0;
+}
+
+.canyon-leader-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.canyon-color-grid label,
+.canyon-config-legion label,
+.canyon-leader-grid label {
     display: grid;
     gap: 6px;
+}
+
+.canyon-objective-chip-list,
+.canyon-route-chip-list,
+.canyon-route-step-list {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.canyon-objective-chip,
+.canyon-route-chip,
+.canyon-route-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: rgba(17, 24, 39, .82);
+    color: white;
+    font-weight: 800;
+}
+
+.canyon-route-chip small,
+.canyon-route-step small {
+    display: inline-grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .16);
+    color: white;
+    font-size: .72rem;
+}
+
+.canyon-route-summary {
+    margin-bottom: 14px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .04);
+}
+
+.canyon-route-summary p {
+    margin: 6px 0 0;
+    color: var(--text-muted);
 }
 
 #canyon-config-status {
@@ -219,7 +298,8 @@
 @media (max-width: 1100px) {
 
     #canyon-battlefield-container,
-    .canyon-team-grid {
+    .canyon-team-grid,
+    .canyon-leader-grid {
         grid-template-columns: 1fr;
     }
 
@@ -238,8 +318,22 @@
     }
 
     .canyon-objective {
-        width: clamp(70px, 18vw, 96px);
-        font-size: .75rem;
+        width: 18px;
+        height: 18px;
+        font-size: 0;
+    }
+
+    #canyon-chief-bar {
+        grid-template-columns: 1fr;
+    }
+
+    #canyon-phase-selector {
+        gap: 6px;
+    }
+
+    .canyon-phase-button {
+        padding: 8px 6px;
+        font-size: 12px;
     }
 
 }

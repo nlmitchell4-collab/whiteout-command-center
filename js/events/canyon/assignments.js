@@ -1,37 +1,35 @@
-import { getCombatants } from "../../data/commandData.js";
+import {
+    getCanyonConfig,
+    getCombatants,
+    getRosterPerson
+} from "../../data/commandData.js";
 
 export const CANYON_TEAMS = [
     {
         name: "Blue",
         className: "blue",
-        side: "Northwest Gate"
+        lane: "Left lane"
     },
     {
         name: "Green",
         className: "green",
-        side: "Northeast Gate"
+        lane: "Middle lane"
     },
     {
         name: "Red",
         className: "red",
-        side: "Southwest Gate"
+        lane: "Right lane"
     },
     {
         name: "Yellow",
         className: "yellow",
-        side: "Southeast Gate"
+        lane: "Flexible support"
     }
 ];
 
-export function getCanyonTeamAssignments() {
+export function getCanyonTeamAssignments(legion) {
     const eligibleCombatants =
-        getCombatants()
-            .filter(isCanyonEligible)
-            .map(combatant => ({
-                ...combatant,
-                displayName: combatant.name ?? combatant.displayName
-            }))
-            .sort((a, b) => getTroopPower(b) - getTroopPower(a));
+        getCanyonEligibleCombatants(legion);
 
     const teams =
         CANYON_TEAMS.map(team => ({
@@ -41,17 +39,39 @@ export function getCanyonTeamAssignments() {
             totalPower: 0
         }));
 
-    const leaders =
-        eligibleCombatants.slice(0, CANYON_TEAMS.length);
+    const leaderIds =
+        getCanyonConfig().teamLeaders?.[legion] ?? {};
 
-    leaders.forEach((combatant, index) => {
-        teams[index].leader = combatant;
-        teams[index].members.push(combatant);
-        teams[index].totalPower += getTroopPower(combatant);
+    const assignedIds =
+        new Set();
+
+    teams.forEach(team => {
+        const leader =
+            eligibleCombatants.find(combatant =>
+                combatant.id === leaderIds[team.name]
+            );
+
+        if (!leader || assignedIds.has(leader.id)) return;
+
+        assignCombatantToTeam(team, leader);
+        assignedIds.add(leader.id);
     });
 
     eligibleCombatants
-        .slice(CANYON_TEAMS.length)
+        .filter(combatant => !assignedIds.has(combatant.id))
+        .forEach(combatant => {
+            const teamWithoutLeader =
+                teams.find(team => !team.leader);
+
+            if (teamWithoutLeader) {
+                teamWithoutLeader.leader = combatant;
+                assignCombatantToTeam(teamWithoutLeader, combatant);
+                assignedIds.add(combatant.id);
+            }
+        });
+
+    eligibleCombatants
+        .filter(combatant => !assignedIds.has(combatant.id))
         .forEach(combatant => {
             const targetTeam =
                 teams
@@ -64,16 +84,15 @@ export function getCanyonTeamAssignments() {
                         return a.totalPower - b.totalPower;
                     })[0];
 
-            targetTeam.members.push(combatant);
-            targetTeam.totalPower += getTroopPower(combatant);
+            assignCombatantToTeam(targetTeam, combatant);
         });
 
     return teams;
 }
 
-export function getCanyonRosterSummary() {
+export function getCanyonRosterSummary(legion) {
     const teams =
-        getCanyonTeamAssignments();
+        getCanyonTeamAssignments(legion);
 
     return {
         combatantCount: teams.reduce((total, team) => total + team.members.length, 0),
@@ -82,13 +101,45 @@ export function getCanyonRosterSummary() {
     };
 }
 
-function isCanyonEligible(combatant) {
-    return (
-        combatant.canyonAssignment === "Legion 1" ||
-        combatant.canyonAssignment === "Legion 2"
-    );
+export function getCanyonTeamForCombatant(combatantId, legion) {
+    return getCanyonTeamAssignments(legion)
+        .find(team =>
+            team.members.some(member => member.id === combatantId)
+        ) ?? null;
 }
 
-function getTroopPower(combatant) {
+export function getCanyonEligibleCombatants(legion) {
+    return getCombatants()
+        .filter(combatant =>
+            getCanyonLegion(combatant) === legion
+        )
+        .map(combatant => ({
+            ...combatant,
+            displayName: combatant.name ?? combatant.displayName
+        }))
+        .sort((a, b) => getTroopPower(b) - getTroopPower(a));
+}
+
+export function getCanyonLegion(combatantOrId) {
+    const combatant =
+        typeof combatantOrId === "string"
+            ? getRosterPerson(combatantOrId)
+            : combatantOrId;
+
+    if (combatant?.canyonAssignment === "Legion 1") return 1;
+    if (combatant?.canyonAssignment === "Legion 2") return 2;
+    return null;
+}
+
+export function getTroopPower(combatant) {
     return combatant.troopPower ?? combatant.power ?? 0;
+}
+
+function assignCombatantToTeam(team, combatant) {
+    if (!team.leader) {
+        team.leader = combatant;
+    }
+
+    team.members.push(combatant);
+    team.totalPower += getTroopPower(combatant);
 }
