@@ -36,6 +36,27 @@ const CANYON_PHASES = {
     }
 };
 
+const CANYON_ROUTE_DIRECTIONS = {
+    Stormrage: {
+        Blue: "Northern enemy push route",
+        Red: "Southern enemy push route",
+        Yellow: "Upper center route",
+        Green: "Lower center route"
+    },
+    Iceguard: {
+        Blue: "Western enemy push route",
+        Red: "Eastern enemy push route",
+        Yellow: "Western center route",
+        Green: "Eastern center route"
+    },
+    Flameguard: {
+        Blue: "Southern enemy push route",
+        Red: "Northern enemy push route",
+        Yellow: "Lower center route",
+        Green: "Upper center route"
+    }
+};
+
 let activeCanyonPhase = "opening";
 let selectedCanyonChief = localStorage.getItem("canyonChief") ?? null;
 let selectedCommanderLegion = Number.parseInt(
@@ -125,7 +146,7 @@ export function buildCanyonBattlefield() {
     renderCanyonLegionContext(legion, mapName);
     renderCanyonMyObjectives(myObjectives, selectedChief, selectedTeam, objectives, mapName);
     renderCanyonPanel(panel, legion, mapName, objectives, selectedTeam);
-    renderCanyonTeams(teamsContainer, legion, selectedTeam);
+    renderCanyonTeams(teamsContainer, legion, selectedTeam, mapName);
 }
 
 export function bindCanyonConfigControls(container) {
@@ -416,20 +437,18 @@ function renderCanyonMyObjectives(container, chief, team, objectives, mapName) {
         return;
     }
 
-    const route =
-        getCanyonRoute(team.name);
-
     const routeObjectives =
         getCanyonPhaseRouteObjectives(team.name, mapName, objectives);
 
     container.innerHTML = `
         <div class="summary-card canyon-my-card ${team.className}">
             <h2>${escapeHtml(chief.displayName)}</h2>
-            <h3>${escapeHtml(team.name)} Team - ${escapeHtml(route?.name ?? team.lane)}</h3>
+            <h3>${escapeHtml(team.name)} Team - ${escapeHtml(getCanyonRouteName(team.name, mapName))}</h3>
             <p>
                 Leader: ${team.leader ? escapeHtml(team.leader.displayName) : "Unassigned"}
             </p>
-            <p>${escapeHtml(route?.summary ?? "Move together and follow team leader calls.")}</p>
+            <p>${escapeHtml(getCanyonRouteSummary(team.name, mapName))}</p>
+            <p>${escapeHtml(getCanyonPhaseGuidance(team.name, mapName))}</p>
             <div class="canyon-route-chip-list">
                 ${routeObjectives.map((objective, index) => `
                     <button
@@ -465,18 +484,23 @@ function renderCanyonPanel(panel, legion, mapName, objectives, selectedTeam) {
         ) ??
         objectives.find(isObjectiveUnlocked);
 
+    const routeTeams =
+        getRouteTeamsForObjective(objective, mapName, canyonMap);
+
     const team =
-        getRouteTeamForObjective(objective, mapName, canyonMap) ??
-        CANYON_TEAMS.find(candidate => candidate.name === objective?.team);
+        routeTeams[0];
+
+    const panelTeams =
+        routeTeams;
 
     const summary =
         getCanyonRosterSummary(legion);
 
-    if (!objective || !team) {
+    if (!objective || panelTeams.length === 0) {
         panel.innerHTML = `
             <div class="detail-card">
                 <h2>${escapeHtml(mapName)} Canyon Plan</h2>
-                <p>No Canyon objectives are configured.</p>
+                <p>No active Canyon route waypoints are configured for this phase.</p>
             </div>
         `;
         return;
@@ -499,11 +523,15 @@ function renderCanyonPanel(panel, legion, mapName, objectives, selectedTeam) {
             </p>
 
             <h3>Route Strategy</h3>
+            <p>${escapeHtml(getCanyonPhaseGuidance(team.name, mapName))}</p>
             <p>${getObjectiveStrategy(objective)}</p>
 
-            <h3>${escapeHtml(team.name)} Team</h3>
-            ${renderRouteSummary(team.name, mapName, objectives)}
-            ${renderAssignedTeam(team.name, legion, selectedTeam)}
+            <h3>${panelTeams.length > 1 ? "Route Teams" : `${escapeHtml(team.name)} Team`}</h3>
+            ${renderSharedRouteTeams(routeTeams)}
+            ${panelTeams.map(panelTeam => `
+                ${renderRouteSummary(panelTeam.name, mapName, objectives)}
+                ${renderAssignedTeam(panelTeam.name, legion, selectedTeam)}
+            `).join("")}
 
             <h3>Commander Summary</h3>
             <p>
@@ -551,6 +579,21 @@ function renderAssignedTeam(teamName, legion, selectedTeam) {
     `;
 }
 
+function renderSharedRouteTeams(teams) {
+    if (teams.length < 2) return "";
+
+    return `
+        <div class="canyon-shared-route">
+            Shared route:
+            ${teams.map(team => `
+                <span class="badge ${team.className}">
+                    ${escapeHtml(team.name)}
+                </span>
+            `).join("")}
+        </div>
+    `;
+}
+
 function renderRouteSummary(teamName, mapName, objectives) {
     const route =
         getCanyonRoute(teamName);
@@ -562,8 +605,8 @@ function renderRouteSummary(teamName, mapName, objectives) {
 
     return `
         <div class="canyon-route-summary">
-            <strong>${escapeHtml(route.name)}</strong>
-            <p>${escapeHtml(route.summary)}</p>
+            <strong>${escapeHtml(getCanyonRouteName(teamName, mapName))}</strong>
+            <p>${escapeHtml(getCanyonRouteSummary(teamName, mapName))}</p>
             <div class="canyon-route-step-list">
                 ${routeObjectives.map((objective, index) => `
                     <button
@@ -578,10 +621,10 @@ function renderRouteSummary(teamName, mapName, objectives) {
     `;
 }
 
-function renderCanyonTeams(container, legion, selectedTeam) {
+function renderCanyonTeams(container, legion, selectedTeam, mapName) {
     container.innerHTML =
         getCanyonTeamAssignments(legion)
-            .map(team => renderCanyonTeam(team, selectedTeam))
+            .map(team => renderCanyonTeam(team, selectedTeam, mapName))
             .join("");
 }
 
@@ -589,9 +632,11 @@ function renderCanyonObjective(objective, selectedTeam, mapName, canyonMap) {
     const unlocked =
         isObjectiveUnlocked(objective);
 
-    const team =
-        getRouteTeamForObjective(objective, mapName, canyonMap) ??
-        CANYON_TEAMS.find(candidate => candidate.name === objective.team);
+    const teams =
+        getRouteTeamsForObjective(objective, mapName, canyonMap);
+
+    const markerTeams =
+        teams;
 
     const selected =
         objective.id === selectedObjectiveId;
@@ -601,7 +646,25 @@ function renderCanyonObjective(objective, selectedTeam, mapName, canyonMap) {
         isObjectiveOnTeamRoute(objective, selectedTeam.name, mapName, canyonMap);
 
     const activePath =
-        isObjectiveOnTeamActiveRoute(objective, team?.name, mapName, canyonMap);
+        markerTeams.some(team =>
+            isObjectiveOnTeamActiveRoute(objective, team.name, mapName, canyonMap)
+        );
+
+    const teamClasses =
+        markerTeams
+            .map(team => team.className)
+            .join(" ");
+
+    const markerStyle =
+        [
+            `left: ${objective.x}%`,
+            `top: ${objective.y}%`,
+            markerTeams.length > 1
+                ? `--route-marker: ${getRouteMarkerGradient(markerTeams)}`
+                : ""
+        ]
+            .filter(Boolean)
+            .join("; ");
 
     const territoryClass =
         objective.mapName === mapName
@@ -613,8 +676,8 @@ function renderCanyonObjective(objective, selectedTeam, mapName, canyonMap) {
     return `
         <button
             type="button"
-            class="canyon-objective ${team?.className ?? ""} ${territoryClass} ${selected ? "selected" : ""} ${teamFocus ? "assigned" : ""} ${activePath ? "active-path" : "inactive-path"} ${unlocked ? "" : "locked"}"
-            style="left: ${objective.x}%; top: ${objective.y}%"
+            class="canyon-objective ${teamClasses} ${markerTeams.length > 1 ? "multi-team" : ""} ${territoryClass} ${selected ? "selected" : ""} ${teamFocus ? "assigned" : ""} ${activePath ? "active-path" : "inactive-path"} ${unlocked ? "" : "locked"}"
+            style="${escapeAttribute(markerStyle)}"
             title="${escapeAttribute(objective.displayName ?? objective.label)}"
             aria-label="${escapeAttribute(objective.displayName ?? objective.label)}"
             data-canyon-objective-id="${objective.id}">
@@ -622,10 +685,7 @@ function renderCanyonObjective(objective, selectedTeam, mapName, canyonMap) {
     `;
 }
 
-function renderCanyonTeam(team, selectedTeam) {
-    const route =
-        getCanyonRoute(team.name);
-
+function renderCanyonTeam(team, selectedTeam, mapName) {
     return `
         <article class="canyon-team-card ${team.className} ${selectedTeam?.name === team.name ? "selected" : ""}">
             <div class="canyon-team-heading">
@@ -633,7 +693,7 @@ function renderCanyonTeam(team, selectedTeam) {
                 <span>${team.totalPower.toLocaleString()}</span>
             </div>
             <p>
-                ${escapeHtml(route?.name ?? team.lane)}
+                ${escapeHtml(getCanyonRouteName(team.name, mapName))}
             </p>
             <p>
                 Leader:
@@ -649,6 +709,32 @@ function renderCanyonTeam(team, selectedTeam) {
             </div>
         </article>
     `;
+}
+
+function getRouteMarkerGradient(teams) {
+    const colors =
+        teams.map(team => getTeamColor(team.name));
+
+    const segmentSize =
+        360 / colors.length;
+
+    const segments =
+        colors.map((color, index) =>
+            `${color} ${index * segmentSize}deg ${(index + 1) * segmentSize}deg`
+        );
+
+    return `conic-gradient(${segments.join(", ")})`;
+}
+
+function getTeamColor(teamName) {
+    const colors = {
+        Blue: "#2563eb",
+        Green: "#059669",
+        Red: "#dc2626",
+        Yellow: "#ca8a04"
+    };
+
+    return colors[teamName] ?? "#1f2937";
 }
 
 function renderLeaderOptions(legion, selectedLeaderId) {
@@ -692,12 +778,12 @@ function getCanyonPhaseRouteObjectives(teamName, mapName, objectives, canyonMap 
         .filter(isObjectiveUnlocked);
 }
 
-function getRouteTeamForObjective(objective, mapName, canyonMap = getCanyonMaps().full) {
-    if (!objective) return null;
+function getRouteTeamsForObjective(objective, mapName, canyonMap = getCanyonMaps().full) {
+    if (!objective) return [];
 
-    return CANYON_TEAMS.find(team =>
-        isObjectiveOnTeamRoute(objective, team.name, mapName, canyonMap)
-    ) ?? null;
+    return CANYON_TEAMS.filter(team =>
+        isObjectiveOnTeamActiveRoute(objective, team.name, mapName, canyonMap)
+    );
 }
 
 function isObjectiveOnAnyActiveRoute(objective, mapName, canyonMap = getCanyonMaps().full) {
@@ -849,6 +935,67 @@ function renderObjectiveValue(objective) {
     }
 
     return "Home spawn and staging objective.";
+}
+
+function getCanyonRouteName(teamName, mapName) {
+    return CANYON_ROUTE_DIRECTIONS[mapName]?.[teamName] ??
+        getCanyonRoute(teamName)?.name ??
+        "Team route";
+}
+
+function getCanyonRouteSummary(teamName, mapName) {
+    const routeName =
+        getCanyonRouteName(teamName, mapName).toLowerCase();
+
+    if (teamName === "Blue" || teamName === "Red") {
+        return `Pushes the ${routeName} from the assigned home territory into the adjacent enemy territory, then collapses toward center on Citadel timing.`;
+    }
+
+    return `Controls the ${routeName} from the assigned home territory, protects connector access, and prepares the final Citadel collapse.`;
+}
+
+function getCanyonPhaseGuidance(teamName, mapName) {
+    const routeName =
+        getCanyonRouteName(teamName, mapName).toLowerCase();
+
+    const enemyPressure =
+        teamName === "Blue" || teamName === "Red";
+
+    const guidance = {
+        opening: {
+            Blue:
+                `Opening: push the ${routeName} as a group and keep the team moving toward the enemy base path.`,
+            Red:
+                `Opening: push the ${routeName} as a group and keep the team moving toward the enemy base path.`,
+            Yellow:
+                `Opening: hold the ${routeName} and support pressure around the home-side connectors.`,
+            Green:
+                `Opening: hold the ${routeName} and keep the path stable for later center rotations.`
+        },
+        fortress: {
+            Blue:
+                `Fortress: continue pressure along the ${routeName} and contest the enemy-side fortress chain.`,
+            Red:
+                `Fortress: continue pressure along the ${routeName} and contest the enemy-side fortress chain.`,
+            Yellow:
+                `Fortress: rotate through the ${routeName} and keep access lanes open for Citadel timing.`,
+            Green:
+                `Fortress: anchor the ${routeName} so the team can collapse cleanly when Citadel opens.`
+        },
+        citadel: {
+            Blue:
+                `Citadel: reset from the ${routeName} and collapse into Frozen Citadel together.`,
+            Red:
+                `Citadel: reset from the ${routeName}, touch the home fortress path, and collapse into Frozen Citadel together.`,
+            Yellow:
+                `Citadel: move through the ${routeName} and arrive at Frozen Citadel with the team stacked.`,
+            Green:
+                `Citadel: move through the ${routeName} and arrive at Frozen Citadel with the team stacked.`
+        }
+    };
+
+    return guidance[activeCanyonPhase]?.[teamName] ??
+        `Move together on the highlighted ${enemyPressure ? "enemy push" : "center"} route and follow team leader calls.`;
 }
 
 function getObjectiveStrategy(objective) {

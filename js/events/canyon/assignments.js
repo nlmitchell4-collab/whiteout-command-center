@@ -45,46 +45,20 @@ export function getCanyonTeamAssignments(legion) {
     const assignedIds =
         new Set();
 
-    teams.forEach(team => {
-        const leader =
-            eligibleCombatants.find(combatant =>
-                combatant.id === leaderIds[team.name]
-            );
+    assignConfiguredLeaders(teams, eligibleCombatants, leaderIds, assignedIds);
+    assignAutomaticLeaders(teams, eligibleCombatants, assignedIds);
 
-        if (!leader || assignedIds.has(leader.id)) return;
-
-        assignCombatantToTeam(team, leader);
-        assignedIds.add(leader.id);
-    });
-
-    eligibleCombatants
-        .filter(combatant => !assignedIds.has(combatant.id))
-        .forEach(combatant => {
-            const teamWithoutLeader =
-                teams.find(team => !team.leader);
-
-            if (teamWithoutLeader) {
-                teamWithoutLeader.leader = combatant;
-                assignCombatantToTeam(teamWithoutLeader, combatant);
-                assignedIds.add(combatant.id);
-            }
-        });
+    const maxTeamSize =
+        Math.ceil(eligibleCombatants.length / teams.length);
 
     eligibleCombatants
         .filter(combatant => !assignedIds.has(combatant.id))
         .forEach(combatant => {
             const targetTeam =
-                teams
-                    .slice()
-                    .sort((a, b) => {
-                        if (a.members.length !== b.members.length) {
-                            return a.members.length - b.members.length;
-                        }
-
-                        return a.totalPower - b.totalPower;
-                    })[0];
+                getLowestPowerTeam(teams, maxTeamSize);
 
             assignCombatantToTeam(targetTeam, combatant);
+            assignedIds.add(combatant.id);
         });
 
     return teams;
@@ -142,4 +116,49 @@ function assignCombatantToTeam(team, combatant) {
 
     team.members.push(combatant);
     team.totalPower += getTroopPower(combatant);
+}
+
+function assignConfiguredLeaders(teams, eligibleCombatants, leaderIds, assignedIds) {
+    teams.forEach(team => {
+        const leader =
+            eligibleCombatants.find(combatant =>
+                combatant.id === leaderIds[team.name]
+            );
+
+        if (!leader || assignedIds.has(leader.id)) return;
+
+        assignCombatantToTeam(team, leader);
+        assignedIds.add(leader.id);
+    });
+}
+
+function assignAutomaticLeaders(teams, eligibleCombatants, assignedIds) {
+    teams
+        .filter(team => !team.leader)
+        .forEach(team => {
+            const leader =
+                eligibleCombatants.find(combatant =>
+                    !assignedIds.has(combatant.id)
+                );
+
+            if (!leader) return;
+
+            assignCombatantToTeam(team, leader);
+            assignedIds.add(leader.id);
+        });
+}
+
+function getLowestPowerTeam(teams, maxTeamSize) {
+    const availableTeams =
+        teams.filter(team => team.members.length < maxTeamSize);
+
+    return (availableTeams.length > 0 ? availableTeams : teams)
+        .slice()
+        .sort((a, b) => {
+            if (a.totalPower !== b.totalPower) {
+                return a.totalPower - b.totalPower;
+            }
+
+            return a.members.length - b.members.length;
+        })[0];
 }

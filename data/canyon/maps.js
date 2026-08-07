@@ -152,40 +152,6 @@ const objectiveTypeByNumber = {
     29: OBJECTIVE_TYPES.STRONGHOLD
 };
 
-const teamByNumber = {
-    1: "Yellow",
-    2: "Yellow",
-    3: "Yellow",
-    4: "Blue",
-    5: "Green",
-    6: "Green",
-    7: "Blue",
-    8: "Blue",
-    9: "Blue",
-    10: "Green",
-    11: "Blue",
-    12: "Blue",
-    13: "Blue",
-    14: "Green",
-    15: "Green",
-    16: "Green",
-    17: "Blue",
-    18: "Blue",
-    19: "Blue",
-    20: "Green",
-    21: "Green",
-    22: "Green",
-    23: "Green",
-    24: "Green",
-    25: "Red",
-    26: "Red",
-    27: "Green",
-    28: "Red",
-    29: "Red",
-    30: "Red",
-    31: "Red"
-};
-
 const territoryPrefixes = {
     Flameguard: "F",
     Iceguard: "I",
@@ -260,7 +226,7 @@ const canyonRoutes = {
     Blue: {
         name: "Northern enemy push route",
         summary:
-            "Moves together through the upper route, crosses into the adjacent enemy territory, and pressures the far base path.",
+            "Pushes from the home northern path into the adjacent enemy territory, then pressures the enemy-side fortress chain before collapsing center.",
         phasesByMap: createPhaseRoutesByMap(homeMap => ({
             opening: createRouteCodes(
                 homeMap,
@@ -283,7 +249,7 @@ const canyonRoutes = {
     Green: {
         name: "Lower center route",
         summary:
-            "Moves together through the lower center path and sets up the final center collapse.",
+            "Controls the lower center path, protects home-side connectors, and stages a clean Citadel collapse.",
         phasesByMap: createPhaseRoutesByMap(homeMap => ({
             opening: createHomeRouteCodes(homeMap, [3, 7, 11, 16, 23, 22, 27, 26]),
             fortress: createHomeRouteCodes(homeMap, [29, 30, 31]),
@@ -296,7 +262,7 @@ const canyonRoutes = {
     Red: {
         name: "Southern enemy push route",
         summary:
-            "Moves together through the lower route, crosses into the adjacent enemy territory, and pressures the far base path.",
+            "Pushes from the home southern path into the adjacent enemy territory, then pressures the enemy-side fortress chain before collapsing center.",
         phasesByMap: createPhaseRoutesByMap(homeMap => ({
             opening: createRouteCodes(
                 homeMap,
@@ -319,7 +285,7 @@ const canyonRoutes = {
     Yellow: {
         name: "Upper center route",
         summary:
-            "Moves together through the upper center path, supports fortress pressure, and links into Citadel timing.",
+            "Controls the upper center path, supports fortress timing, and links the team into the final Citadel collapse.",
         phasesByMap: createPhaseRoutesByMap(homeMap => ({
             opening: createHomeRouteCodes(homeMap, [3, 6, 10, 15, 21, 14, 25, 29, 30]),
             fortress: createHomeRouteCodes(homeMap, [24, 20, 28, 30]),
@@ -359,7 +325,6 @@ function createTerritoryObjectives(mapName, coordinates) {
             number,
             x,
             y,
-            team: teamByNumber[number] ?? "Yellow",
             ...objectiveType,
             displayName: `${mapName} ${prefix}${number}`
         };
@@ -384,7 +349,6 @@ export const canyonMaps = {
                 number: 100,
                 x: 50,
                 y: 38,
-                team: "Yellow",
                 ...OBJECTIVE_TYPES.CITADEL
             }
         ]

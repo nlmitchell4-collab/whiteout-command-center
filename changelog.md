@@ -1,5 +1,26 @@
 # Changelog
 
+## v1.0.24
+
+- Removed old single-team Canyon objective ownership so route and phase definitions are the source of truth.
+- Restored small Canyon route bubbles and removed the SVG route-line overlay.
+- Added active-phase support for shared Canyon waypoints assigned to multiple teams.
+- Rebalanced Canyon team assignment fill to prioritize lowest total troop power while keeping team sizes even.
+
+## v1.0.23
+
+- Made Canyon route direction text relative to each legion's assigned territory.
+- Updated Canyon guide copy to explain that equivalent routes rotate by Stormrage, Iceguard and Flameguard perspective.
+
+## v1.0.22
+
+- Increased Canyon route line weight and contrast so each team route is easier to read on the map.
+- Updated Canyon helper text and guide content around the established Blue, Red, Yellow and Green route responsibilities.
+
+## v1.0.21
+
+- Replaced Canyon route bubble markers with thin SVG path lines and subtle anchor points for better map alignment.
+
 ## v1.0.20
 
 - Added exact Canyon route sequences that can flow from home territory into enemy territory.

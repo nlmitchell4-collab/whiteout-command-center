@@ -57,23 +57,26 @@
 
 .canyon-objective {
     position: absolute;
+    z-index: 2;
     transform: translate(-50%, -50%);
-    width: clamp(16px, 1.8vw, 26px);
-    height: clamp(16px, 1.8vw, 26px);
+    width: clamp(12px, 1.35vw, 18px);
+    height: clamp(12px, 1.35vw, 18px);
     min-height: 0;
     padding: 0;
 
-    border: 2px solid rgba(255, 255, 255, .82);
+    border: 2px solid rgba(255, 255, 255, .86);
     border-radius: 999px;
-    background: rgba(17, 24, 39, .78);
+    background: rgba(17, 24, 39, .82);
     color: white;
     font-weight: 800;
     line-height: 1.15;
-    backdrop-filter: blur(2px);
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, .72),
+        0 0 0 2px rgba(17, 24, 39, .5);
 }
 
 .canyon-objective.enemy-territory {
-    opacity: .16;
+    opacity: .72;
 }
 
 .canyon-objective.center-territory,
@@ -83,41 +86,48 @@
 
 .canyon-objective.locked {
     opacity: .12;
-    filter: grayscale(.75);
+    filter: grayscale(.8);
 }
 
 .canyon-objective.selected {
+    width: clamp(16px, 1.7vw, 22px);
+    height: clamp(16px, 1.7vw, 22px);
     box-shadow: 0 0 0 5px rgba(215, 179, 106, .34);
     border-color: var(--gold);
+    background: rgba(17, 24, 39, .82);
 }
 
 .canyon-objective.assigned {
-    outline: 2px solid white;
+    outline: 1px solid rgba(255, 255, 255, .75);
 }
 
 .canyon-objective.active-path {
-    opacity: .94;
+    opacity: .92;
 }
 
 .canyon-objective.inactive-path {
-    opacity: .18;
-    filter: grayscale(.65);
+    opacity: .08;
+    filter: grayscale(.75);
 }
 
-.canyon-objective.blue.active-path {
+.canyon-objective.blue {
     background: #2563eb;
 }
 
-.canyon-objective.green.active-path {
+.canyon-objective.green {
     background: #059669;
 }
 
-.canyon-objective.red.active-path {
+.canyon-objective.red {
     background: #dc2626;
 }
 
-.canyon-objective.yellow.active-path {
+.canyon-objective.yellow {
     background: #ca8a04;
+}
+
+.canyon-objective.multi-team {
+    background: var(--route-marker, rgba(17, 24, 39, .82));
 }
 
 .canyon-team-grid {
@@ -290,6 +300,15 @@
     color: var(--text-muted);
 }
 
+.canyon-shared-route {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 0 0 12px;
+    color: var(--text-muted);
+}
+
 #canyon-config-status {
     align-self: center;
     color: var(--text-muted);
@@ -318,8 +337,8 @@
     }
 
     .canyon-objective {
-        width: 18px;
-        height: 18px;
+        width: 14px;
+        height: 14px;
         font-size: 0;
     }
 
