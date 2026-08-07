@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.14
+
+- Added a basic-auth SVS admin modal with a Google-verified archive/reset action.
+- Added an Apps Script admin action endpoint that checks `SVS_ADMIN_EMAILS` before running `archiveAndReset()`.
+
 ## v1.0.13
 
 - Cleaned up the SVS Apps Script archive module while preserving archive and reset entry points.
