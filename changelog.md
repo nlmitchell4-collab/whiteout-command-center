@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.11
+
+- Added the SVS Form Apps Script source tree and deployment workflow using clasp.
+
 ## v1.0.10
 
 - Cached Foundry assignment plans and top-power roster checks to speed up battlefield interactions.

@@ -1,0 +1,16 @@
+{
+  "scriptId": "1WAhDRhVs1fUWZmsu_VsLNrgFwaQouO4uAWrKLGWznQULooUzMgHgn3gc",
+  "rootDir": "apps-script/svs-form",
+  "scriptExtensions": [
+    ".js",
+    ".gs"
+  ],
+  "htmlExtensions": [
+    ".html"
+  ],
+  "jsonExtensions": [
+    ".json"
+  ],
+  "filePushOrder": [],
+  "skipSubdirectories": false
+}

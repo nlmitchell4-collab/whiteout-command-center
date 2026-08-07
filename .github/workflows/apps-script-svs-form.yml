@@ -1,0 +1,81 @@
+name: Deploy SVS Form Apps Script
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/apps-script-svs-form.yml"
+      - ".clasp.json"
+      - "apps-script/svs-form/**"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+
+jobs:
+  deploy-svs-form:
+    runs-on: ubuntu-latest
+    env:
+      SVS_FORM_DEPLOYMENT_ID: ${{ secrets.SVS_FORM_DEPLOYMENT_ID }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate clasp secrets
+        shell: bash
+        run: |
+          if [ -z "$CLASPRC_JSON" ]; then
+            echo "::error::CLASPRC_JSON is missing or empty."
+            exit 1
+          fi
+
+          node -e "JSON.parse(process.env.CLASPRC_JSON); console.log('clasp credentials JSON is valid.');"
+        env:
+          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
+
+      - name: Write clasp credentials
+        shell: bash
+        run: |
+          node -e '
+          const fs = require("fs");
+          const os = require("os");
+          const path = require("path");
+          const credentials = JSON.parse(process.env.CLASPRC_JSON);
+          fs.writeFileSync(
+            path.join(os.homedir(), ".clasprc.json"),
+            JSON.stringify(credentials)
+          );
+          '
+        env:
+          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
+
+      - name: Validate Apps Script project config
+        shell: bash
+        run: |
+          node -e '
+          const config = require("./.clasp.json");
+          if (config.scriptId !== "1WAhDRhVs1fUWZmsu_VsLNrgFwaQouO4uAWrKLGWznQULooUzMgHgn3gc") {
+            throw new Error("Unexpected SVS Form scriptId in .clasp.json.");
+          }
+          if (config.rootDir !== "apps-script/svs-form") {
+            throw new Error("Unexpected SVS Form rootDir in .clasp.json.");
+          }
+          console.log("SVS Form clasp project config is valid.");
+          '
+
+      - name: Push SVS Form source
+        run: npx clasp push --force
+
+      - name: Update Apps Script deployment
+        if: ${{ env.SVS_FORM_DEPLOYMENT_ID != '' }}
+        run: npx clasp deploy --deploymentId "$SVS_FORM_DEPLOYMENT_ID" --description "GitHub Actions ${{ github.sha }}"
