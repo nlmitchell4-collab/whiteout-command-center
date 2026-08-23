@@ -38,10 +38,18 @@
     margin-top: 20px;
 }
 
+#canyon-map-shell {
+    min-width: 0;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+}
+
 #canyon-map {
     position: relative;
     width: 100%;
+    min-width: 0;
     aspect-ratio: 1821 / 1280;
+    container-type: inline-size;
 
     overflow: hidden;
 
@@ -59,8 +67,8 @@
     position: absolute;
     z-index: 2;
     transform: translate(-50%, -50%);
-    width: clamp(12px, 1.35vw, 18px);
-    height: clamp(12px, 1.35vw, 18px);
+    width: clamp(11px, 1.15cqw, 18px);
+    height: clamp(11px, 1.15cqw, 18px);
     min-height: 0;
     padding: 0;
 
@@ -90,8 +98,8 @@
 }
 
 .canyon-objective.selected {
-    width: clamp(16px, 1.7vw, 22px);
-    height: clamp(16px, 1.7vw, 22px);
+    width: clamp(15px, 1.45cqw, 22px);
+    height: clamp(15px, 1.45cqw, 22px);
     box-shadow: 0 0 0 5px rgba(215, 179, 106, .34);
     border-color: var(--gold);
     background: rgba(17, 24, 39, .82);
@@ -322,6 +330,10 @@
         grid-template-columns: 1fr;
     }
 
+    #canyon-map {
+        max-width: 100%;
+    }
+
 }
 
 @media (max-width: 700px) {
@@ -337,9 +349,19 @@
     }
 
     .canyon-objective {
-        width: 14px;
-        height: 14px;
+        width: 12px;
+        height: 12px;
         font-size: 0;
+    }
+
+    #canyon-map-shell {
+        margin-inline: -12px;
+        padding-inline: 12px;
+    }
+
+    #canyon-map {
+        width: min(760px, 188vw);
+        min-width: 640px;
     }
 
     #canyon-chief-bar {

@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.0.28
+
+- Synchronized Stormrage and Flameguard Canyon route assignments from the updated Iceguard route templates.
+
+## v1.0.27
+
+- Simplified Canyon route configuration so routes can be edited directly with readable S/F/I objective codes.
+
+## v1.0.26
+
+- Added a responsive Canyon map shell so small viewports can scroll the full map without distorting objective coordinates.
+- Switched Canyon route bubble sizing to container-relative units for better consistency across desktop, tablet and mobile widths.
+
+## v1.0.25
+
+- Recalibrated Canyon objective coordinates against the map artwork using decimal percentages for more accurate route bubble placement.
+
 ## v1.0.24
 
 - Removed old single-team Canyon objective ownership so route and phase definitions are the source of truth.
