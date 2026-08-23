@@ -12,6 +12,10 @@ import {
 import { renderRosterPage } from "./rosterPage.js";
 
 let reviewCombatants = [];
+let reviewSort = {
+    field: null,
+    direction: "asc"
+};
 
 export function renderImportPage() {
 
@@ -203,6 +207,9 @@ function renderImportResults(container, results) {
 }
 
 function renderCombatantReview(combatants = []) {
+    const sortedCombatants =
+        getSortedCombatants(combatants);
+
     return `
         <div class="review-panel">
             <h3>Review Combatants</h3>
@@ -212,6 +219,31 @@ function renderCombatantReview(combatants = []) {
                     ? "<p>No combatants loaded.</p>"
                     : ""
             }
+
+            <div class="review-toolbar">
+                <div class="review-sort-controls" aria-label="Roster sort controls">
+                    <button
+                        type="button"
+                        class="review-sort-button ${getSortButtonClass("name")}"
+                        data-review-sort="name">
+                        ${getSortButtonLabel("Name", "name")}
+                    </button>
+
+                    <button
+                        type="button"
+                        class="review-sort-button ${getSortButtonClass("troopPower")}"
+                        data-review-sort="troopPower">
+                        ${getSortButtonLabel("Troop Power", "troopPower")}
+                    </button>
+                </div>
+
+                <button
+                    id="reset-review-assignments"
+                    type="button"
+                    class="danger">
+                    Reset Assignments
+                </button>
+            </div>
 
             <div class="review-grid">
                 <div class="review-row review-header">
@@ -224,7 +256,7 @@ function renderCombatantReview(combatants = []) {
                     <div class="review-heading"></div>
                 </div>
 
-                ${combatants.map((combatant, index) => `
+                ${sortedCombatants.map(({ combatant, index }) => `
                     <div class="review-row">
                         <input
                             data-review-index="${index}"
@@ -349,6 +381,45 @@ function bindReviewEvents(container) {
     const addButton =
         container.querySelector("#add-reviewed-combatant");
 
+    const resetButton =
+        container.querySelector("#reset-review-assignments");
+
+    container
+        .querySelectorAll("[data-review-sort]")
+        .forEach(button => {
+            button.addEventListener("click", () => {
+                setReviewSort(button.dataset.reviewSort);
+                rerenderReviewPanel();
+            });
+        });
+
+    if (resetButton) {
+
+        resetButton.addEventListener("click", () => {
+
+            reviewCombatants =
+                reviewCombatants.map(combatant => ({
+                    ...combatant,
+                    legion: null,
+                    foundryAssignment: "No engagement",
+                    assignment: "No engagement",
+                    canyonAssignment: "No engagement"
+                }));
+
+            rerenderReviewPanel();
+
+            const status =
+                document.getElementById("review-save-status");
+
+            if (status) {
+                status.textContent =
+                    "Assignments reset in editor. Save to apply.";
+            }
+
+        });
+
+    }
+
     if (addButton) {
 
         addButton.addEventListener("click", () => {
@@ -401,6 +472,80 @@ function bindReviewEvents(container) {
 
         }
     });
+}
+
+function rerenderReviewPanel() {
+    const resultsPanel =
+        document.getElementById("import-results");
+
+    if (!resultsPanel) return;
+
+    resultsPanel.innerHTML =
+        renderCombatantReview(reviewCombatants);
+
+    bindReviewEvents(resultsPanel);
+}
+
+function setReviewSort(field) {
+    if (reviewSort.field === field) {
+        reviewSort = {
+            field,
+            direction: reviewSort.direction === "asc" ? "desc" : "asc"
+        };
+        return;
+    }
+
+    reviewSort = {
+        field,
+        direction: field === "troopPower" ? "desc" : "asc"
+    };
+}
+
+function getSortedCombatants(combatants) {
+    const indexedCombatants =
+        combatants.map((combatant, index) => ({
+            combatant,
+            index
+        }));
+
+    if (!reviewSort.field) return indexedCombatants;
+
+    return indexedCombatants.sort((first, second) => {
+        const direction =
+            reviewSort.direction === "asc" ? 1 : -1;
+
+        if (reviewSort.field === "troopPower") {
+            return (
+                getCombatantTroopPower(first.combatant) -
+                getCombatantTroopPower(second.combatant)
+            ) * direction ||
+                getCombatantName(first.combatant).localeCompare(
+                    getCombatantName(second.combatant),
+                    undefined,
+                    { sensitivity: "base" }
+                );
+        }
+
+        return getCombatantName(first.combatant).localeCompare(
+            getCombatantName(second.combatant),
+            undefined,
+            { sensitivity: "base" }
+        ) * direction ||
+            (
+                getCombatantTroopPower(second.combatant) -
+                getCombatantTroopPower(first.combatant)
+            );
+    });
+}
+
+function getSortButtonClass(field) {
+    return reviewSort.field === field ? "active" : "";
+}
+
+function getSortButtonLabel(label, field) {
+    if (reviewSort.field !== field) return `Sort ${label}`;
+
+    return `${label} ${reviewSort.direction === "asc" ? "Ascending" : "Descending"}`;
 }
 
 function updateReviewCombatant(input) {
@@ -511,6 +656,10 @@ function normalizeAssignment(value) {
 
 function getCombatantTroopPower(combatant) {
     return combatant.troopPower ?? combatant.power ?? 0;
+}
+
+function getCombatantName(combatant) {
+    return combatant.name ?? "";
 }
 
 function getCombatantFoundryAssignment(combatant) {

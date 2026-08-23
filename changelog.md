@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.29
+
+- Added roster editor sorting by name and troop power.
+- Added a bulk reset control to set Foundry and Canyon assignments to No engagement before saving.
+
 ## v1.0.28
 
 - Synchronized Stormrage and Flameguard Canyon route assignments from the updated Iceguard route templates.

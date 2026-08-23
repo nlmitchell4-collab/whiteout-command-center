@@ -69,6 +69,41 @@ input[type="submit"] {
     margin-top: 24px;
 }
 
+.review-toolbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 16px 0;
+}
+
+.review-sort-controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.review-sort-button,
+.danger {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-weight: 700;
+}
+
+.review-sort-button.active {
+    border-color: var(--gold);
+    background: var(--gold-dark);
+    color: white;
+}
+
+.danger {
+    border-color: rgba(239, 68, 68, .45);
+    background: rgba(127, 29, 29, .28);
+    color: #fecaca;
+}
+
 .review-grid {
     display: grid;
     gap: 8px;
@@ -136,6 +171,12 @@ input[type="submit"] {
 }
 
 @media (max-width: 900px) {
+    .review-toolbar,
+    .review-sort-controls {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
     .review-row {
         grid-template-columns: 1fr;
     }
