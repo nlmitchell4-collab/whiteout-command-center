@@ -39,6 +39,11 @@ jobs:
             exit 1
           fi
 
+          if [ -z "$SVS_FORM_DEPLOYMENT_ID" ]; then
+            echo "::error::SVS_FORM_DEPLOYMENT_ID is missing or empty. Source can be pushed, but the live web app deployment will not update without it."
+            exit 1
+          fi
+
           node -e "JSON.parse(process.env.CLASPRC_JSON); console.log('clasp credentials JSON is valid.');"
         env:
           CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
@@ -77,5 +82,4 @@ jobs:
         run: npx clasp push --force
 
       - name: Update Apps Script deployment
-        if: ${{ env.SVS_FORM_DEPLOYMENT_ID != '' }}
         run: npx clasp deploy --deploymentId "$SVS_FORM_DEPLOYMENT_ID" --description "GitHub Actions ${{ github.sha }}"
