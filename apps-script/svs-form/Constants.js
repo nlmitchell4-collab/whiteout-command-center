@@ -88,29 +88,6 @@ const FURNACE_LEVELS = [
 
 /**
  * =========================================================
- * PREP SPECIALTIES
- * =========================================================
- */
-
-const SPECIALTIES = [
-
-  'Construction',
-
-  'Research',
-
-  'Hero Growth',
-
-  'Troop Training',
-
-  'Beast Hunting',
-
-  'Chief Gear / Charms',
-
-  'Final Sprint'
-];
-
-/**
- * =========================================================
  * COVERAGE BLOCKS
  * =========================================================
  */
@@ -178,25 +155,6 @@ const BATTLE_AVAILABILITY = [
 
 /**
  * =========================================================
- * BATTLE ROLES
- * =========================================================
- */
-
-const BATTLE_ROLES = [
-
-  'Rally Lead',
-
-  'Reinforcement',
-
-  'Filler',
-
-  'Defender',
-
-  'Garrison Captain'
-];
-
-/**
- * =========================================================
  * DASHBOARD DEFAULTS
  * =========================================================
  */
@@ -238,9 +196,6 @@ const HEADERS = {
   FURNACE_LEVEL:
     'Furnace Level',
 
-  SPECIALTIES:
-    'Preferred SvS Preparation Specialties',
-
   COVERAGE:
     'Available Ministry Coverage Blocks (Select All)',
 
@@ -267,9 +222,6 @@ const HEADERS = {
 
   CASTLE_BATTLE:
     'Can You Participate In SvS Castle Battle?',
-
-  BATTLE_ROLES:
-    'Battle Roles',
 
   CONSTRUCTION_SCORE:
     'Construction Score',

@@ -71,14 +71,6 @@ es: 'Nivel del horno',
 ar: 'مستوى الفرن'
 },
 
-specialties: {
-en: 'Preferred SvS Preparation Specialties',
-ru: 'Предпочтительные специализации подготовки SvS',
-ko: '선호하는 SvS 준비 전문 분야',
-pl: 'Preferowane specjalizacje przygotowań SvS',
-es: 'Especialidades preferidas de preparación SvS',
-ar: 'تخصصات التحضير المفضلة لـ SvS'
-},
 
 coverage: {
 en: 'Available Ministry Coverage Blocks (Select All)',
@@ -160,15 +152,6 @@ pl: 'Czy możesz uczestniczyć w bitwie o zamek SvS?',
 es: '¿Puedes participar en la битве замка SvS?',
 ar: 'هل يمكنك المشاركة في معركة قلعة SvS؟'
 },
-
-battleRoles: {
-en: 'Battle Roles',
-ru: 'Боевые роли',
-ko: '전투 역할',
-pl: 'Role bojowe',
-es: 'Roles de batalla',
-ar: 'أدوار المعركة'
-}
 };
 
 /**

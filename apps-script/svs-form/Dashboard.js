@@ -9,10 +9,10 @@
 * Dashboard Includes:
 *
 * * Total Applicants
-* * Construction Applicants
-* * Research Applicants
-* * Training Applicants
-* * Final Sprint Applicants
+* * Average Construction Score
+* * Average Research Score
+* * Average Training Score
+* * Average Final Sprint Score
 *
 * * Total Fire Crystals
 * * Total SRFC
@@ -204,13 +204,13 @@ sheet
 
   ['Total Applicants',''],
 
-  ['Construction Applicants',''],
+  ['Average Construction Score',''],
 
-  ['Research Applicants',''],
+  ['Average Research Score',''],
 
-  ['Training Applicants',''],
+  ['Average Training Score',''],
 
-  ['Final Sprint Applicants',''],
+  ['Average Final Sprint Score',''],
 
   ['Coverage Gaps',''],
 
@@ -288,61 +288,32 @@ headers,
 rows
 ) {
 
-const specialtyIndex =
-headers.indexOf(
-HEADERS.SPECIALTIES
+const constructionAverage =
+getAverageScore_(
+  headers,
+  rows,
+  HEADERS.CONSTRUCTION_SCORE
 );
 
-let construction = 0;
-let research = 0;
-let training = 0;
-let sprint = 0;
+const researchAverage =
+getAverageScore_(
+  headers,
+  rows,
+  HEADERS.RESEARCH_SCORE
+);
 
-rows.forEach(
-row => {
+const trainingAverage =
+getAverageScore_(
+  headers,
+  rows,
+  HEADERS.TRAINING_SCORE
+);
 
-
-  const specialties =
-    String(
-      row[
-        specialtyIndex
-      ] || ''
-    );
-
-  if (
-    specialties.includes(
-      'Construction'
-    )
-  ) {
-    construction++;
-  }
-
-  if (
-    specialties.includes(
-      'Research'
-    )
-  ) {
-    research++;
-  }
-
-  if (
-    specialties.includes(
-      'Troop Training'
-    )
-  ) {
-    training++;
-  }
-
-  if (
-    specialties.includes(
-      'Final Sprint'
-    )
-  ) {
-    sprint++;
-  }
-}
-
-
+const sprintAverage =
+getAverageScore_(
+  headers,
+  rows,
+  HEADERS.FINAL_SPRINT_SCORE
 );
 
 dashboard
@@ -354,13 +325,13 @@ dashboard
 
   [rows.length],
 
-  [construction],
+  [constructionAverage],
 
-  [research],
+  [researchAverage],
 
-  [training],
+  [trainingAverage],
 
-  [sprint]
+  [sprintAverage]
 ]);
 
 
@@ -370,6 +341,50 @@ dashboard
 )
 .setValue(
 new Date()
+);
+}
+
+function getAverageScore_(
+headers,
+rows,
+scoreHeader
+) {
+
+const scoreIndex =
+headers.indexOf(
+scoreHeader
+);
+
+if (
+scoreIndex < 0 ||
+rows.length === 0
+) {
+
+
+return 0;
+
+
+}
+
+const total =
+rows.reduce(
+(
+sum,
+row
+) =>
+  sum +
+  (
+    Number(
+      row[
+        scoreIndex
+      ]
+    ) || 0
+  ),
+0
+);
+
+return Math.round(
+total / rows.length
 );
 }
 

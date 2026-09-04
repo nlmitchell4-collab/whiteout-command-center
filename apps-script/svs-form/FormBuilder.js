@@ -56,10 +56,6 @@ createFurnaceSection(
 form
 );
 
-createSpecialtySection(
-form
-);
-
 createCoverageSection(
 form
 );
@@ -234,34 +230,6 @@ true
 /**
 
 * =========================================================
-* SPECIALTIES
-* =========================================================
-  */
-
-function createSpecialtySection(
-form
-) {
-
-form.addCheckboxItem()
-.setTitle(
-HEADERS.SPECIALTIES
-)
-.setHelpText(
-getHelpText(
-'specialties'
-)
-)
-.setChoiceValues(
-SPECIALTIES
-)
-.setRequired(
-true
-);
-}
-
-/**
-
-* =========================================================
 * COVERAGE
 * =========================================================
   */
@@ -393,22 +361,6 @@ BATTLE_AVAILABILITY
 )
 .setRequired(
 true
-);
-
-form.addCheckboxItem()
-.setTitle(
-HEADERS.BATTLE_ROLES
-)
-.setHelpText(
-getHelpText(
-'battleRoles'
-)
-)
-.setChoiceValues(
-BATTLE_ROLES
-)
-.setRequired(
-false
 );
 }
 

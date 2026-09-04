@@ -10,29 +10,30 @@
 *
 * Construction:
 * Construction Speedups
+* * General Speedups / 4
 * * Fire Crystals
 * * SRFC
 * * Coverage Bonus
 *
 * Research:
 * Research Speedups
+* * General Speedups / 4
 * * Fire Crystals
 * * Fire Crystal Shards
 * * Coverage Bonus
 *
 * Training:
 * Training Speedups
+* * General Speedups / 4
 * * Coverage Bonus
 *
 * Final Sprint:
 * Construction
 * * Research
 * * Training
-* * General
+* * General Speedups / 4
 * * Fire Crystals
 * * Coverage Bonus
-*
-* Prep Specialties DO NOT affect score.
 *
 * =========================================================
   */
@@ -348,6 +349,9 @@ spreadsheet,
 player.general
 );
 
+const generalSpeedShare =
+generalSpeed / 4;
+
 const fireCrystalScore =
 getFireCrystalScore(
 spreadsheet,
@@ -383,6 +387,7 @@ return {
 construction:
 
   constructionSpeed +
+  generalSpeedShare +
   fireCrystalScore +
   srfcScore +
   coverageBonus,
@@ -390,6 +395,7 @@ construction:
 research:
 
   researchSpeed +
+  generalSpeedShare +
   fireCrystalScore +
   shardScore +
   coverageBonus,
@@ -397,6 +403,7 @@ research:
 training:
 
   trainingSpeed +
+  generalSpeedShare +
   coverageBonus,
 
 finalSprint:
@@ -404,7 +411,7 @@ finalSprint:
   constructionSpeed +
   researchSpeed +
   trainingSpeed +
-  generalSpeed +
+  generalSpeedShare +
   fireCrystalScore +
   coverageBonus,
 
