@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Validate clasp secrets
+      - name: Validate clasp credentials secret
         shell: bash
         run: |
           if [ -z "$CLASPRC_JSON" ]; then
@@ -39,14 +39,17 @@ jobs:
             exit 1
           fi
 
+          node -e "JSON.parse(process.env.CLASPRC_JSON); console.log('clasp credentials JSON is valid.');"
+        env:
+          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
+
+      - name: Validate Apps Script deployment ID secret
+        shell: bash
+        run: |
           if [ -z "$SVS_FORM_DEPLOYMENT_ID" ]; then
             echo "::error::SVS_FORM_DEPLOYMENT_ID is missing or empty. Source can be pushed, but the live web app deployment will not update without it."
             exit 1
           fi
-
-          node -e "JSON.parse(process.env.CLASPRC_JSON); console.log('clasp credentials JSON is valid.');"
-        env:
-          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
 
       - name: Write clasp credentials
         shell: bash
