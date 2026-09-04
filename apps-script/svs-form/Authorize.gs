@@ -1,7 +1,11 @@
 function authorizeSvsAdminScopes() {
 
   UrlFetchApp.fetch(
-    'https://oauth2.googleapis.com'
+    'https://www.googleapis.com/discovery/v1/apis',
+    {
+      muteHttpExceptions:
+        true
+    }
   );
 
   PropertiesService
