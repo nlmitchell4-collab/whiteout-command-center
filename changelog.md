@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.0.30
+
+- Added a password-unlocked SVS admin workspace from the SVS form page.
+- Added direct SVS admin links through `?svsAdmin=true#svs-ministry-form`.
+- Rendered SVS recommended assignments as an Apps Script HTML table for admin review.
+- Moved SVS archive/reset controls out of the modal while keeping Google authentication for archive actions.
+
 ## v1.0.29
 
 - Added roster editor sorting by name and troop power.

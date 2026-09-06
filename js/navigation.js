@@ -4,9 +4,12 @@
 import { isAdmin } from "./auth.js";
 import { showLoginModal } from "./pages/loginModal.js";
 
+const ADMIN_PASSWORD =
+    import.meta.env.VITE_ADMIN_PASSWORD || "3133Rox";
+
 const PAGE_PASSWORDS = {
     "svs-ministry-form": {
-        password: "3133Rox",
+        password: ADMIN_PASSWORD,
         sessionKey: "svsMinistryFormAccess"
     }
 };

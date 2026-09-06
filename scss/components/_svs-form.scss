@@ -89,6 +89,79 @@
     color: var(--text-muted);
 }
 
+.svs-admin-page {
+    display: grid;
+    gap: 16px;
+}
+
+.svs-admin-page[hidden] {
+    display: none;
+}
+
+.svs-admin-actions-panel {
+    display: grid;
+    gap: 12px;
+    padding: 16px;
+
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+}
+
+.svs-admin-actions-panel h2 {
+    margin: 0 0 6px;
+}
+
+.svs-admin-actions-panel p {
+    max-width: 780px;
+    font-size: 15px;
+}
+
+.svs-admin-action-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.svs-recommendations-shell {
+    width: 100%;
+    height: min(72vh, 900px);
+    min-height: 560px;
+
+    overflow: hidden;
+    position: relative;
+
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+}
+
+.svs-recommendations-frame {
+    width: 100%;
+    height: 100%;
+
+    border: 0;
+    background: var(--panel);
+}
+
+.svs-recommendations-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+
+    display: grid;
+    place-items: center;
+
+    background: var(--panel);
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+.svs-recommendations-loading[hidden] {
+    display: none;
+}
+
 .svs-form-shell {
     width: 100%;
     height: min(78vh, 920px);
@@ -112,6 +185,21 @@
 }
 
 @media (max-width: 600px) {
+
+    .svs-admin-actions-panel,
+    .svs-recommendations-shell {
+        border-width: 1px;
+        border-radius: 8px;
+    }
+
+    .svs-admin-action-row {
+        flex-direction: column;
+    }
+
+    .svs-recommendations-shell {
+        min-height: 620px;
+        height: calc(100vh - 210px);
+    }
 
     .svs-form-shell {
         min-height: 720px;

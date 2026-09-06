@@ -3,8 +3,11 @@ import { getFirebaseApp } from "../common/firebase.js";
 const SVS_FORM_WEB_APP_URL =
     "https://script.google.com/macros/s/AKfycbyYRZRUyw33cG3HKxINpUHCNPkaDh6EQlaHW_XydJZ0NnEklQ5P3eg1ISQ3M5uG_DY-/exec";
 
+const SVS_RECOMMENDATIONS_URL =
+    `${SVS_FORM_WEB_APP_URL}?view=recommendations`;
+
 const ADMIN_PASSWORD =
-    import.meta.env.VITE_ADMIN_PASSWORD ?? "";
+    import.meta.env.VITE_ADMIN_PASSWORD || "3133Rox";
 
 export function renderSvsMinistryFormPage() {
     const container =
@@ -30,6 +33,62 @@ export function renderSvsMinistryFormPage() {
                 loading="lazy">
                 Loading...
             </iframe>
+        </div>
+
+        <div
+            id="svs-admin-page"
+            class="svs-admin-page"
+            hidden>
+            <div class="svs-admin-actions-panel">
+                <div>
+                    <h2>Recommended Assignments</h2>
+                    <p>
+                        Review the current recommendations generated from live
+                        SVS form responses.
+                    </p>
+                </div>
+
+                <div class="svs-admin-action-row">
+                    <button
+                        type="button"
+                        id="svs-admin-back"
+                        class="svs-admin-button">
+                        Back to Form
+                    </button>
+
+                    <button
+                        type="button"
+                        id="svs-recommendations-refresh"
+                        class="svs-admin-button">
+                        Refresh Recommendations
+                    </button>
+
+                    <button
+                        type="button"
+                        id="svs-archive-reset"
+                        class="svs-admin-danger">
+                        Archive & Reset Current SVS
+                    </button>
+                </div>
+
+                <p id="svs-admin-status" class="svs-admin-status" role="status"></p>
+            </div>
+
+            <div class="svs-recommendations-shell">
+                <div
+                    id="svs-recommendations-loading"
+                    class="svs-recommendations-loading">
+                    Loading recommendations...
+                </div>
+
+                <iframe
+                    id="svs-recommendations-frame"
+                    class="svs-recommendations-frame"
+                    title="SVS Recommended Assignments"
+                    loading="lazy">
+                    Loading...
+                </iframe>
+            </div>
         </div>
 
         <div
@@ -62,31 +121,27 @@ export function renderSvsMinistryFormPage() {
                     </button>
                 </div>
 
-                <div id="svs-admin-actions" class="svs-admin-section" hidden>
-                    <p>
-                        Archive current responses to the SVS archive workbook,
-                        then reset the live form responses, response sheet,
-                        dashboard and recommendations.
-                    </p>
-                    <button
-                        type="button"
-                        id="svs-archive-reset"
-                        class="svs-admin-danger">
-                        Archive & Reset Current SVS
-                    </button>
-                </div>
-
-                <p id="svs-admin-status" class="svs-admin-status" role="status"></p>
+                <p id="svs-admin-login-status" class="svs-admin-status" role="status"></p>
             </div>
         </div>
     `;
 
     initializeSvsAdminModal(container);
+
+    if (shouldOpenAdminFromUrl()) {
+        openButtonClick(container);
+    }
 }
 
 function initializeSvsAdminModal(container) {
     const openButton =
         container.querySelector("#svs-admin-open");
+    const toolbar =
+        container.querySelector(".svs-form-toolbar");
+    const formShell =
+        container.querySelector(".svs-form-shell");
+    const adminPage =
+        container.querySelector("#svs-admin-page");
     const modal =
         container.querySelector("#svs-admin-modal");
     const closeButton =
@@ -95,18 +150,24 @@ function initializeSvsAdminModal(container) {
         container.querySelector("#svs-admin-password");
     const unlockButton =
         container.querySelector("#svs-admin-unlock");
-    const loginSection =
-        container.querySelector("#svs-admin-login");
-    const actionsSection =
-        container.querySelector("#svs-admin-actions");
+    const backButton =
+        container.querySelector("#svs-admin-back");
     const archiveResetButton =
         container.querySelector("#svs-archive-reset");
+    const recommendationsRefreshButton =
+        container.querySelector("#svs-recommendations-refresh");
+    const recommendationsFrame =
+        container.querySelector("#svs-recommendations-frame");
+    const recommendationsLoading =
+        container.querySelector("#svs-recommendations-loading");
     const status =
         container.querySelector("#svs-admin-status");
+    const loginStatus =
+        container.querySelector("#svs-admin-login-status");
 
     const closeModal = () => {
         modal.hidden = true;
-        status.textContent = "";
+        loginStatus.textContent = "";
     };
 
     openButton.addEventListener("click", () => {
@@ -124,13 +185,42 @@ function initializeSvsAdminModal(container) {
 
     unlockButton.addEventListener("click", () => {
         if (passwordInput.value !== ADMIN_PASSWORD) {
-            status.textContent = "Incorrect admin password.";
+            loginStatus.textContent = "Incorrect admin password.";
             return;
         }
 
-        loginSection.hidden = true;
-        actionsSection.hidden = false;
+        openAdminPage({
+            modal,
+            toolbar,
+            formShell,
+            adminPage,
+            recommendationsFrame
+        });
         status.textContent = "Admin controls unlocked.";
+    });
+
+    passwordInput.addEventListener("keydown", event => {
+        if (event.key !== "Enter") return;
+
+        event.preventDefault();
+        unlockButton.click();
+    });
+
+    backButton.addEventListener("click", () => {
+        adminPage.hidden = true;
+        toolbar.hidden = false;
+        formShell.hidden = false;
+        status.textContent = "";
+        clearAdminUrlParameter();
+    });
+
+    recommendationsRefreshButton.addEventListener("click", () => {
+        loadRecommendationsFrame(
+            recommendationsFrame,
+            recommendationsLoading,
+            true
+        );
+        status.textContent = "Recommendations refreshed.";
     });
 
     archiveResetButton.addEventListener("click", async () => {
@@ -158,6 +248,54 @@ function initializeSvsAdminModal(container) {
             archiveResetButton.disabled = false;
         }
     });
+}
+
+function openButtonClick(container) {
+    container
+        .querySelector("#svs-admin-open")
+        ?.click();
+}
+
+function openAdminPage({
+    modal,
+    toolbar,
+    formShell,
+    adminPage,
+    recommendationsFrame
+}) {
+    modal.hidden = true;
+    toolbar.hidden = true;
+    formShell.hidden = true;
+    adminPage.hidden = false;
+    loadRecommendationsFrame(
+        recommendationsFrame,
+        adminPage.querySelector("#svs-recommendations-loading")
+    );
+}
+
+function shouldOpenAdminFromUrl() {
+    const params =
+        new URLSearchParams(
+            globalThis.location.search
+        );
+
+    return params.get("svsAdmin") === "true";
+}
+
+function clearAdminUrlParameter() {
+    const url =
+        new URL(
+            globalThis.location.href
+        );
+
+    if (!url.searchParams.has("svsAdmin")) return;
+
+    url.searchParams.delete("svsAdmin");
+    globalThis.history.replaceState(
+        null,
+        "",
+        `${url.pathname}${url.search}${url.hash}`
+    );
 }
 
 async function signInWithGoogle() {
@@ -191,6 +329,31 @@ async function signInWithGoogle() {
     }
 
     return credential.idToken;
+}
+
+function loadRecommendationsFrame(frame, loadingIndicator, refresh = false) {
+    if (!frame) return;
+
+    if (!refresh && frame.src) return;
+
+    if (loadingIndicator) {
+        loadingIndicator.hidden = false;
+    }
+
+    frame.addEventListener(
+        "load",
+        () => {
+            if (loadingIndicator) {
+                loadingIndicator.hidden = true;
+            }
+        },
+        { once: true }
+    );
+
+    frame.src =
+        refresh
+            ? `${SVS_RECOMMENDATIONS_URL}&t=${Date.now()}`
+            : SVS_RECOMMENDATIONS_URL;
 }
 
 function submitArchiveResetAction(idToken) {
