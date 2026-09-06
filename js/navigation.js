@@ -7,9 +7,11 @@ import { showLoginModal } from "./pages/loginModal.js";
 const ADMIN_PASSWORD =
     import.meta.env.VITE_ADMIN_PASSWORD || "3133Rox";
 
+const SVS_FORM_PASSWORD = "3133Rox";
+
 const PAGE_PASSWORDS = {
     "svs-ministry-form": {
-        password: ADMIN_PASSWORD,
+        password: SVS_FORM_PASSWORD,
         sessionKey: "svsMinistryFormAccess"
     }
 };

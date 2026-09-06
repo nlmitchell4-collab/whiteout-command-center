@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.31
+
+- Restored the SVS Ministry Form page password to the fixed `3133Rox` value.
+- Kept SVS admin unlock separate so it continues to use `VITE_ADMIN_PASSWORD`.
+
 ## v1.0.30
 
 - Added a password-unlocked SVS admin workspace from the SVS form page.
